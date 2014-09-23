@@ -1,0 +1,16 @@
+package $packageName;
+
+import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.backends.android.AndroidLiveWallpaperService;
+
+public class WallpaperService extends AndroidLiveWallpaperService {
+	
+	@Override
+	public void onCreateApplication() {
+		AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
+		cfg.useGL20 = false;
+		
+		$ddeEngine.getInstance().getConfig().relativeDirectory = "";
+		initialize(new $ddeEngineDecorator($ddeEngine.getInstance()), cfg);
+	}
+}

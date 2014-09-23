@@ -1,0 +1,6 @@
+{
+"jarName": "dde-ext-ui-editor.jar",
+"name": "DDE UI Editor",
+"description": "Simple but flexible GUI editor",
+"startClass": "ua.com.integer.dde.extension.ui.editor.UIEditorExtension"
+}

@@ -1,0 +1,17 @@
+package $packageName;
+
+import $packageName.$ddeEngine;
+import ua.com.integer.dde.startpanel.DDEStartPanel;
+
+public class DesktopStarter {
+	public static void main(String[] args) {
+		for(int i = 0; i < args.length; i++) {
+			if (args[i].equals("-relativeDirectory")) {
+				i++;
+				String relativeDirectory = args[i];
+				$ddeEngine.getInstance().getConfig().relativeDirectory = relativeDirectory;
+			}
+		}
+		DDEStartPanel.getInstance($ddeEngine.getInstance());
+	}
+}

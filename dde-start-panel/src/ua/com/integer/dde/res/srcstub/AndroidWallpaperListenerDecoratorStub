@@ -1,0 +1,28 @@
+package $packageName;
+
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.backends.android.AndroidWallpaperListener;
+
+public class $ddeEngineDecorator implements ApplicationListener, AndroidWallpaperListener {
+	private ApplicationListener listener;
+	
+	public $ddeEngineDecorator(ApplicationListener listener) {
+		this.listener = listener;
+	}
+	
+	@Override
+	public void offsetChange(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset) {
+	}
+	
+	@Override
+	public void previewStateChange(boolean arg0) {
+		
+	}
+
+	public void create() {listener.create();}
+	public void resize(int width, int height) {listener.resize(width, height);}
+	public void render() {listener.render();}
+	public void pause() {listener.pause();}
+	public void resume() {listener.resume();}
+	public void dispose() {listener.dispose();}
+}

@@ -1,0 +1,18 @@
+package $packageName;
+
+import android.os.Bundle;
+import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.backends.android.AndroidApplication;
+import $packageName.$ddeEngineClassName;
+
+public class GameActivity extends AndroidApplication {
+	@Override
+	public void onCreate(Bundle b) {
+		super.onCreate(b);
+
+		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		config.useGL20 = false;
+		$ddeEngineClassName.getInstance().getConfig().relativeDirectory = "";
+		initialize($ddeEngineClassName.getInstance(), config);
+	}
+}

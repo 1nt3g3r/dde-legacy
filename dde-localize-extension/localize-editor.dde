@@ -1,0 +1,6 @@
+{
+"jarName": "dde-ext-localize-editor.jar",
+"name": "DDE Localize Editor",
+"description": "Tool for localize applications",
+"startClass": "ua.com.integer.dde.extension.localize.editor.LocalizeEditorExtension"
+}

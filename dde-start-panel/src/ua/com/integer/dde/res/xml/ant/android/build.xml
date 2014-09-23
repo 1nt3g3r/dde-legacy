@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build.android" name="Create apk">
+    <property file="build.properties"/>
+	
+	<target name="copy.jars">
+		<copy todir="../libs">
+			<fileset dir="../${kernel.project}/libs" >
+				<exclude name="*source*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build.android" description="Create apk" depends="copy.jars">
+		<delete file="${android.apk.name}"/>
+		<exec command="${android.tools.dir}/android update project -p ${android.project}"/>
+		<exec command="ant release" dir="${android.project}"/>
+		<exec command="jarsigner -digestalg SHA1 -sigalg MD5withRSA -keystore $keystoreName -signedjar ${android.project}/bin/noalign.apk -storepass ${keystore.pass} -keypass ${alias.pass} ${android.project}/bin/${android.unsigned.activity.name} ${alias.name}"/>
+		<exec command="${android.tools.dir}/zipalign -f -v 4 ${android.project}/bin/noalign.apk ${android.apk.name}"/>
+		<exec command="rm ${android.project}/bin/noalign.apk"/>
+	</target>
+	
+</project>

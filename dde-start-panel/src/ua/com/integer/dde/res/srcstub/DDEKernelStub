@@ -1,0 +1,20 @@
+package $packageName;
+
+import ua.com.integer.dde.kernel.DDKernel;
+
+public class $ddeKernelName extends DDKernel {
+	private static $ddeKernelName instance = new $ddeKernelName();
+
+	private $ddeKernelName() {
+		getConfig().relativeDirectory = "$androidPath/assets/";
+	}
+
+	public static $ddeKernelName getInstance() {
+		return instance;
+	}
+
+	@Override
+	public void create() {
+		super.create();
+	}
+}

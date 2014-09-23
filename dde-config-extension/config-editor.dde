@@ -1,0 +1,6 @@
+{
+"jarName": "dde-ext-config-editor.jar",
+"name": "DDE Config Editor",
+"description": "Simple property editor. Allows you to edit exsiting and create new properties.",
+"startClass": "ua.com.integer.dde.extension.config.editor.ConfigEditorExtension"
+}

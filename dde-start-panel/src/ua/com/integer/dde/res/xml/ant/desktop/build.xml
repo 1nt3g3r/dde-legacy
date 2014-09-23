@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build.desktop" name="Desktop build">
+	<property file="build.properties"/>
+
+	<target name="build.desktop" depends = "clean.dir, create.run.jar, copy.data, copy.extensions, create.launchers$addTarget"/>
+
+	<target name="clean.dir">
+		<delete dir="$jarDir"/>
+	</target>
+
+	<target name="create.run.jar">
+		<jar destfile="$jarDir/$jarFile" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="$mainClass"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+        		$fileset
+        		$zipfileset
+        </jar>
+	</target>
+
+	<target name="copy.data">
+		<copydir dest="$jarDir/data" src="../$androidProject/assets/data">
+		</copydir>
+	</target>
+	
+	<target name="copy.extensions">
+		<copydir dest="$jarDir/extensions" src="../$desktopProject/extensions">
+		</copydir>
+	</target>
+
+	<target name="create.launchers">
+		<echo message="java -jar $jarFile -relativeDirectory ./" file="$jarDir/start.bat"/>
+		<echo message="java -jar $jarFile -relativeDirectory ./" file="$jarDir/start.sh"/>
+		<chmod perm="777" file="$jarDir/start.sh">
+		</chmod>
+	</target>
+	
+	<target name="build.zip">
+		<zip destfile="$jarDir/$zipFile">
+			<fileset file="$jarDir/$jarFile.bat"/>
+			<fileset file="$jarDir/$jarFile.sh"/>
+			<fileset file="$jarDir/$jarFile"/>
+			<fileset dir="$jarDir/extensions"/>
+			<fileset dir="../$androidProject/assets"/>
+		</zip>
+	</target>
+	
+	<target name="remove.created.jar">
+		<delete>
+			<fileset file="$jarDir/$jarFile.bat"/>
+			<fileset file="$jarDir/$jarFile.sh"/>
+			<fileset file="$jarDir/$jarFile"/>
+		</delete>
+		<delete dir="$jarDir/data"/>
+	</target>
+</project>
