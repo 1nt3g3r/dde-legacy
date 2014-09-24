@@ -50,7 +50,7 @@ public class CommonPropertySupporter extends PropertySupporter {
 	}
 	
 	private void checkRotation() {
-		actor.setRotation(Integer.parseInt(config.get("actor-rotation", "0")));
+		actor.setRotation(Float.parseFloat(config.get("actor-rotation", "0")));
 	}
 	
 	private void checkScales() {

@@ -106,6 +106,7 @@ public class UiEditorDialog extends JDialog {
 		getContentPane().setBackground(Color.GRAY);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		addWindowListener(new ActorListCloseListener());
 		addComponentListener(new ScreenResizeListener());
 
 		setTitle("DDE Actor Editor");
@@ -793,7 +794,10 @@ public class UiEditorDialog extends JDialog {
 	class ActorListCloseListener extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
-			saveCurrentUiConfig();
+			Settings sets = Settings.getInstance();
+			sets.setSettingsClass(UiEditorDialog.class);
+			sets.putString("frame-width", getWidth() + "");
+			sets.putString("frame-height", getHeight() + "");
 			System.exit(0);
 		}
 	}
@@ -851,6 +855,14 @@ public class UiEditorDialog extends JDialog {
 		
 		allowDragCheckbox.setSelected(getSettings().getBoolean("allow-drag-root-group", true));
 		allowDragCheckbox.addActionListener(new AllowDragRootGroupListener());
+		
+		int frameWidth = Integer.parseInt(sets.getString("frame-width", "0"));
+		int frameHeight = Integer.parseInt(sets.getString("frame-height", "0"));
+		System.out.println(frameWidth + ", " + frameHeight);
+		if (frameWidth != 0 && frameHeight != 0) {
+			System.out.println("Ui editor dialog: load frame size as " + frameWidth + "x" + frameHeight);
+			setSize(frameWidth, frameHeight);
+		}
 	}
 	
 	class ReparseButtonListener implements ActionListener {
