@@ -75,7 +75,7 @@ public class IntegerEditPanel extends JPanel implements PropertyEditComponent {
 	}
 	
 	protected void setSpinnerValue(String value) {
-		valueSpinner.setValue(Integer.parseInt(value));
+		valueSpinner.setValue((int) Float.parseFloat(value));
 	}
 	
 	@Override
