@@ -212,7 +212,7 @@ public class AbstractScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
+		//stage.dispose();
 		notifyAboutEvent(ScreenEvent.DISPOSE);
 	}
 	

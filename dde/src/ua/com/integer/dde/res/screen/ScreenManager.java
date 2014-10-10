@@ -93,9 +93,11 @@ public class ScreenManager implements Disposable, LoadManager {
 	 */
 	@Override
 	public void dispose() {
-		for(Screen screen : screens.values()) {
+		for(AbstractScreen screen : screens.values()) {
 			screen.dispose();
+			//screen.getStage().dispose();
 		}
+		screens.clear();
 	}
 	
 	/**
