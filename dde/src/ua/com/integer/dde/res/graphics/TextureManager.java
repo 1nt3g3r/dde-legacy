@@ -63,6 +63,7 @@ public class TextureManager implements LoadManager {
 			}
 		}
 		possibleHeights.sort();
+		possibleHeights.reverse();
 
 		int screenHeight = Gdx.graphics.getHeight();
 		
@@ -71,7 +72,6 @@ public class TextureManager implements LoadManager {
 			for (int h : possibleHeights) {
 				if (h >= screenHeight) {
 					currentHeight = h;
-					break;
 				}
 			}
 			this.packDirectory += ("/images-" + currentHeight);
