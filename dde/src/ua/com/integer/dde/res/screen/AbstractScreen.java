@@ -20,7 +20,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class AbstractScreen implements Screen {
-	private static SpriteBatch batch = new SpriteBatch();
+	public static SpriteBatch batch;
+	//= new SpriteBatch();
 	private static DDKernel kernel;
 
 	private Stage stage;
@@ -240,5 +241,10 @@ public class AbstractScreen implements Screen {
 		for(int i = 0; i < screenListeners.size; i++) {
 			screenListeners.get(i).eventHappened(this, event);
 		}
+	}
+
+	public static void disposeBatch() {
+		batch.dispose();
+		batch = null;
 	}
 }

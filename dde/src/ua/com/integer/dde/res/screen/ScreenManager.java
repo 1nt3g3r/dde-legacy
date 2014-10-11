@@ -98,6 +98,9 @@ public class ScreenManager implements Disposable, LoadManager {
 			//screen.getStage().dispose();
 		}
 		screens.clear();
+		if (AbstractScreen.getBatch() != null) {
+			AbstractScreen.disposeBatch();
+		}
 	}
 	
 	/**
