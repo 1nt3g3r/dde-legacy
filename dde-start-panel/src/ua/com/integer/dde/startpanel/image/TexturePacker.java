@@ -72,6 +72,8 @@ public class TexturePacker {
 		Settings sets = new Settings();
 		sets.filterMin = TextureFilter.Linear;
 		sets.filterMag = TextureFilter.Linear;
+		sets.paddingX = 2;
+		sets.paddingY = 2;
 		
 		File setsFile = new File(inputPath + "/pack.json");
 		if (setsFile.exists()) {
@@ -89,6 +91,8 @@ public class TexturePacker {
 				}
 			}
 			sets = JsonWorker.JSON.fromJson(Settings.class, text);
+			sets.stripWhitespaceX = true;
+			sets.stripWhitespaceY = true;
 		}
 		com.badlogic.gdx.tools.texturepacker.TexturePacker.process(sets, inputPath, outputPath, packName
 				+ ".pack");

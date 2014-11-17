@@ -43,4 +43,8 @@ public class Size {
 	public static Size fromString(String json) {
 		return JsonWorker.JSON.fromJson(Size.class, json);
 	}
+	
+	public boolean needParentActor() {
+		return sizeType == SizeType.PARENT_WIDTH || sizeType == SizeType.PARENT_HEIGHT;
+	}
 }
