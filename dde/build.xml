@@ -1,0 +1,33 @@
+<project default="make.jars" basedir=".">
+	<path id="classpath">
+		<fileset dir="libs" includes="gdx.jar"/>
+		<fileset dir="libs" includes="gdx-freetype.jar"/>
+	</path>
+	
+	<target name="make.jars" depends="pre.clean">
+		<ant target="make.jar"/>
+		<ant target="make.sources.jar"/>
+		<ant target = "post.clean"/>
+	</target>
+		
+    <target name="make.jar" description="Create .jar from DDE">
+    	<javac srcdir="src" destdir="build/classes">
+    		<classpath refid="classpath"></classpath>
+    	</javac>
+    	
+    	<jar destfile="build/dde.jar" basedir="build/classes"></jar>
+    </target>
+	
+	<target name="make.sources.jar" description="Create source .jar from DDE">
+		<jar destfile="build/dde-sources.jar" basedir="src"/>
+	</target>
+
+	<target name="pre.clean" description="Prepare to build jar">
+		<delete dir="build"/>
+		<mkdir dir="build/classes"/>
+	</target>
+	
+	<target name="post.clean" description="Remove non-needed files">
+		<delete dir="build/classes"/>
+	</target>
+</project>

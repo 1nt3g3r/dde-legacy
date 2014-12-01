@@ -1,0 +1,32 @@
+<project name="Make DDE release" default="release" basedir=".">
+	<property file="build.properties">
+	</property>
+	
+	<target name="release" depends="prepare">
+		<!--Core project-->
+		<ant antfile="build.xml" target="make.jars"/>
+		<copyfile dest="release/dde.jar" src="build/dde.jar"/>
+		<copyfile dest="release/dde-sources.jar" src="build/dde-sources.jar"/>
+		
+		<!--Start panel project-->
+		<ant dir="${startpanel}" antfile="${startpanel}/build.xml" target="make.jars"/>
+		<copyfile dest="release/dde-startpanel.jar" src="${startpanel.jardir}/dde-startpanel.jar"/>
+		<copyfile dest="release/dde-startpanel-sources.jar" src="${startpanel.jardir}/dde-startpanel-sources.jar"/>
+		
+		<zip destfile="build/release.zip" basedir="release"/>
+	
+		<antcall target="post.clean"/>
+	</target>
+		
+	<target name="create.zip">
+	</target>
+	
+	<target name="prepare">
+		<delete dir="release"/>
+		<mkdir dir="release"/>
+	</target>
+	
+	<target name="post.clean">
+		<delete dir="release"/>
+	</target>
+</project>

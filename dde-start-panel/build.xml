@@ -1,0 +1,45 @@
+<project default="make.jars" name="DDE Start Panel" basedir=".">
+	
+	<path id = "core.classpath">
+		<fileset dir="../dde/libs" includes="*.jar"/>
+	</path>
+	
+	<path id="classpath">
+		<fileset dir="libs" includes="*.jar"/>
+		<fileset dir="../dde/libs" includes="*.jar"/>
+	</path>
+	
+	<target name="make.jars" depends="pre.clean">
+		<ant target="make.jar"/>
+		<ant target="make.sources.jar"/>
+		<ant target="post.clean"/>
+	</target>
+	
+	<target name="make.jar">
+		<javac srcdir="../dde/src" destdir="build/core/classes">
+			<classpath refid="core.classpath"/>
+		</javac>
+		
+		<javac srcdir="src" destdir="build/classes">
+			<classpath refid="classpath"/>
+			<classpath location="build/core/classes"></classpath>
+		</javac>
+		
+		<jar destfile="build/dde-startpanel.jar" basedir="build/classes"/>
+	</target>
+	
+	<target name="make.sources.jar">
+		<jar destfile="build/dde-startpanel-sources.jar" basedir="src"/>
+	</target>
+	
+	<target name="pre.clean">
+		<delete dir="build"/>
+		<mkdir dir="build/classes"/>
+		<mkdir dir="build/core/classes"/>
+	</target>
+	
+	<target name="post.clean">
+		<delete dir="build/classes"/>
+		<delete dir="build/core"/>
+	</target>
+</project>
