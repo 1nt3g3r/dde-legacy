@@ -54,4 +54,8 @@ public class TextureRegionActor extends Actor {
 			batch.draw(region, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 		}
 	}
+	
+	public TextureRegion getRegion() {
+		return region;
+	}
 }

@@ -42,7 +42,7 @@ public class UiConfigurator implements ScreenListener {
 	
 	private void position() {
 		if (target == null) return;
-	
+		
 		setupDistances();
 		setupSizes();
 		
@@ -68,11 +68,21 @@ public class UiConfigurator implements ScreenListener {
 	}
 	
 	private void setupDistances() {
-		distanceX = config.horizontalDistance.getValue(target);
-		distanceY = config.verticalDistance.getValue(target);
+		if (!(config.horizontalDistance.needParentActor() && target.getParent() == null)) {
+			distanceX = config.horizontalDistance.getValue(target);
+		}
+		
+		if (!(config.verticalDistance.needParentActor() && target.getParent() == null)) {
+			distanceY = config.verticalDistance.getValue(target);
+		}
 	}
 	
 	private void setupSizes() {
+		//Если нам нужен родитель-группа для определения размеров, а его нет - ничего не определяем
+		if ((config.width.needParentActor() || config.height.needParentActor()) && !target.hasParent()) {
+			return;
+		}
+		
 		target.setSize(config.width.getValue(target), config.height.getValue(target));
 	}
 	
@@ -81,20 +91,28 @@ public class UiConfigurator implements ScreenListener {
 	}
 	
 	private void handleParentBottomRight() {
+		if (target.getParent() == null) return;
+		
 		target.setPosition(target.getParent().getWidth() - target.getWidth() - distanceX, distanceY);
 	}
 	
 	private void handleParentCenter() {
+		if (target.getParent() == null) return;
+		
 		target.setX(distanceX + (target.getParent().getWidth() - target.getWidth())/2);
 		target.setY(distanceY + (target.getParent().getHeight() - target.getHeight())/2);
 	}
 	
 	private void handleParentTopLeft() {
+		if (target.getParent() == null) return;
+		
 		target.setX(distanceX);
 		target.setY(target.getParent().getHeight() - target.getHeight() - distanceY);
 	}
 	
 	private void handleParentTopRight() {
+		if (target.getParent() == null) return;
+		
 		target.setX(target.getParent().getWidth() - target.getWidth() - distanceX);
 		target.setY(target.getParent().getHeight() - target.getHeight() - distanceY);
 	}
