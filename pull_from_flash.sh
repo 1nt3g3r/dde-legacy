@@ -1,0 +1,1 @@
+git pull /media/integer/C669-D193/dde/dde
