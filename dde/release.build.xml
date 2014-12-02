@@ -13,9 +13,30 @@
 		<copyfile dest="release/dde-startpanel.jar" src="${startpanel.jardir}/dde-startpanel.jar"/>
 		<copyfile dest="release/dde-startpanel-sources.jar" src="${startpanel.jardir}/dde-startpanel-sources.jar"/>
 		
+		<!--Localize extension-->
+		<ant dir="${localize}" antfile="${localize}/build.xml" target="make.jars"/>
+		<copy todir="release/extensions/localize">
+			<fileset dir="${localize.jardir}"/>
+			<fileset file="${localize}/localize-editor.dde"/>
+		</copy>
+		
+		<!--Config extension-->
+		<ant dir="${config}" antfile="${config}/build.xml" target="make.jars"/>
+		<copy todir="release/extensions/config">
+			<fileset dir="${config.jardir}"/>
+			<fileset file="${config}/config-editor.dde"/>
+		</copy>
+		
+		<!--UI extension-->
+		<ant dir="${ui}" antfile="${ui}/build.xml" target="make.jars"/>
+		<copy todir="release/extensions/ui">
+			<fileset dir="${ui.jardir}"/>
+			<fileset file="${ui}/ui-editor.dde"/>
+		</copy>
+		
 		<zip destfile="build/release.zip" basedir="release"/>
 	
-		<antcall target="post.clean"/>
+		<!--antcall target="post.clean"/-->
 	</target>
 		
 	<target name="create.zip">

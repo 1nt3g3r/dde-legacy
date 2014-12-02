@@ -5,9 +5,9 @@
 	</path>
 	
 	<target name="make.jars" depends="pre.clean">
-		<ant target="make.jar"/>
-		<ant target="make.sources.jar"/>
-		<ant target = "post.clean"/>
+		<antcall target="make.jar"/>
+		<antcall target="make.sources.jar"/>
+		<antcall target = "post.clean"/>
 	</target>
 		
     <target name="make.jar" description="Create .jar from DDE">
