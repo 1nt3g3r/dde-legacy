@@ -25,7 +25,10 @@
 			<classpath location="build/core/classes"></classpath>
 		</javac>
 		
-		<jar destfile="build/dde-startpanel.jar" basedir="build/classes"/>
+		<copydir dest="build/classes/ua/com/integer/dde/res" src="src/ua/com/integer/dde/res"></copydir>
+		
+		<jar destfile="build/dde-startpanel.jar" basedir="build/classes">
+		</jar>
 	</target>
 	
 	<target name="make.sources.jar">

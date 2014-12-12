@@ -20,6 +20,10 @@
 		<javac srcdir="src" destdir="build/classes">
 			<classpath refid="classpath"/>
 		</javac>
+		
+		<copydir dest="build/classes/ua/com/integer/dde/extension/ui/skin" src="src/ua/com/integer/dde/extension/ui/skin"></copydir>
+		
+		<delete file="build/classes/ua/com/integer/dde/extension/ui/skin/DefaultSkin.java"></delete>
 	</target>
 	
 	<target name="build.runtime.jar" depends="compile">

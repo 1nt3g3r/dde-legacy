@@ -94,6 +94,8 @@ public class TexturePacker {
 			sets.stripWhitespaceX = true;
 			sets.stripWhitespaceY = true;
 		}
+		
+		sets.atlasExtension = ".pack";
 		com.badlogic.gdx.tools.texturepacker.TexturePacker.process(sets, inputPath, outputPath, packName
 				+ ".pack");
 	}
