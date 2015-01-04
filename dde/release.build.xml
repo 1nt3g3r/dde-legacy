@@ -2,6 +2,9 @@
 	<property file="build.properties">
 	</property>
 	
+	<property file="ftp.properties">
+	</property>
+	
 	<target name="release" depends="prepare">
 		<!--Core project-->
 		<ant antfile="build.xml" target="make.jars"/>
@@ -34,9 +37,9 @@
 			<fileset file="${ui}/ui-editor.dde"/>
 		</copy>
 		
-		<zip destfile="build/release.zip" basedir="release"/>
+		<zip destfile="build/dde-release.zip" basedir="release"/>
 	
-		<!--antcall target="post.clean"/-->
+		<antcall target="post.clean"/>
 	</target>
 		
 	<target name="create.zip">
@@ -49,5 +52,21 @@
 	
 	<target name="post.clean">
 		<delete dir="release"/>
+	</target>
+	
+	
+	<target name="upload.to.ftp">
+		<ftp
+	        server="${host}"
+	    	userid="${user}"
+	    	password="${password}"
+	    	port="21"
+			remotedir="${remotedir}"
+			verbose="true"
+			action="send">
+	        <fileset dir="build">
+	        	<include name="dde-release.zip"/>
+	        </fileset>
+	    </ftp>
 	</target>
 </project>

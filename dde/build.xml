@@ -15,6 +15,7 @@
     		<classpath refid="classpath"></classpath>
     	</javac>
     	
+    	<copy file="src/ua/com/integer/dde/res/font/Roboto-Condensed.ttf" tofile="build/classes/ua/com/integer/dde/res/font/Roboto-Condensed.ttf"></copy>
     	<jar destfile="build/dde.jar" basedir="build/classes"></jar>
     </target>
 	

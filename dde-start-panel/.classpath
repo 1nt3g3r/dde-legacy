@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="libs/ant-launcher.jar"/>
 	<classpathentry kind="lib" path="libs/ant.jar"/>
 	<classpathentry kind="lib" path="libs/xom-1.2.10.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-tools.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-tools.jar" sourcepath="libs/gdx-tools-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
