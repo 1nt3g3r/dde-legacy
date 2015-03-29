@@ -23,12 +23,14 @@ public class FontNameEditPanel extends JPanel implements PropertyEditComponent {
 	private UiConfig config;
 	private String uiPropertyName;
 	private PropertyChangeListener listener;
+	@SuppressWarnings("rawtypes")
 	private JComboBox fontNameBox;
 	private JLabel propertyName;
 
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings("rawtypes")
 	public FontNameEditPanel() {
 		setBackground(Color.GRAY);
 		setPreferredSize(new Dimension(300, 20));
@@ -63,6 +65,7 @@ public class FontNameEditPanel extends JPanel implements PropertyEditComponent {
 		updateUiFromConfig();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateUiFromConfig() {
 		if (config != null && uiPropertyName != null) {
 			fontNameBox.setModel(new DefaultComboBoxModel(FontUtils.getFontNamesWithStandard()));
@@ -96,11 +99,5 @@ public class FontNameEditPanel extends JPanel implements PropertyEditComponent {
 			}
 			
 		}
-	}
-	public JComboBox getFontNameBox() {
-		return fontNameBox;
-	}
-	public JLabel getPropertyName() {
-		return propertyName;
 	}
 }

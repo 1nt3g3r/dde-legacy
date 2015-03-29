@@ -28,6 +28,7 @@ import javax.swing.SpinnerNumberModel;
 public class SizePanel extends JPanel {
 	private static final long serialVersionUID = 559562481036278137L;
 	private JSpinner valueSpinner;
+	@SuppressWarnings("rawtypes")
 	private JComboBox sizeTypeBox;
 	
 	private SizeListener sizeListener;
@@ -35,6 +36,7 @@ public class SizePanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SizePanel() {
 		setBackground(Color.GRAY);
 		
@@ -71,6 +73,7 @@ public class SizePanel extends JPanel {
 		setLayout(groupLayout);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setAllowedSizeTypes(SizeType ... types) {
 		sizeTypeBox.setModel(new DefaultComboBoxModel(types));
 	}

@@ -22,6 +22,7 @@ public class ScalingEditPanel extends JPanel implements PropertyEditComponent {
 	private static final long serialVersionUID = -9219486169697324844L;
 
 	private JLabel propertyName;
+	@SuppressWarnings("rawtypes")
 	private JComboBox valueField;
 	
 	private UiConfig config;
@@ -31,6 +32,7 @@ public class ScalingEditPanel extends JPanel implements PropertyEditComponent {
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ScalingEditPanel() {
 		setPreferredSize(new Dimension(300, 20));
 		setMinimumSize(new Dimension(300, 20));
@@ -50,13 +52,6 @@ public class ScalingEditPanel extends JPanel implements PropertyEditComponent {
 		valueField.setModel(new DefaultComboBoxModel(Scaling.values()));
 		add(valueField);
 
-	}
-
-	public JLabel getPropertyName() {
-		return propertyName;
-	}
-	public JComboBox getValueField() {
-		return valueField;
 	}
 
 	@Override
@@ -104,5 +99,4 @@ public class ScalingEditPanel extends JPanel implements PropertyEditComponent {
 			}
 		} 
 	}
-	
 }

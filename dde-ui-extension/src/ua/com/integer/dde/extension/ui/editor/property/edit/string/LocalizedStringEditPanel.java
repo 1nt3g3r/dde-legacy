@@ -26,6 +26,7 @@ public class LocalizedStringEditPanel extends JPanel implements PropertyEditComp
 	private static final long serialVersionUID = 7823894230864943611L;
 	
 	private JTextField textfield;
+	@SuppressWarnings("rawtypes")
 	private JComboBox tagCombobox;
 	private JCheckBox needLocalize;
 	private JLabel propertyName;
@@ -35,6 +36,7 @@ public class LocalizedStringEditPanel extends JPanel implements PropertyEditComp
 	
 	private PropertyChangeListener listener;
 	
+	@SuppressWarnings("rawtypes")
 	public LocalizedStringEditPanel() {
 		setBackground(Color.GRAY);
 		setPreferredSize(new Dimension(300, 20));
@@ -94,6 +96,7 @@ public class LocalizedStringEditPanel extends JPanel implements PropertyEditComp
 		config.set(uiPropertyName + "-localize", "true");
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void updateTagList() {
 		tagCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getTags()));
 	}

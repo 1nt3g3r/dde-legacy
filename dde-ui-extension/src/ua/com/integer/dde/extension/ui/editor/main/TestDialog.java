@@ -1,20 +1,18 @@
 package ua.com.integer.dde.extension.ui.editor.main;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
-import javax.swing.JButton;
+import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.BoxLayout;
 
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 
 public class TestDialog extends JDialog {
-
+	private static final long serialVersionUID = 592988096643896569L;
 	private final JPanel contentPanel = new JPanel();
 
 	/**

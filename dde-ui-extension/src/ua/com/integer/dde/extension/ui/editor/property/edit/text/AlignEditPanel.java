@@ -20,6 +20,7 @@ public class AlignEditPanel extends JPanel implements PropertyEditComponent {
 	private static final long serialVersionUID = 13348312730673242L;
 	
 	private JLabel propertyName;
+	@SuppressWarnings("rawtypes")
 	private JComboBox alignValue;
 
 	private UiConfig config;
@@ -29,6 +30,7 @@ public class AlignEditPanel extends JPanel implements PropertyEditComponent {
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AlignEditPanel() {
 		setPreferredSize(new Dimension(300, 20));
 		setMinimumSize(new Dimension(300, 20));
@@ -48,13 +50,6 @@ public class AlignEditPanel extends JPanel implements PropertyEditComponent {
 		alignValue.setModel(new DefaultComboBoxModel(Align.values()));
 		add(alignValue);
 
-	}
-
-	public JLabel getPropertyName() {
-		return propertyName;
-	}
-	public JComboBox getAlignValue() {
-		return alignValue;
 	}
 	
 	@Override

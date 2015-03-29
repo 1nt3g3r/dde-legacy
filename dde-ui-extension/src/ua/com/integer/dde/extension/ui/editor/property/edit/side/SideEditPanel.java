@@ -24,11 +24,13 @@ public class SideEditPanel extends JPanel implements PropertyEditComponent {
 	
 	private UiConfig config;
 	private PropertyChangeListener listener;
+	@SuppressWarnings("rawtypes")
 	private JComboBox sideCombobox;
 
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SideEditPanel() {
 		setPreferredSize(new Dimension(300, 20));
 		setMinimumSize(new Dimension(300, 20));

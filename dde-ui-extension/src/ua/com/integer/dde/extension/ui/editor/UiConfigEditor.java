@@ -58,9 +58,11 @@ public class UiConfigEditor extends JDialog {
 	private JPanel widthPanel;
 	private JPanel xDistancePanel;
 	private JPanel yDistancePanel;
+	@SuppressWarnings("rawtypes")
 	private JComboBox xDistanceSizeType;
 	private JLabel label_1;
 	private JSpinner xDistanceValue;
+	@SuppressWarnings("rawtypes")
 	private JComboBox yDistanceSizeType;
 	private JLabel label_2;
 	private JSpinner yDistanceValue;
@@ -69,8 +71,10 @@ public class UiConfigEditor extends JDialog {
 	private JButton refreshButton;
 	private JCheckBox autorefreshConfig;
 	private JSpinner heightValue;
+	@SuppressWarnings("rawtypes")
 	private JComboBox heightSizeType;
 	private JSpinner widthValue;
+	@SuppressWarnings("rawtypes")
 	private JComboBox widthSizeType;
 	
 	private Array<ConfigChangedListener> configChangeListeners;
@@ -99,6 +103,7 @@ public class UiConfigEditor extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public UiConfigEditor() {
 		addWindowListener(new CloseUiEditorDialogListener());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

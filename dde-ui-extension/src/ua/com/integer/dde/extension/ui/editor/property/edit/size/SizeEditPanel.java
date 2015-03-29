@@ -26,6 +26,7 @@ import javax.swing.event.ChangeListener;
 
 public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 	private static final long serialVersionUID = -4171978323826119465L;
+	@SuppressWarnings("rawtypes")
 	private JComboBox sizeTypeBox;
 	private JSpinner multSpinner;
 	private JLabel propertyName;
@@ -37,6 +38,7 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 	
 	private String defaultValue = FontUtils.getDefaultFontSize().toString();
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SizeEditPanel() {
 		setPreferredSize(new Dimension(300, 20));
 		setMinimumSize(new Dimension(300, 20));
@@ -135,6 +137,7 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		config.set(uiPropertyName, size.toString());
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setAllowedSizeTypes(SizeType ... types) {
 		sizeTypeBox.setModel(new DefaultComboBoxModel(types));
 	}

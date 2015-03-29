@@ -6,6 +6,7 @@ import javax.swing.AbstractListModel;
 
 import com.badlogic.gdx.utils.Array;
 
+@SuppressWarnings("rawtypes")
 public class ActorListModel extends AbstractListModel {
 	private static final long serialVersionUID = -3369513931830934340L;
 	

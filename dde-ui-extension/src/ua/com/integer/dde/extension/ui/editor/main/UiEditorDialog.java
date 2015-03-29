@@ -75,6 +75,7 @@ public class UiEditorDialog extends JDialog {
 	private static final long serialVersionUID = 8201647974528008553L;
 	private final JPanel contentPanel = new JPanel();
 	
+	@SuppressWarnings("rawtypes")
 	private JList actorList;
 	
 	private LwjglAWTCanvas lCanvas;
@@ -101,6 +102,7 @@ public class UiEditorDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings("rawtypes")
 	public UiEditorDialog() {
 		System.out.println("New editor dialog");
 		getContentPane().setBackground(Color.GRAY);
@@ -448,6 +450,7 @@ public class UiEditorDialog extends JDialog {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateActorList() {
 		actorList.setModel(new ActorListModel(getActorFiles()));
 	}

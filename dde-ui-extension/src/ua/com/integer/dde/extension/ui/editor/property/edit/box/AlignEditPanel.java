@@ -21,6 +21,7 @@ import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponen
 
 public class AlignEditPanel extends JPanel implements PropertyEditComponent {
 	private static final long serialVersionUID = 1871482774965698728L;
+	@SuppressWarnings("rawtypes")
 	private JComboBox alignBox;
 	private JLabel propertyName;
 	
@@ -32,6 +33,7 @@ public class AlignEditPanel extends JPanel implements PropertyEditComponent {
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AlignEditPanel() {
 		setPreferredSize(new Dimension(300, 20));
 		setMinimumSize(new Dimension(300, 20));

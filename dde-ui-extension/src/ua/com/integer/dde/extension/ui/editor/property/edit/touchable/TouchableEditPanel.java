@@ -15,11 +15,13 @@ import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListen
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
 
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+
 import java.awt.Color;
 
 public class TouchableEditPanel extends JPanel implements PropertyEditComponent {
 	private static final long serialVersionUID = -2992801321578558963L;
 	
+	@SuppressWarnings("rawtypes")
 	private JComboBox propertyBox;
 	private JLabel propertyName;
 
@@ -31,6 +33,7 @@ public class TouchableEditPanel extends JPanel implements PropertyEditComponent 
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TouchableEditPanel() {
 		setBackground(Color.GRAY);
 		setPreferredSize(new Dimension(300, 20));
