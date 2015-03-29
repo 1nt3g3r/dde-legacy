@@ -4,6 +4,7 @@ import javax.swing.AbstractListModel;
 
 import ua.com.integer.dde.extension.localize.Translation;
 
+@SuppressWarnings("rawtypes")
 public class TagListModel extends AbstractListModel {
 	private static final long serialVersionUID = 8160630556306607701L;
 	

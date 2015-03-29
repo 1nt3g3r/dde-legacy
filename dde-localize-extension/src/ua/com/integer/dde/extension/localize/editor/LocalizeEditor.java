@@ -46,10 +46,12 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class LocalizeEditor extends JDialog {
 	private static final long serialVersionUID = 4311652295200306518L;
 	private final JPanel contentPanel = new JPanel();
+	@SuppressWarnings("rawtypes")
 	private JList tagList;
 
 	private File translationFile;
 	private Translation translation;
+	@SuppressWarnings("rawtypes")
 	private JList langList;
 	
 	private ObjectMap<String, JScrollPane> editors;
@@ -73,6 +75,7 @@ public class LocalizeEditor extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings("rawtypes")
 	public LocalizeEditor() {
 		editors = new ObjectMap<String, JScrollPane>();
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -256,6 +259,7 @@ public class LocalizeEditor extends JDialog {
 		updateLanguageList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void initTagList() {
 		tagList.setModel(new TagListModel(translation));
 		updateTagList();
@@ -265,6 +269,7 @@ public class LocalizeEditor extends JDialog {
 		tagList.updateUI();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateLanguageList() {
 		langList.setModel(new LangListModel(translation));
 	}

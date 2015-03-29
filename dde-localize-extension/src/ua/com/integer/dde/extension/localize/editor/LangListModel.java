@@ -6,9 +6,9 @@ import ua.com.integer.dde.extension.localize.Translation;
 
 import com.badlogic.gdx.utils.Array;
 
+@SuppressWarnings("rawtypes")
 public class LangListModel extends AbstractListModel {
 	private static final long serialVersionUID = -1544368444811546330L;
-	
 	
 	private Array<String> languages;
 	

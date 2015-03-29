@@ -17,7 +17,9 @@ import ua.com.integer.dde.extension.localize.Localize;
 public class SelectTagPanel extends JPanel {
 	private static final long serialVersionUID = 1000144274130872822L;
 	private JTextField resultTextfield;
+	@SuppressWarnings("rawtypes")
 	private JComboBox tagCombobox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox langCombobox;
 
 	private LocalizeSelectListener localizeListener;
@@ -25,6 +27,7 @@ public class SelectTagPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings("rawtypes")
 	public SelectTagPanel() {
 		
 		JLabel tagLabel = new JLabel("Tag:");
@@ -79,6 +82,7 @@ public class SelectTagPanel extends JPanel {
 		this.localizeListener = listener;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setup() {
 		tagCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getTags()));
 		langCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getLanguages()));
