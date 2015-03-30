@@ -20,7 +20,6 @@ public class ActorInputListener extends InputListener {
 	private JPopupMenu menu;
 	
 	private Actor actor;
-	private long lastClickTime;
 	
 	public ActorInputListener(UiEditorScreen screen) {
 		this.screen = screen;
@@ -44,10 +43,6 @@ public class ActorInputListener extends InputListener {
 		if (button == 1) {
 			showMenu();
 		} else if (button == 0) {
-			if (Math.abs(lastTouchX - x) < 10 && (Math.abs(lastTouchY - y) < 10)) {
-				checkDoubleClick();
-			}
-			
 			lastTouchX = (int) x;
 			lastTouchY = (int) y;
 		}
@@ -67,16 +62,6 @@ public class ActorInputListener extends InputListener {
 		JDialog frame = EditorKernel.getInstance().getActorListDialog();
 		menu = MenuCreator.getInstance().createMenu(actor, getUiConfig());
 		menu.show(frame, frame.getMousePosition().x, frame.getMousePosition().y);
-	}
-	
-	private void checkDoubleClick() {
-		if (System.currentTimeMillis() - lastClickTime <= 500) {
-			lastTouchX = -1;
-			lastTouchY = -1;
-			editActor();
-		}
-		
-		lastClickTime = System.currentTimeMillis();
 	}
 	
 	class EditItemListener implements ActionListener {
