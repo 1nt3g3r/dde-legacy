@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import ua.com.integer.dde.extension.localize.Localize;
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.actor.Align;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.property.util.font.FontUtils;
 import ua.com.integer.dde.extension.ui.size.Size;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
@@ -32,7 +31,7 @@ public abstract class PropertySupporter {
 	protected DDKernel kernel;
 	private static final String DEFAULT_SIZE_STR = new Size().toString();
 	
-	public abstract JPanel createSetupPanel(UiConfig config, Actor actor, UiConfigEditor editor);
+	public abstract JPanel createSetupPanel(UiConfig config, Actor actor);
 	
 	public void setup(UiConfig config, Actor actor, DDKernel kernel) {
 		this.config = config;

@@ -6,6 +6,8 @@ import ua.com.integer.dde.extension.ui.size.Size;
 import ua.com.integer.dde.util.JsonWorker;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -81,8 +83,79 @@ public class UiConfig {
 		return get(name, "");
 	}
 
+	/**
+	 * Returns name and properties of this config
+	 */
 	public void print() {
 		System.out.println("Config: " + name);
 		System.out.println(properties);
+	}
+	
+	/**
+	 * Updates properties of this config (horizontalDistance and verticalDistance) from the given actor. 
+	 * You should use this method if you drag actor by mouse and want to save position to config
+	 */
+	public void loadFromActor(Actor actor) {
+		switch(parentCorner) {
+		case BOTTOM_LEFT:
+			loadFromActorBottomLeft(actor);
+			break;
+		case BOTTOM_RIGHT:
+			loadFromActorBottomRight(actor);
+			break;
+		case CENTER:
+			loadFromActorCenterSide(actor);
+			break;
+		case TOP_LEFT:
+			loadFromActorTopLeft(actor);
+			break;
+		case TOP_RIGHT:
+			loadFromActorTopRight(actor);
+			break;
+		default:
+			break;
+		
+		}
+	}
+	
+	private void loadFromActorCenterSide(Actor actor) {
+		float actorCenterX = actor.getX() + actor.getWidth()/2f;
+		float actorCenterY = actor.getY() + actor.getHeight()/2f;
+		
+		Group parent = actor.getParent();
+		float parentCenterX = parent.getWidth()/2f;
+		float parentCenterY = parent.getHeight()/2f;
+		
+		float dstX = actorCenterX - parentCenterX;
+		float dstY = actorCenterY - parentCenterY;
+		updateDistances(actor, dstX, dstY);
+	}
+	
+	private void loadFromActorBottomLeft(Actor actor) {
+		updateDistances(actor, actor.getX(), actor.getY());
+	}
+	
+	private void loadFromActorBottomRight(Actor actor) {
+		Group parent = actor.getParent();
+		float dstX = parent.getWidth() - actor.getWidth() - actor.getX();
+		updateDistances(actor, dstX, actor.getY());
+	}
+	
+	private void loadFromActorTopLeft(Actor actor) {
+		Group parent = actor.getParent();
+		float dstY = parent.getHeight() - actor.getHeight() - actor.getY();
+		updateDistances(actor, actor.getX(), dstY);
+	}
+	
+	private void loadFromActorTopRight(Actor actor) {
+		Group parent = actor.getParent();
+		float dstX = parent.getWidth() - actor.getWidth() - actor.getX();
+		float dstY = parent.getHeight() - actor.getHeight() - actor.getY();
+		updateDistances(actor, dstX, dstY);
+	}
+	
+	private void updateDistances(Actor actor, float dstX, float dstY) {
+		horizontalDistance.loadFromValue(actor, dstX);
+		verticalDistance.loadFromValue(actor, dstY);
 	}
 }

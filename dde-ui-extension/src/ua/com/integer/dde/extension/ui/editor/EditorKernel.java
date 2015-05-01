@@ -32,4 +32,8 @@ public class EditorKernel extends DDKernel {
 		super.create();
 		showScreen(UiEditorScreen.class);
 	}
+	
+	public static UiEditorScreen editorScreen() {
+		return instance.getScreen(UiEditorScreen.class);
+	}
 }

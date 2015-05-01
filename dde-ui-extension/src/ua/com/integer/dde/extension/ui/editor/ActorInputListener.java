@@ -1,14 +1,10 @@
 package ua.com.integer.dde.extension.ui.editor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JDialog;
 import javax.swing.JPopupMenu;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
-import ua.com.integer.dde.startpanel.FrameTools;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -62,24 +58,6 @@ public class ActorInputListener extends InputListener {
 		JDialog frame = EditorKernel.getInstance().getActorListDialog();
 		menu = MenuCreator.getInstance().createMenu(actor, getUiConfig());
 		menu.show(frame, frame.getMousePosition().x, frame.getMousePosition().y);
-	}
-	
-	class EditItemListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			editActor();
-		}
-	}
-	
-	private void editActor() {
-		UiConfigEditor editor = new UiConfigEditor();
-		
-		editor.addConfigChangeListener(screen);
-		
-		editor.setConfig(getUiConfig(), actor);
-		FrameTools.situateOnCenter(editor);
-		
-		editor.setVisible(true);
 	}
 	
 	@Override

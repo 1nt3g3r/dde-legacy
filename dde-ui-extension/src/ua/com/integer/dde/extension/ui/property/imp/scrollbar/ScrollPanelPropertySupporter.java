@@ -3,7 +3,6 @@ package ua.com.integer.dde.extension.ui.property.imp.scrollbar;
 import javax.swing.JPanel;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.scrollbar.ScrollPanePropertyEditor;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
@@ -18,8 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
  */
 public class ScrollPanelPropertySupporter extends PropertySupporter {
 	@Override
-	public JPanel createSetupPanel(UiConfig config, Actor actor,
-			UiConfigEditor editor) {
+	public JPanel createSetupPanel(UiConfig config, Actor actor) {
 		return new ScrollPanePropertyEditor();
 	}
 

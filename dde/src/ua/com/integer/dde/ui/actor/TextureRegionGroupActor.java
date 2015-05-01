@@ -56,4 +56,8 @@ public class TextureRegionGroupActor extends Group {
 		
 		super.draw(batch, parentAlpha);
 	}
+	
+	public TextureRegion getRegion() {
+		return region;
+	}
 }

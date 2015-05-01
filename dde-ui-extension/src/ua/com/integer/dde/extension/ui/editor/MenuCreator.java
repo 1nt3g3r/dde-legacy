@@ -1,6 +1,17 @@
 package ua.com.integer.dde.extension.ui.editor;
 
-import static ua.com.integer.dde.extension.ui.WidgetType.*;
+import static ua.com.integer.dde.extension.ui.WidgetType.BOX;
+import static ua.com.integer.dde.extension.ui.WidgetType.BUTTON;
+import static ua.com.integer.dde.extension.ui.WidgetType.CHECKBOX;
+import static ua.com.integer.dde.extension.ui.WidgetType.EMPTY_GROUP;
+import static ua.com.integer.dde.extension.ui.WidgetType.IMAGE;
+import static ua.com.integer.dde.extension.ui.WidgetType.SCROLL_PANE;
+import static ua.com.integer.dde.extension.ui.WidgetType.TEXTURE_REGION_BUTTON;
+import static ua.com.integer.dde.extension.ui.WidgetType.TEXTURE_REGION_GROUP_ACTOR;
+import static ua.com.integer.dde.extension.ui.WidgetType.TEXT_BUTTON;
+import static ua.com.integer.dde.extension.ui.WidgetType.TEXT_FIELD;
+import static ua.com.integer.dde.extension.ui.WidgetType.TEXT_LABEL;
+import static ua.com.integer.dde.extension.ui.WidgetType.TOUCHPAD;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +24,6 @@ import javax.swing.JSeparator;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.WidgetType;
-import ua.com.integer.dde.startpanel.FrameTools;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -40,24 +50,6 @@ public class MenuCreator {
 		screen = EditorKernel.getInstance().getScreen(UiEditorScreen.class);
 		
 		return createMenu();
-	}
-	
-	class EditItemListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			editActor();
-		}
-	}
-	
-	private void editActor() {
-		UiConfigEditor editor = new UiConfigEditor();
-		
-		editor.addConfigChangeListener(screen);
-		
-		editor.setConfig(getUiConfig(), actor);
-		FrameTools.situateOnCenter(editor);
-		
-		editor.setVisible(true);
 	}
 	
 	class DeleteItemListener implements ActionListener {
@@ -149,13 +141,6 @@ public class MenuCreator {
 				toReturn.add(new JSeparator());
 			}
 			
-		
-			JMenuItem editItem = new JMenuItem("Edit");
-			editItem.addActionListener(new EditItemListener());
-			toReturn.add(editItem);
-			
-			toReturn.add(new JSeparator());
-
 			JMenuItem deleteItem = new JMenuItem("Delete");
 			deleteItem.addActionListener(new DeleteItemListener());
 			toReturn.add(deleteItem);

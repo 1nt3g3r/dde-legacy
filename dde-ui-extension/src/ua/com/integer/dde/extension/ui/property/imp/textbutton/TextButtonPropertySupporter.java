@@ -2,19 +2,17 @@ package ua.com.integer.dde.extension.ui.property.imp.textbutton;
 
 import javax.swing.JPanel;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-
 import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.textbutton.TextButtonPropertyEditor;
 import ua.com.integer.dde.extension.ui.property.imp.button.ButtonPropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+
 public class TextButtonPropertySupporter extends ButtonPropertySupporter {
 	@Override
-	public JPanel createSetupPanel(UiConfig config, Actor actor,
-			UiConfigEditor editor) {
+	public JPanel createSetupPanel(UiConfig config, Actor actor) {
 		return new TextButtonPropertyEditor();
 	}
 	

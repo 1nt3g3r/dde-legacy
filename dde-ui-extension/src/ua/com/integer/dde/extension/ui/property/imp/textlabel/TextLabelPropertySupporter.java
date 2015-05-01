@@ -4,7 +4,6 @@ import javax.swing.JPanel;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.actor.TextLabel;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.textlabel.TextLabelPropertyEditor;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
@@ -20,8 +19,7 @@ public class TextLabelPropertySupporter extends PropertySupporter {
 	private TextLabel textLabel;
 	
 	@Override
-	public JPanel createSetupPanel(UiConfig config, Actor actor,
-			UiConfigEditor editor) {
+	public JPanel createSetupPanel(UiConfig config, Actor actor) {
 		return new TextLabelPropertyEditor();
 	}
 

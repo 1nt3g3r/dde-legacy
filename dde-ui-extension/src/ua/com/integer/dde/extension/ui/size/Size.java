@@ -47,4 +47,8 @@ public class Size {
 	public boolean needParentActor() {
 		return sizeType == SizeType.PARENT_WIDTH || sizeType == SizeType.PARENT_HEIGHT;
 	}
+	
+	public void loadFromValue(Actor actor, float value) {
+		sizeValue = value / sizeType.getValue(actor);
+	}
 }

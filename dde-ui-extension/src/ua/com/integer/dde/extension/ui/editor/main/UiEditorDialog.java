@@ -51,12 +51,10 @@ import ua.com.integer.dde.extension.ui.Actors;
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.editor.MenuCreator;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.UiEditorScreen;
 import ua.com.integer.dde.extension.ui.editor.property.ConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesPanel;
 import ua.com.integer.dde.extension.ui.property.PropertyUtils;
-import ua.com.integer.dde.startpanel.FrameTools;
 import ua.com.integer.dde.startpanel.Settings;
 import ua.com.integer.dde.startpanel.ddestub.ProjectFinder;
 import ua.com.integer.dde.startpanel.util.ExtensionFilenameFilter;
@@ -711,7 +709,7 @@ public class UiEditorDialog extends JDialog {
 				ConfigEditor specificEditor;
 				
 				try {
-					specificEditor = (ConfigEditor) PropertyUtils.getSupporter(config.widgetType).createSetupPanel(config, null, null);
+					specificEditor = (ConfigEditor) PropertyUtils.getSupporter(config.widgetType).createSetupPanel(config, null);
 					Gdx.app.postRunnable(new SetConfigRunnable(config, specificEditor));
 				} catch (Exception ex) {
 					specificEditor = null;
@@ -750,25 +748,9 @@ public class UiEditorDialog extends JDialog {
 	class TreeNodeClickListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-				editActiveActor();
-				return;
-			}
-			
 			if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
 				JPopupMenu menu = MenuCreator.getInstance().createMenu(getEditorScreen().getSelectedActor(), (UiConfig) getEditorScreen().getSelectedActor().getUserObject());
 				menu.show(UiEditorDialog.this, getMousePosition().x, getMousePosition().y);
-			}
-		}
-		
-		private void editActiveActor() {
-			UiConfigEditor editor = new UiConfigEditor();
-			if (getEditorScreen().getSelectedActor() != null) {
-				editor.setConfig((UiConfig) getEditorScreen().getSelectedActor().getUserObject(), getEditorScreen().getSelectedActor());
-				editor.addConfigChangeListener(getEditorScreen());
-				FrameTools.situateOnCenter(editor);
-				editor.setVisible(true);
 			}
 		}
 	}

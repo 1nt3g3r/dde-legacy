@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class AbstractScreen implements Screen {
 	public static SpriteBatch batch;
-	//= new SpriteBatch();
 	private static DDKernel kernel;
 
 	private Stage stage;
@@ -70,8 +69,6 @@ public class AbstractScreen implements Screen {
 		componentHelpers = new Array<ActorHelper>();
 		screenListeners = new Array<ScreenListener>();
 		stage = new Stage(new ScreenViewport(), getBatch());
-		//stage.getViewport().setCamera(stage.getCamera());
-				//new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		stage.getRoot().setSize(stage.getWidth(), stage.getHeight());
 		stage.addListener(new BackPressListener());
 	}
@@ -129,7 +126,7 @@ public class AbstractScreen implements Screen {
 	 * Finds and returns an actor with selected name. If no actor found null will be returned. 
 	 * Method searches in root group.
 	 */
-	public Actor findByName(String name) {
+	public <T extends Actor> T findByName(String name) {
 		return stage.getRoot().findActor(name);
 	}
 

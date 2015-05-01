@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.UiConfigurator;
+import ua.com.integer.dde.extension.ui.editor.drag.WidgetDragListener;
 import ua.com.integer.dde.extension.ui.property.util.actor.ActorUtils;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenEvent;
@@ -99,8 +100,15 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		getStage().setScrollFocus(selectedActor);
 		
 		if (needUpdateProperties && EditorKernel.getInstance().getActorListDialog() != null) {
-			EditorKernel.getInstance().getActorListDialog().updatePropertyPanelForSelectedActor();
+			updatePropertyPanel();
 		}
+	}
+
+	/**
+	 * Updates properties of selected actor. This method can be useful if you changed {@link UiConfig} of this actor
+	 */
+	public void updatePropertyPanel() {
+		EditorKernel.getInstance().getActorListDialog().updatePropertyPanelForSelectedActor();
 	}
 	
 	/**
@@ -247,6 +255,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					
 					getStage().clear();
 					getStage().getRoot().addListener(new StageRootDragListener());
+					getStage().addListener(new WidgetDragListener());
 					
 					ActorUtils.deployConfigToScreen(UiEditorScreen.this, config);
 					

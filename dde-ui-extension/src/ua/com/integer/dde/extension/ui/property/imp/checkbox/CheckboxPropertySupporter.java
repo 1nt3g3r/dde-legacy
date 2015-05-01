@@ -3,7 +3,6 @@ package ua.com.integer.dde.extension.ui.property.imp.checkbox;
 import javax.swing.JPanel;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.checkbox.CheckboxPropertyEditor;
 import ua.com.integer.dde.extension.ui.property.imp.textbutton.TextButtonPropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
@@ -13,8 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 
 public class CheckboxPropertySupporter extends TextButtonPropertySupporter {
 	@Override
-	public JPanel createSetupPanel(UiConfig config, Actor actor,
-			UiConfigEditor editor) {
+	public JPanel createSetupPanel(UiConfig config, Actor actor) {
 		return new CheckboxPropertyEditor();
 	}
 	

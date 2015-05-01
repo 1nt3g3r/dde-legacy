@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.actor.Box;
 import ua.com.integer.dde.extension.ui.actor.Box.Align;
-import ua.com.integer.dde.extension.ui.editor.UiConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.box.BoxPropertyEditor;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
@@ -16,8 +15,7 @@ public class BoxPropertySupporter extends PropertySupporter {
 	private Box horizontalBox;
 	
 	@Override
-	public JPanel createSetupPanel(UiConfig config, Actor actor,
-			UiConfigEditor editor) {
+	public JPanel createSetupPanel(UiConfig config, Actor actor) {
 		return new BoxPropertyEditor();
 	}
 
