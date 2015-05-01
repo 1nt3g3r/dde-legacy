@@ -254,7 +254,6 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					clearScreenListeners();
 					
 					getStage().clear();
-					getStage().getRoot().addListener(new StageRootDragListener());
 					getStage().addListener(new WidgetDragListener());
 					
 					ActorUtils.deployConfigToScreen(UiEditorScreen.this, config);

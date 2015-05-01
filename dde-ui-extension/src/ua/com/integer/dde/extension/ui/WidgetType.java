@@ -1,8 +1,8 @@
 package ua.com.integer.dde.extension.ui;
 
-import ua.com.integer.dde.extension.ui.actor.TextureRegionButton;
 import ua.com.integer.dde.extension.ui.actor.Box;
 import ua.com.integer.dde.extension.ui.actor.TextLabel;
+import ua.com.integer.dde.extension.ui.actor.TextureRegionButton;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
 import ua.com.integer.dde.ui.actor.TextureRegionGroupActor;
 
@@ -10,16 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 
 /**
  * Типы виджетов пользовательського интерфейса
@@ -76,6 +76,32 @@ public enum WidgetType {
 	 * Тачпад из scene2d
 	 */
 	TOUCHPAD;
+	
+	public static final WidgetType[] SIMPLE_WIDGETS = {
+		IMAGE, TEXT_LABEL, BUTTON, TEXT_BUTTON, CHECKBOX, TEXT_FIELD, TOUCHPAD
+	};
+	
+	public static final WidgetType[] CONTAINER_WIDGETS = {
+		EMPTY_GROUP, TEXTURE_REGION_GROUP_ACTOR, BOX, SCROLL_PANE
+	};
+	
+	public static final WidgetType[] OTHER_WIDGETS = {
+		TEXTURE_REGION_BUTTON
+	};
+	
+	/**
+	 * Is this widget can contain other widgets
+	 * @return
+	 */
+	public boolean isContainer() {
+		for(WidgetType type : CONTAINER_WIDGETS) {
+			if (this == type) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	public Actor createWidget() {
 		switch(this) {

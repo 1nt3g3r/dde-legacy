@@ -9,5 +9,5 @@ public class Version {
 	/**
 	 * Current version
 	 */
-	public static final float NUMBER = 0.01f;
+	public static final float NUMBER = 0.02f;
 }

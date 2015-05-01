@@ -1,24 +1,12 @@
 package ua.com.integer.dde.extension.ui.editor;
 
-import static ua.com.integer.dde.extension.ui.WidgetType.BOX;
-import static ua.com.integer.dde.extension.ui.WidgetType.BUTTON;
-import static ua.com.integer.dde.extension.ui.WidgetType.CHECKBOX;
-import static ua.com.integer.dde.extension.ui.WidgetType.EMPTY_GROUP;
-import static ua.com.integer.dde.extension.ui.WidgetType.IMAGE;
-import static ua.com.integer.dde.extension.ui.WidgetType.SCROLL_PANE;
-import static ua.com.integer.dde.extension.ui.WidgetType.TEXTURE_REGION_BUTTON;
-import static ua.com.integer.dde.extension.ui.WidgetType.TEXTURE_REGION_GROUP_ACTOR;
-import static ua.com.integer.dde.extension.ui.WidgetType.TEXT_BUTTON;
-import static ua.com.integer.dde.extension.ui.WidgetType.TEXT_FIELD;
-import static ua.com.integer.dde.extension.ui.WidgetType.TEXT_LABEL;
-import static ua.com.integer.dde.extension.ui.WidgetType.TOUCHPAD;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
@@ -31,9 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
 public class MenuCreator {
 	private Actor actor;
-	private UiConfig uiConfig;
 	private UiConfig temporary;
-	private UiEditorScreen screen;
 	
 	private static MenuCreator instance = new MenuCreator();
 	
@@ -46,8 +32,6 @@ public class MenuCreator {
 	
 	public JPopupMenu createMenu(Actor actor, UiConfig uiConfig) {
 		this.actor = actor;
-		this.uiConfig = uiConfig;
-		screen = EditorKernel.getInstance().getScreen(UiEditorScreen.class);
 		
 		return createMenu();
 	}
@@ -55,7 +39,7 @@ public class MenuCreator {
 	class DeleteItemListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			screen.removeUiConfig(getUiConfig());
+			getEditorScreen().removeUiConfig(getUiConfig());
 			
 			EditorKernel.getInstance().getActorListDialog().updateActorTree();
 		}
@@ -80,9 +64,9 @@ public class MenuCreator {
 			UiConfig toInsert = UiConfig.fromFile(new File("tmp.actor"));
 			
 			getUiConfig().children.add(toInsert);
-			screen.updateConfig();
+			getEditorScreen().updateConfig();
 			
-			screen.selectActorByConfig(toInsert);
+			getEditorScreen().selectActorByConfig(toInsert);
 			
 			new File("tmp.actor").delete();
 			
@@ -121,8 +105,8 @@ public class MenuCreator {
 				}
 				parentConfig.children.insert(configIndex + addIndex, toInsert);
 				
-				screen.updateConfig();
-				screen.selectActorByConfig(toInsert);
+				getEditorScreen().updateConfig();
+				getEditorScreen().selectActorByConfig(toInsert);
 				
 				new File("tmp.actor").delete();
 				
@@ -199,29 +183,39 @@ public class MenuCreator {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (getUiConfig() == null) {
+				JOptionPane.showMessageDialog(null, "Select parent widget!");
+				return;
+			}
+			
+			if (!getUiConfig().widgetType.isContainer()) {
+				JOptionPane.showMessageDialog(null, "Selected widget can't contain other widgets!");
+				return;
+			}
+			
 			UiConfig config = new UiConfig();
 			config.name = widgetType.getShortDescription();
 			config.widgetType = widgetType;
 			
 			getUiConfig().children.add(config);
-			screen.updateConfig();
+			getEditorScreen().updateConfig();
 			
-			screen.selectActorByConfig(config);
+			getEditorScreen().selectActorByConfig(config);
 			
 			EditorKernel.getInstance().getActorListDialog().updateActorTree();
 		}
 	}
 	
-	private JMenu createInsertMenu() {
+	public JMenu createInsertMenu() {
 		JMenu toReturn = new JMenu("Insert");
-			toReturn.add(createAddWidgetMenu("Standard UI widget", IMAGE, TEXT_LABEL, BUTTON, TEXT_BUTTON, CHECKBOX, TEXT_FIELD, TOUCHPAD));
-			toReturn.add(createAddWidgetMenu("Container", EMPTY_GROUP, TEXTURE_REGION_GROUP_ACTOR, BOX, SCROLL_PANE));
-			toReturn.add(createAddWidgetMenu("Other widgets", TEXTURE_REGION_BUTTON));
+			toReturn.add(createAddWidgetMenu("Simple", WidgetType.SIMPLE_WIDGETS));
+			toReturn.add(createAddWidgetMenu("Container", WidgetType.CONTAINER_WIDGETS));
+			toReturn.add(createAddWidgetMenu("Other", WidgetType.OTHER_WIDGETS));
 			toReturn.add(createInserUiConfigMenu());
 		return toReturn;
 	}
 	
-	private JMenu createAddWidgetMenu(String menuName, WidgetType ... widgets) {
+	public JMenu createAddWidgetMenu(String menuName, WidgetType ... widgets) {
 		JMenu toReturn = new JMenu(menuName);
 			for(WidgetType type : widgets) {
 				JMenuItem insertItem = new JMenuItem(type.getShortDescription());
@@ -242,7 +236,7 @@ public class MenuCreator {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			getUiConfig().children.add(UiConfig.fromFile(configFile));
-			screen.updateConfig();
+			getEditorScreen().updateConfig();
 			
 			EditorKernel.getInstance().getActorListDialog().updateActorTree();
 		}
@@ -259,6 +253,10 @@ public class MenuCreator {
 	}
 	
 	private UiConfig getUiConfig() {
-		return uiConfig;
+		return EditorKernel.editorScreen().getSelectedConfig();
+	}
+	
+	private UiEditorScreen getEditorScreen() {
+		return EditorKernel.editorScreen();
 	}
 }

@@ -47,6 +47,10 @@ public class WidgetDragListener extends InputListener {
 	 */
 	@Override
 	public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+		if (touchActor == null) {
+			return;
+		}
+		
 		UiConfig config = (UiConfig) touchActor.getUserObject();
 		config.loadFromActor(touchActor);
 		

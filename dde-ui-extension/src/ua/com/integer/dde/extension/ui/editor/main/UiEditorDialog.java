@@ -3,11 +3,12 @@ package ua.com.integer.dde.extension.ui.editor.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -15,14 +16,13 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -30,8 +30,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
@@ -49,12 +53,15 @@ import javax.swing.tree.DefaultTreeModel;
 import ua.com.integer.dde.extension.localize.Localize;
 import ua.com.integer.dde.extension.ui.Actors;
 import ua.com.integer.dde.extension.ui.UiConfig;
+import ua.com.integer.dde.extension.ui.WidgetType;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.editor.MenuCreator;
 import ua.com.integer.dde.extension.ui.editor.UiEditorScreen;
+import ua.com.integer.dde.extension.ui.editor.command.CommandProcessor;
 import ua.com.integer.dde.extension.ui.editor.property.ConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesPanel;
 import ua.com.integer.dde.extension.ui.property.PropertyUtils;
+import ua.com.integer.dde.startpanel.FrameTools;
 import ua.com.integer.dde.startpanel.Settings;
 import ua.com.integer.dde.startpanel.ddestub.ProjectFinder;
 import ua.com.integer.dde.startpanel.util.ExtensionFilenameFilter;
@@ -66,8 +73,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 public class UiEditorDialog extends JDialog {
 	private static final long serialVersionUID = 8201647974528008553L;
@@ -79,6 +84,8 @@ public class UiEditorDialog extends JDialog {
 	private LwjglAWTCanvas lCanvas;
 
 	private String fullActorPath;
+	
+	private CommandProcessor commandProcessor = new CommandProcessor();
 	
 	/**
 	 * Launch the application.
@@ -96,18 +103,16 @@ public class UiEditorDialog extends JDialog {
 		});
 	}
 
-	JTabbedPane tabs;
+	public JTabbedPane tabs;
 	/**
 	 * Create the dialog.
 	 */
 	@SuppressWarnings("rawtypes")
 	public UiEditorDialog() {
-		System.out.println("New editor dialog");
 		getContentPane().setBackground(Color.GRAY);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addWindowListener(new ActorListCloseListener());
-		addComponentListener(new ScreenResizeListener());
 
 		setTitle("DDE Actor Editor");
 		setBounds(100, 100, 671, 326);
@@ -140,7 +145,7 @@ public class UiEditorDialog extends JDialog {
 		
 		screenOptionsPanel = new JPanel();
 		screenOptionsPanel.setBackground(Color.GRAY);
-		screenOptionsPanel.setBorder(null);
+		screenOptionsPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		actorHierarchy = new JPanel();
 		actorHierarchy.setBackground(Color.DARK_GRAY);
@@ -170,107 +175,35 @@ public class UiEditorDialog extends JDialog {
 					.addComponent(screenOptionsPanel, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
 		);
 		
-		screenSizeLabel = new JLabel("Screen size:");
-		screenSizeLabel.setBackground(Color.DARK_GRAY);
-		screenSizeLabel.setForeground(Color.WHITE);
+		commandLine = new JTextField();
+		commandLine.addKeyListener(new CommandListener());
+		commandLine.addMouseListener(new CommandListener());
+		commandLine.setFont(new Font("Dialog", Font.BOLD, 14));
+		commandLine.setText("Enter command and press Enter...");
+		commandLine.setForeground(Color.GREEN);
+		commandLine.setBackground(Color.DARK_GRAY);
 		
-		highlightSelectedBox = new JCheckBox("Highlight selected");
-		highlightSelectedBox.setBackground(Color.GRAY);
-		
-		highlightInactiveBox = new JCheckBox("Highlight inactive");
-		highlightInactiveBox.setBackground(Color.GRAY);
-		
-		JButton setBackgroundButton = new JButton("Set background image");
-		setBackgroundButton.setBackground(Color.LIGHT_GRAY);
-		setBackgroundButton.addActionListener(new SelectBackgroundImageListener());
-		
-		showBackgroundImage = new JCheckBox("Show background image");
-		showBackgroundImage.setBackground(Color.GRAY);
-		showBackgroundImage.addActionListener(new ShowBackgroundImageListener());
-		
-		JPanel stageRootPanel = new JPanel();
-		stageRootPanel.setBackground(Color.GRAY);
-		stageRootPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		scrollPane_1 = new JScrollPane();
 		GroupLayout gl_screenOptionsPanel = new GroupLayout(screenOptionsPanel);
 		gl_screenOptionsPanel.setHorizontalGroup(
 			gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(screenSizeLabel)
-						.addComponent(highlightInactiveBox)
-						.addComponent(highlightSelectedBox))
-					.addGroup(gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-							.addGap(1)
-							.addComponent(showBackgroundImage))
-						.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(setBackgroundButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-					.addGap(8)
-					.addComponent(stageRootPanel, GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
+				.addComponent(commandLine, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+				.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
 		);
 		gl_screenOptionsPanel.setVerticalGroup(
 			gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-					.addGroup(gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-							.addGroup(gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-									.addComponent(screenSizeLabel)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(highlightSelectedBox))
-								.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(setBackgroundButton)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_screenOptionsPanel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(highlightInactiveBox)
-								.addComponent(showBackgroundImage)))
-						.addComponent(stageRootPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		
-		rootPositionLabel = new JLabel("Root position: (0, 0)");
-		rootPositionLabel.setBackground(Color.DARK_GRAY);
-		
-		rootToZeroButton = new JButton("(0, 0)");
-		rootToZeroButton.setBackground(Color.LIGHT_GRAY);
-		rootToZeroButton.addActionListener(new RootToZeroListener());
-		
-		allowDragCheckbox = new JCheckBox("Allow drag root group");
-		allowDragCheckbox.setBackground(Color.GRAY);
-		
-		reparseButton = new JButton("Reparse");
-		reparseButton.setBackground(Color.LIGHT_GRAY);
-		reparseButton.addActionListener(new ReparseButtonListener());
-		GroupLayout gl_stageRootPanel = new GroupLayout(stageRootPanel);
-		gl_stageRootPanel.setHorizontalGroup(
-			gl_stageRootPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_stageRootPanel.createSequentialGroup()
-					.addGroup(gl_stageRootPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(allowDragCheckbox)
-						.addComponent(rootPositionLabel))
+					.addComponent(commandLine, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_stageRootPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(rootToZeroButton, GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-						.addComponent(reparseButton, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))
-					.addGap(0))
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
 		);
-		gl_stageRootPanel.setVerticalGroup(
-			gl_stageRootPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_stageRootPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_stageRootPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(rootPositionLabel)
-						.addComponent(rootToZeroButton))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_stageRootPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(allowDragCheckbox)
-						.addComponent(reparseButton))
-					.addGap(18))
-		);
-		stageRootPanel.setLayout(gl_stageRootPanel);
+		
+		outputText = new JTextArea();
+		outputText.setForeground(Color.BLUE);
+		outputText.setBackground(Color.LIGHT_GRAY);
+		outputText.setText("Some\nmultiline\ntext");
+		outputText.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
+		scrollPane_1.setViewportView(outputText);
 		screenOptionsPanel.setLayout(gl_screenOptionsPanel);
 		screenPanel.setLayout(new GridLayout(1, 1, 0, 0));
 		
@@ -375,23 +308,97 @@ public class UiEditorDialog extends JDialog {
 		langMenu = new JMenu("Localize language");
 		mnUi.add(langMenu);
 		
-		showActorListMenuItem = new JCheckBoxMenuItem("Show actor & properties");
-		menuBar.add(showActorListMenuItem);
+		mnView = new JMenu("View");
+		menuBar.add(mnView);
 		
-		showControlPanelMenuItem = new JCheckBoxMenuItem("Show control panel");
-		showControlPanelMenuItem.addActionListener(new ShowControlPanelClickListener());
-		menuBar.add(showControlPanelMenuItem);
+		mnViewActorsAndProperties = new JCheckBoxMenuItem("Actors & properties");
+		mnView.add(mnViewActorsAndProperties);
 		
-		showActorHierarchyMenuItem = new JCheckBoxMenuItem("Show actor hierarchy");
-		showActorHierarchyMenuItem.addActionListener(new ShowActorHierarchyClickListener());
-		menuBar.add(showActorHierarchyMenuItem);
-		showActorListMenuItem.addActionListener(new ShowActorListClickListener());
+		mnViewControlPanel = new JCheckBoxMenuItem("Control panel");
+		mnView.add(mnViewControlPanel);
+		
+		mnViewActorHierarchy = new JCheckBoxMenuItem("Actor hierarchy");
+		mnView.add(mnViewActorHierarchy);
+		
+		JSeparator separator = new JSeparator();
+		mnView.add(separator);
+		
+		mnViewHiglightSelectedActor = new JCheckBoxMenuItem("Higlight selected actor");
+		mnView.add(mnViewHiglightSelectedActor);
+		
+		mnViewHiglightInactiveActors = new JCheckBoxMenuItem("Higlight inactive actors");
+		mnView.add(mnViewHiglightInactiveActors);
+		
+		separator_1 = new JSeparator();
+		mnView.add(separator_1);
+		
+		mnViewBackground = new JMenu("Background");
+		mnView.add(mnViewBackground);
+		
+		mnViewChooseBackground = new JMenuItem("Select...");
+		mnViewChooseBackground.addActionListener(new SelectBackgroundImageListener());
+		mnViewBackground.add(mnViewChooseBackground);
+		
+		mnViewShowBackground = new JCheckBoxMenuItem("Show background");
+		mnViewShowBackground.addActionListener(new ShowBackgroundImageListener());
+		mnViewBackground.add(mnViewShowBackground);
+		
+		mnInsert = new JMenu("Insert");
+		setupInsertWidgetMenu();
+		menuBar.add(mnInsert);
+		
+		mnResolution = new JMenu("Resolution");
+		menuBar.add(mnResolution);
+		
+		mnResolution800x480 = new JMenuItem("800x480");
+		mnResolution800x480.addActionListener(new ChangeResolutionListener("800x480"));
+		mnResolution.add(mnResolution800x480);
+		
+		mnViewControlPanel.addActionListener(new ShowControlPanelClickListener());
+		mnViewActorHierarchy.addActionListener(new ShowActorHierarchyClickListener());
+		
+		mnViewActorsAndProperties.addActionListener(new ShowActorListClickListener());
 
+		loadResolutions();
 		//TODO если нужно редактировать с помощью Swing Designer, закомментировать эти строки
 		setupFullActorPath(); 
 		updateActorList();
 		insertCanvas();
 		loadUiSettings();
+		
+		FrameTools.situateOnCenter(this);
+	}
+	
+	private void loadResolutions() {
+		mnResolution.removeAll();
+		String[] multipliers = {
+			"precise",
+			"half",
+			"maximize"
+		};
+		
+		ButtonGroup group = new ButtonGroup();
+		for(String multiplier: multipliers) {
+			for(String resolution: Constants.RESOLUTIONS) {
+				String desiredResolution = resolution + " " + multiplier;
+				JRadioButtonMenuItem resolutionItem = new JRadioButtonMenuItem(desiredResolution);
+				resolutionItem.addActionListener(new ChangeResolutionListener(desiredResolution));
+				mnResolution.add(resolutionItem);
+				group.add(resolutionItem);
+			}
+			
+			mnResolution.addSeparator();
+		}
+		
+		JMenuItem maximizeMenuItem = new JMenuItem("Maximize");
+		maximizeMenuItem.addActionListener(new ChangeResolutionListener("0x0 fullscreen"));
+		mnResolution.add(maximizeMenuItem);
+	}
+	
+	private void setupInsertWidgetMenu() {
+		mnInsert.add(MenuCreator.getInstance().createAddWidgetMenu("Simple", WidgetType.SIMPLE_WIDGETS));
+		mnInsert.add(MenuCreator.getInstance().createAddWidgetMenu("Container", WidgetType.CONTAINER_WIDGETS));
+		mnInsert.add(MenuCreator.getInstance().createAddWidgetMenu("Other", WidgetType.OTHER_WIDGETS));
 	}
 	
 	class LanguageClickListener implements ActionListener {
@@ -531,13 +538,8 @@ public class UiEditorDialog extends JDialog {
 	
 	private File previousActorFile;
 	private JTree actorTree;
-	private JPanel screenPanel;
-	private JLabel screenSizeLabel;
-	private JCheckBox highlightInactiveBox;
-	private JCheckBox highlightSelectedBox;
+	public JPanel screenPanel;
 	private JPanel actorsPanel;
-	private JButton reparseButton;
-	private JCheckBox showBackgroundImage;
 	/**
 	 * Слушатель на выбор определенного актера
 	 * @author integer
@@ -575,7 +577,6 @@ public class UiEditorDialog extends JDialog {
 		previousActorFile = getSelectedActorFile();
 		
 		getEditorScreen().getStage().getRoot().setPosition(0, 0);
-		updateStageRootPosition();
 		
 		EditorKernel.getInstance().getActorListDialog().updateActorTree();
 		EditorKernel.getInstance().getScreen(UiEditorScreen.class).selectRoot();
@@ -631,29 +632,35 @@ public class UiEditorDialog extends JDialog {
 	}
 	
 	private void showUiConfig(final UiConfig config) {
-		//Gdx.app.postRunnable(new Runnable() {
-			//public void run() {
-				EditorKernel.getInstance().getScreen(UiEditorScreen.class).setConfig(config);
-			//}
-		//});
+		EditorKernel.getInstance().getScreen(UiEditorScreen.class).setConfig(config);
 	}
 	public JTree getActorTree() {
 		return actorTree;
 	}
 	
 	private ObjectMap<UiConfig, DefaultMutableTreeNode> configNodes = new ObjectMap<UiConfig, DefaultMutableTreeNode>();
-	private JCheckBoxMenuItem showControlPanelMenuItem;
-	private JCheckBoxMenuItem showActorListMenuItem;
-	private JCheckBoxMenuItem showActorHierarchyMenuItem;
-	private JPanel screenOptionsPanel;
-	private JPanel actorHierarchy;
-	private JButton rootToZeroButton;
-	private JLabel rootPositionLabel;
-	private JCheckBox allowDragCheckbox;
+	public JPanel screenOptionsPanel;
+	public JPanel actorHierarchy;
 	private JPanel propertyPanel;
 	private JScrollPane propertyScroll;
 	private JMenu mnUi;
 	private JMenu langMenu;
+	private JMenu mnView;
+	private JCheckBoxMenuItem mnViewActorsAndProperties;
+	private JCheckBoxMenuItem mnViewControlPanel;
+	private JCheckBoxMenuItem mnViewActorHierarchy;
+	private JMenu mnInsert;
+	private JCheckBoxMenuItem mnViewHiglightSelectedActor;
+	private JCheckBoxMenuItem mnViewHiglightInactiveActors;
+	private JSeparator separator_1;
+	private JMenu mnViewBackground;
+	private JMenuItem mnViewChooseBackground;
+	private JCheckBoxMenuItem mnViewShowBackground;
+	private JMenu mnResolution;
+	private JMenuItem mnResolution800x480;
+	private JTextField commandLine;
+	private JScrollPane scrollPane_1;
+	private JTextArea outputText;
 	
 	private void addUiConfigIntoNode(UiConfig config, DefaultMutableTreeNode node) {
 		DefaultMutableTreeNode nameNode = new DefaultMutableTreeNode(config);
@@ -787,24 +794,6 @@ public class UiEditorDialog extends JDialog {
 		}
 	}
 	
-	class ScreenResizeListener extends ComponentAdapter {
-		@Override
-		public void componentResized(ComponentEvent e) {
-			updateScreenSizeLabel();
-		}
-	}
-	
-	/**
-	 * Set size of view
-	 */
-	public void updateScreenSizeLabel() {
-		Timer.schedule(new Task() {
-			public void run() {
-				screenSizeLabel.setText("Screen size: " + screenPanel.getWidth() + "*" + screenPanel.getHeight());
-			}
-		}, 0.2f);
-	}
-	
 	class HighlightModeChangeListener implements ActionListener {
 
 		@Override
@@ -812,8 +801,8 @@ public class UiEditorDialog extends JDialog {
 			Settings sets = Settings.getInstance();
 			sets.setSettingsClass(UiEditorScreen.class);
 			
-			sets.putBoolean("highlight-active-actor", highlightSelectedBox.isSelected());
-			sets.putBoolean("highlight-inactive-actors", highlightInactiveBox.isSelected());
+			sets.putBoolean("highlight-active-actor", mnViewHiglightSelectedActor.isSelected());
+			sets.putBoolean("highlight-inactive-actors", mnViewHiglightInactiveActors.isSelected());
 			
 			EditorKernel.getInstance().getScreen(UiEditorScreen.class).updateHighlightActorSettings();
 		}
@@ -823,38 +812,25 @@ public class UiEditorDialog extends JDialog {
 		Settings sets = Settings.getInstance();
 		sets.setSettingsClass(UiEditorScreen.class);
 		
-		highlightSelectedBox.setSelected(sets.getBoolean("highlight-active-actor", true));
-		highlightInactiveBox.setSelected(sets.getBoolean("highlight-inactive-actors", true));
+		mnViewHiglightSelectedActor.setSelected(sets.getBoolean("highlight-active-actor", true));
+		mnViewHiglightInactiveActors.setSelected(sets.getBoolean("highlight-inactive-actors", true));
 		
 		HighlightModeChangeListener changeListener = new HighlightModeChangeListener();
-		highlightInactiveBox.addActionListener(changeListener);
-		highlightSelectedBox.addActionListener(changeListener);
+		mnViewHiglightInactiveActors.addActionListener(changeListener);
+		mnViewHiglightSelectedActor.addActionListener(changeListener);
 		
-		showActorHierarchyMenuItem.setSelected(getSettings().getBoolean("show-actor-hierarchy", true));
-		showActorListMenuItem.setSelected(getSettings().getBoolean("show-actors-list", true));
-		showControlPanelMenuItem.setSelected(getSettings().getBoolean("show-control-panel", true));
+		mnViewActorHierarchy.setSelected(getSettings().getBoolean("show-actor-hierarchy", true));
+		mnViewActorsAndProperties.setSelected(getSettings().getBoolean("show-actors-list", true));
+		mnViewControlPanel.setSelected(getSettings().getBoolean("show-control-panel", true));
 		
-		actorHierarchy.setVisible(showActorHierarchyMenuItem.isSelected());
-		tabs.setVisible(showActorListMenuItem.isSelected());
-		screenOptionsPanel.setVisible(showControlPanelMenuItem.isSelected());
-		
-		allowDragCheckbox.setSelected(getSettings().getBoolean("allow-drag-root-group", true));
-		allowDragCheckbox.addActionListener(new AllowDragRootGroupListener());
+		actorHierarchy.setVisible(mnViewActorHierarchy.isSelected());
+		tabs.setVisible(mnViewActorsAndProperties.isSelected());
+		screenOptionsPanel.setVisible(mnViewControlPanel.isSelected());
 		
 		int frameWidth = Integer.parseInt(sets.getString("frame-width", "0"));
 		int frameHeight = Integer.parseInt(sets.getString("frame-height", "0"));
-		System.out.println(frameWidth + ", " + frameHeight);
 		if (frameWidth != 0 && frameHeight != 0) {
-			System.out.println("Ui editor dialog: load frame size as " + frameWidth + "x" + frameHeight);
 			setSize(frameWidth, frameHeight);
-		}
-	}
-	
-	class ReparseButtonListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			getEditorScreen().updateConfig();
-			updateActorTree();
 		}
 	}
 	
@@ -888,7 +864,7 @@ public class UiEditorDialog extends JDialog {
 							getEditorScreen().setBackground(new TextureRegion(background));
 							getEditorScreen().getConfig().needDrawBackgroundImage = true;
 							
-							showBackgroundImage.setSelected(true);
+							mnViewShowBackground.setSelected(true);
 						} catch (Exception ex) {
 							JOptionPane.showMessageDialog(null, "Can't load image: " + ex.getMessage());
 						}
@@ -906,7 +882,7 @@ public class UiEditorDialog extends JDialog {
 	class ShowBackgroundImageListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (showBackgroundImage.isSelected()) {
+			if (mnViewShowBackground.isSelected()) {
 				if (getEditorScreen().getConfig().background != null) {
 					getEditorScreen().getConfig().needDrawBackgroundImage = true;
 				}
@@ -919,20 +895,20 @@ public class UiEditorDialog extends JDialog {
 	class ShowActorListClickListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			tabs.setVisible(showActorListMenuItem.isSelected());
+			tabs.setVisible(mnViewActorsAndProperties.isSelected());
 			
-			getSettings().putBoolean("show-actors-list", showActorListMenuItem.isSelected());
-			updateScreenSizeLabel();
+			getSettings().putBoolean("show-actors-list", mnViewActorsAndProperties.isSelected());
+			//TODO resize
 		}
 	}
 	
 	class ShowActorHierarchyClickListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			actorHierarchy.setVisible(showActorHierarchyMenuItem.isSelected());
+			actorHierarchy.setVisible(mnViewActorHierarchy.isSelected());
 			
-			getSettings().putBoolean("show-actor-hierarchy", showActorHierarchyMenuItem.isSelected());
-			updateScreenSizeLabel();
+			getSettings().putBoolean("show-actor-hierarchy", mnViewActorHierarchy.isSelected());
+			//TODO resize
 		}
 	}
 	
@@ -944,17 +920,9 @@ public class UiEditorDialog extends JDialog {
 	class ShowControlPanelClickListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			screenOptionsPanel.setVisible(showControlPanelMenuItem.isSelected());
+			screenOptionsPanel.setVisible(mnViewControlPanel.isSelected());
 			
-			getSettings().putBoolean("show-control-panel", showControlPanelMenuItem.isSelected());
-		}
-	}
-	
-	class RootToZeroListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			getEditorScreen().getStage().getRoot().setPosition(0, 0);
-			updateStageRootPosition();
+			getSettings().putBoolean("show-control-panel", mnViewControlPanel.isSelected());
 		}
 	}
 	
@@ -964,21 +932,78 @@ public class UiEditorDialog extends JDialog {
 		return sets;
 	}
 	
-	class AllowDragRootGroupListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			getSettings().putBoolean("allow-drag-root-group", allowDragCheckbox.isSelected());
-		}
-	};
-
-	/**
-	 * Обновляет положение про текущую позицию корневого актера (root)
-	 */
-	public void updateStageRootPosition() {
-		rootPositionLabel.setText("Root position: (" + getEditorScreen().getStage().getRoot().getX() + " " + getEditorScreen().getStage().getRoot().getY() + ")");
-	}
-	
 	public JMenu getLangMenu() {
 		return langMenu;
+	}
+	
+	class ChangeResolutionListener implements ActionListener {
+		private String resolution;
+		
+		public ChangeResolutionListener(String resolution) {
+			this.resolution = resolution;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			String[] parts = resolution.split(" ");
+			String[] dimension = parts[0].split("x");
+			String multiplier = "precise";
+			if (parts.length > 1) {
+				multiplier = parts[1];
+			}
+			sendCommand("res " + dimension[0] + " " + dimension[1] + " " + multiplier);
+		}
+		
+	}
+	
+	public void setEditorViewportSize(int width, int height) {
+		int wholeWindowWidth = getWidth();
+		int wholeWindowHeight = getHeight();
+		
+		int tabWidth = tabs.getWidth();
+		
+		int hierarchyWidth = actorHierarchy.getWidth();
+		
+		int editorWidth = screenPanel.getWidth();
+		int editorHeight = screenPanel.getHeight();
+		
+		int controlPanelHeight = screenOptionsPanel.getHeight();
+
+		int borderWidth = wholeWindowWidth - tabWidth - hierarchyWidth - editorWidth;
+		int borderHeight = wholeWindowHeight - editorHeight - controlPanelHeight;
+
+		int newWindowWidth = width + borderWidth + tabWidth + hierarchyWidth;
+		int newWindowHeight = height + borderHeight + controlPanelHeight;
+		setSize(newWindowWidth, newWindowHeight);
+	}
+	
+	class CommandListener extends MouseAdapter implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent event) {
+			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+				String cmd = commandLine.getText().trim();
+				sendCommand(cmd);
+				commandLine.setText("");
+			}
+		}
+		@Override
+		public void keyReleased(KeyEvent event) {
+		}
+		@Override
+		public void keyTyped(KeyEvent event) {
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			commandLine.selectAll();
+		}
+	}
+	
+	public void sendCommand(String command) {
+		commandProcessor.executeCommand(command, this);
+	}
+	
+	public void setConsoleOutput(String text) {
+		outputText.setText(text);
 	}
 }

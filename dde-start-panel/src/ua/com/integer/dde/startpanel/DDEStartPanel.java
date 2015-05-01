@@ -240,9 +240,11 @@ public class DDEStartPanel {
 		resourcesPanel.add(horizontalGlue_1);
 		
 		verticalStrut_1 = Box.createVerticalStrut(20);
+		verticalStrut_1.setVisible(false);
 		centerPanel.add(verticalStrut_1);
 		
 		exportPanel = new JPanel();
+		exportPanel.setVisible(false);
 		exportPanel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Export", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		exportPanel.setBackground(Color.LIGHT_GRAY);
 		centerPanel.add(exportPanel);
@@ -276,6 +278,7 @@ public class DDEStartPanel {
 		exportPanel.add(horizontalGlue_2);
 		
 		verticalStrut_2 = Box.createVerticalStrut(20);
+		verticalStrut_2.setVisible(false);
 		centerPanel.add(verticalStrut_2);
 		
 		otherPanel = new JPanel();
