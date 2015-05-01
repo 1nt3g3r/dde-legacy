@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import ua.com.integer.dde.startpanel.util.color.StartsWithFilenameFilter;
 import ua.com.integer.dde.util.JsonWorker;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -14,9 +15,10 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 public class TexturePacker {
 	private String imageDirectory = "./data/raw-img";
-	private String outDirectory = "./data/img";
+	private String outDirectory = "./data/image_packs";
 	private String customPackName;
 	private boolean packCustom;
+	private boolean notificationsEnabled = true;
 	
 	public TexturePacker(String imageDirectory) {
 		this();
@@ -47,12 +49,16 @@ public class TexturePacker {
 				if (packCustom && !resDirectory.getName().equals(customPackName)) {
 					continue;
 				}
+				
 				packCustomDir(resDirectory.getPath(),
 						outDirectory + "/" + file.getName() + "/",
 						resDirectory.getName());
 			}
 		}
-		JOptionPane.showMessageDialog(null, "Pack succesufully finished!");
+
+		if (notificationsEnabled) {
+			JOptionPane.showMessageDialog(null, "Pack succesufully finished!");
+		}
 	}
 	
 	public void packSelected(String packName) {
@@ -68,7 +74,11 @@ public class TexturePacker {
 
 	private void packCustomDir(String inputPath, String outputPath,
 			String packName) {
-
+		File[] toDelete = new File(outputPath).listFiles(new StartsWithFilenameFilter(packName));
+		for(File toDelFile: toDelete) {
+			toDelFile.delete();
+		}
+		
 		Settings sets = new Settings();
 		sets.filterMin = TextureFilter.Linear;
 		sets.filterMag = TextureFilter.Linear;
@@ -105,5 +115,13 @@ public class TexturePacker {
 		public boolean accept(File file) {
 			return file.isDirectory();
 		}
+	}
+	
+	public void setNotificationsEnabled(boolean enabled) {
+		this.notificationsEnabled = enabled;
+	}
+	
+	public boolean isNotificationsEnabled(boolean enabled) {
+		return notificationsEnabled;
 	}
 }

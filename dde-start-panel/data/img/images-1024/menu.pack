@@ -1,0 +1,167 @@
+
+menu.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back-button
+  rotate: false
+  xy: 800, 583
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+background
+  rotate: false
+  xy: 2, 528
+  size: 796, 481
+  orig: 796, 481
+  offset: 0, 0
+  index: -1
+box
+  rotate: false
+  xy: 429, 50
+  size: 250, 250
+  orig: 250, 250
+  offset: 0, 0
+  index: -1
+forward-button
+  rotate: false
+  xy: 882, 676
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+level-box
+  rotate: false
+  xy: 800, 658
+  size: 80, 91
+  orig: 80, 91
+  offset: 0, 0
+  index: -1
+level-cleared-title
+  rotate: false
+  xy: 395, 415
+  size: 425, 111
+  orig: 425, 111
+  offset: 0, 0
+  index: -1
+locker
+  rotate: false
+  xy: 800, 540
+  size: 35, 41
+  orig: 35, 41
+  offset: 0, 0
+  index: -1
+music-disabled
+  rotate: false
+  xy: 801, 227
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+music-enabled
+  rotate: false
+  xy: 681, 30
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+panel
+  rotate: false
+  xy: 800, 809
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+panel-top
+  rotate: false
+  xy: 2, 379
+  size: 391, 147
+  orig: 391, 147
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 681, 185
+  size: 118, 115
+  orig: 118, 115
+  offset: 0, 0
+  index: -1
+select-box
+  rotate: false
+  xy: 2, 266
+  size: 425, 111
+  orig: 425, 111
+  offset: 0, 0
+  index: -1
+select-level-title
+  rotate: false
+  xy: 2, 153
+  size: 425, 111
+  orig: 425, 111
+  offset: 0, 0
+  index: -1
+share-via-facebook
+  rotate: false
+  xy: 801, 152
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+share-via-twitter
+  rotate: false
+  xy: 882, 601
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+sound-disabled
+  rotate: false
+  xy: 765, 77
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+sound-enabled
+  rotate: false
+  xy: 756, 2
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 681, 105
+  size: 82, 78
+  orig: 82, 78
+  offset: 0, 0
+  index: -1
+store
+  rotate: false
+  xy: 840, 77
+  size: 73, 73
+  orig: 73, 73
+  offset: 0, 0
+  index: -1
+store-title
+  rotate: false
+  xy: 2, 40
+  size: 425, 111
+  orig: 425, 111
+  offset: 0, 0
+  index: -1
+title
+  rotate: false
+  xy: 429, 302
+  size: 425, 111
+  orig: 425, 111
+  offset: 0, 0
+  index: -1
+yellow-button
+  rotate: false
+  xy: 800, 751
+  size: 201, 56
+  orig: 201, 56
+  offset: 0, 0
+  index: -1

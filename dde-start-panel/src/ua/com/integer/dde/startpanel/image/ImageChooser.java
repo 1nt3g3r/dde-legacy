@@ -35,6 +35,7 @@ import javax.swing.event.ListSelectionListener;
 import ua.com.integer.dde.startpanel.DDEStartPanel;
 import ua.com.integer.dde.startpanel.FileUtils;
 import ua.com.integer.dde.startpanel.Settings;
+import ua.com.integer.dde.startpanel.util.AtlasFilenameFilter;
 import ua.com.integer.dde.util.JsonWorker;
 
 public class ImageChooser extends JDialog {
@@ -259,7 +260,7 @@ public class ImageChooser extends JDialog {
 	private File[] getPackDirectories() {
 		File[] imageDirectories = getImageDirectories();
 		if (imageDirectories.length > 0) {
-			return getImageDirectories()[0].listFiles();
+			return getImageDirectories()[0].listFiles(new AtlasFilenameFilter());
 		} else {
 			return new File[0];
 		}
