@@ -175,33 +175,20 @@ public class UiEditorDialog extends JDialog {
 					.addComponent(screenOptionsPanel, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
 		);
 		
-		commandLine = new JTextField();
-		commandLine.addKeyListener(new CommandListener());
-		commandLine.addMouseListener(new CommandListener());
-		commandLine.setFont(new Font("Dialog", Font.BOLD, 14));
-		commandLine.setText("Enter command and press Enter...");
-		commandLine.setForeground(Color.GREEN);
-		commandLine.setBackground(Color.DARK_GRAY);
-		
 		scrollPane_1 = new JScrollPane();
 		GroupLayout gl_screenOptionsPanel = new GroupLayout(screenOptionsPanel);
 		gl_screenOptionsPanel.setHorizontalGroup(
 			gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
-				.addComponent(commandLine, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
 				.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
 		);
 		gl_screenOptionsPanel.setVerticalGroup(
 			gl_screenOptionsPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_screenOptionsPanel.createSequentialGroup()
-					.addComponent(commandLine, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
+				.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
 		);
 		
 		outputText = new JTextArea();
-		outputText.setForeground(Color.BLUE);
-		outputText.setBackground(Color.LIGHT_GRAY);
-		outputText.setText("Some\nmultiline\ntext");
+		outputText.setForeground(new Color(0, 128, 0));
+		outputText.setBackground(new Color(0, 0, 0));
 		outputText.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 		scrollPane_1.setViewportView(outputText);
 		screenOptionsPanel.setLayout(gl_screenOptionsPanel);
@@ -314,7 +301,7 @@ public class UiEditorDialog extends JDialog {
 		mnViewActorsAndProperties = new JCheckBoxMenuItem("Actors & properties");
 		mnView.add(mnViewActorsAndProperties);
 		
-		mnViewControlPanel = new JCheckBoxMenuItem("Control panel");
+		mnViewControlPanel = new JCheckBoxMenuItem("Console output");
 		mnView.add(mnViewControlPanel);
 		
 		mnViewActorHierarchy = new JCheckBoxMenuItem("Actor hierarchy");
@@ -658,7 +645,6 @@ public class UiEditorDialog extends JDialog {
 	private JCheckBoxMenuItem mnViewShowBackground;
 	private JMenu mnResolution;
 	private JMenuItem mnResolution800x480;
-	private JTextField commandLine;
 	private JScrollPane scrollPane_1;
 	private JTextArea outputText;
 	
@@ -976,28 +962,6 @@ public class UiEditorDialog extends JDialog {
 		int newWindowWidth = width + borderWidth + tabWidth + hierarchyWidth;
 		int newWindowHeight = height + borderHeight + controlPanelHeight;
 		setSize(newWindowWidth, newWindowHeight);
-	}
-	
-	class CommandListener extends MouseAdapter implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-				String cmd = commandLine.getText().trim();
-				sendCommand(cmd);
-				commandLine.setText("");
-			}
-		}
-		@Override
-		public void keyReleased(KeyEvent event) {
-		}
-		@Override
-		public void keyTyped(KeyEvent event) {
-		}
-		
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			commandLine.selectAll();
-		}
 	}
 	
 	public void sendCommand(String command) {
