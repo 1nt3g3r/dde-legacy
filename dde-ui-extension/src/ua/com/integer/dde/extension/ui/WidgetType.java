@@ -3,11 +3,14 @@ package ua.com.integer.dde.extension.ui;
 import ua.com.integer.dde.extension.ui.actor.Box;
 import ua.com.integer.dde.extension.ui.actor.TextLabel;
 import ua.com.integer.dde.extension.ui.actor.TextureRegionButton;
+import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
+import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.ui.actor.TextureRegionGroupActor;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -116,9 +119,16 @@ public enum WidgetType {
 		case TEXTURE_REGION_BUTTON : 
 			return new TextureRegionButton();
 		case SCROLL_PANE : 
-			return new ScrollPane(null);
+			ScrollPane scroll = new ScrollPane(null);
+			if (isEditor()) {
+				scroll.clearListeners();
+			}
+			return scroll;
 		case TEXT_FIELD : 
 			TextField toReturn = new TextField("", DefaultSkin.getInstance().getSkin());
+			if (isEditor()) {
+				toReturn.clearListeners();
+			}
 			TextFieldStyle copyStyle = new TextFieldStyle(toReturn.getStyle());
 			toReturn.setStyle(copyStyle);
 			return toReturn;
@@ -126,21 +136,34 @@ public enum WidgetType {
 			return new Image();
 		case BUTTON:
 			Button toReturnButton = new Button(DefaultSkin.getInstance().getSkin());
+			if (isEditor()) {
+				toReturnButton.clearListeners();
+			}
 			ButtonStyle copyButtonStyle = new ButtonStyle(toReturnButton.getStyle());
 			toReturnButton.setStyle(copyButtonStyle);
 			return toReturnButton;
 		case TEXT_BUTTON:
 			TextButton toReturnTextButton  = new TextButton("Button", DefaultSkin.getInstance().getSkin());
+			if (isEditor()) {
+				makeInnerActorsUntochable(toReturnTextButton);
+				toReturnTextButton.clearListeners();
+			}
 			TextButtonStyle copyTextButtonStyle = new TextButtonStyle(toReturnTextButton.getStyle());
 			toReturnTextButton.setStyle(copyTextButtonStyle);
 			return toReturnTextButton;
 		case CHECKBOX:
 			CheckBox checkbox = new CheckBox("Checkbox", DefaultSkin.getInstance().getSkin());
+			if (isEditor()) {
+				checkbox.clearListeners();
+			}
 			CheckBoxStyle checkboxStyle = new CheckBoxStyle(checkbox.getStyle());
 			checkbox.setStyle(checkboxStyle);
 			return checkbox;
 		case TOUCHPAD:
 			Touchpad touchpad = new Touchpad(2, DefaultSkin.getInstance().getSkin());
+			if (isEditor()) {
+				touchpad.clearListeners();
+			}
 			TouchpadStyle touchpadStyle = new TouchpadStyle(touchpad.getStyle());
 			touchpad.setStyle(touchpadStyle);
 			return touchpad;
@@ -166,6 +189,19 @@ public enum WidgetType {
 		case CHECKBOX : return "Checkbox";
 		case TOUCHPAD : return "Touchpad";
 		default: return "";
+		}
+	}
+	
+	private boolean isEditor() {
+		return AbstractScreen.getKernel() instanceof EditorKernel;
+	}
+	
+	private void makeInnerActorsUntochable(Group actor) {
+		for(Actor child : actor.getChildren()) {
+			child.setTouchable(Touchable.disabled);
+			if (child instanceof Group) {
+				makeInnerActorsUntochable((Group) child);
+			}
 		}
 	}
 }

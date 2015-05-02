@@ -41,6 +41,11 @@ public class UiConfig {
 	public void saveToFile(File file) {
 		JsonWorker.toJson(this, file);
 	}
+	
+	public void setSide(Side side) {
+		parentCorner = side;
+		targetCorner = side;
+	}
 
 	public static UiConfig fromFileHandle(FileHandle handle) {
 		return JsonWorker.JSON.fromJson(UiConfig.class, handle);

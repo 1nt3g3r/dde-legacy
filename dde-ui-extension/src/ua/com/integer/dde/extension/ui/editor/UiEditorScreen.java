@@ -83,6 +83,26 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		drawStageBorders = sets.getBoolean("draw-stage-borders", true);
 	}
 	
+	/**
+	 * Нужно ли рисовать линию вокруг активного актера
+	 */
+	public void setBorderAroundActorVisible(boolean visible) {
+		sets().putBoolean("highlight-active-actor", visible);
+		updateHighlightActorSettings();
+	}
+
+	/**
+	 * Нужно ли рисовать линии вокруг неактивных актеров
+	 */
+	public void setBorderAroundInactiveActorsVisible(boolean visible) {
+		sets().putBoolean("highlight-inactive-actors", visible);
+		updateHighlightActorSettings();
+	}
+	
+	private Settings sets() {
+		return Settings.getInstance();
+	}
+	
 	public void setConfigChangedListener(ConfigChangedListener configChangedListener) {
 		this.configChangedListener = configChangedListener;
 	}
@@ -254,7 +274,9 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					clearScreenListeners();
 					
 					getStage().clear();
-					getStage().addListener(new WidgetDragListener());
+					WidgetDragListener dragListener = new WidgetDragListener();
+					addScreenEventListener(dragListener);
+					getStage().addListener(dragListener);
 					
 					ActorUtils.deployConfigToScreen(UiEditorScreen.this, config);
 					
@@ -269,7 +291,6 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 							selectActorByConfig(config, getStage().getRoot());
 						}
 					}
-					
 					
 					if (configChangedListener != null) {
 						configChangedListener.configChanged(config);
@@ -369,6 +390,10 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	}
 
 	public UiConfig getSelectedConfig() {
+		if (getSelectedActor() == null) {
+			return null;
+		}
+		
 		return (UiConfig) getSelectedActor().getUserObject();
 	}
 
@@ -407,10 +432,5 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		addActor(messageLabel);
 		
 		messageLabel.addAction(sequence(delay(0.5f), fadeOut(0.2f), Actions.removeActor()));
-	}
-	
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
 	}
 }

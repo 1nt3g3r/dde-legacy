@@ -32,10 +32,10 @@ public class ResolutionCommandHandler implements CommandHandler {
 			multiplier = "precise";
 		}
 		
-		if (multiplier.equals("half")) {
+		if (multiplier.equals("half") || multiplier.equals("h")) {
 			width /= 2;
 			height /= 2;
-		} else if (multiplier.equals("maximize")) {
+		} else if (multiplier.equals("maximize") || multiplier.equals("max") || multiplier.equals("m")) {
 			float aspectRatio = (float) width / (float) height;
 
 			width = getMaxEditorViewportWidth();

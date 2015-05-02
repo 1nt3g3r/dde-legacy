@@ -708,6 +708,7 @@ public class UiEditorDialog extends JDialog {
 	public void updatePropertyPanelForSelectedActor() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				//TODO hot point
 				final UiConfig config = EditorKernel.getInstance().getScreen(UiEditorScreen.class).getSelectedConfig();
 				
 				CommonPropertiesPanel commonEditor = new CommonPropertiesPanel();

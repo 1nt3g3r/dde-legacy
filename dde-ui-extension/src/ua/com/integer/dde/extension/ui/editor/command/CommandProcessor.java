@@ -1,7 +1,10 @@
 package ua.com.integer.dde.extension.ui.editor.command;
 
+import ua.com.integer.dde.extension.ui.editor.command.imp.AlignActorCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.DefaultHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.FullscreenCommandHandler;
+import ua.com.integer.dde.extension.ui.editor.command.imp.HighlightCommandHandler;
+import ua.com.integer.dde.extension.ui.editor.command.imp.LayoutCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.ResolutionCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.main.UiEditorDialog;
 
@@ -14,6 +17,9 @@ public class CommandProcessor {
 	public CommandProcessor() {
 		initResolutionHandler();
 		initFullscreenHandler();
+		initHiglightHandler();
+		initLayoutHandler();
+		initAlignCommandHandler();
 	}
 
 	private void initResolutionHandler() {
@@ -25,6 +31,25 @@ public class CommandProcessor {
 	private void initFullscreenHandler() {
 		CommandHandler fullScreenHandler = new FullscreenCommandHandler();
 		commandHandlers.put("fullscreen", fullScreenHandler);
+		commandHandlers.put("fsc", fullScreenHandler);
+	}
+	
+	private void initHiglightHandler() {
+		CommandHandler higlightHandler = new HighlightCommandHandler();
+		commandHandlers.put("highlight", higlightHandler);
+		commandHandlers.put("hl", higlightHandler);
+	}
+	
+	private void initLayoutHandler() {
+		CommandHandler layoutHandler = new LayoutCommandHandler();
+		commandHandlers.put("layout", layoutHandler);
+		commandHandlers.put("lay", layoutHandler);
+	}
+	
+	private void initAlignCommandHandler() {
+		CommandHandler alignHandler = new AlignActorCommandHandler();
+		commandHandlers.put("align", alignHandler);
+		commandHandlers.put("al", alignHandler);
 	}
 	
 	public void executeCommand(String rawComand, UiEditorDialog screen) {
