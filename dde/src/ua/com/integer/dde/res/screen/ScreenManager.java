@@ -150,7 +150,9 @@ public class ScreenManager implements Disposable, LoadManager {
 			screens.put(toReturn.getScreenName(), toReturn);
 			return (T) toReturn;
 		} catch (InstantiationException e) {
+			e.printStackTrace();
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 
 		throw new IllegalArgumentException("No screen for this class!");

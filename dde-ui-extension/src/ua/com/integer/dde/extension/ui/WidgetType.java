@@ -193,7 +193,8 @@ public enum WidgetType {
 	}
 	
 	private boolean isEditor() {
-		return AbstractScreen.getKernel() instanceof EditorKernel;
+		String coreName = AbstractScreen.getKernel().getClass().getName();
+		return coreName.contains("EditorKernel");
 	}
 	
 	private void makeInnerActorsUntochable(Group actor) {

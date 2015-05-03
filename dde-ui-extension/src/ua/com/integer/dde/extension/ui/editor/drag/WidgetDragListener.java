@@ -32,11 +32,8 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 		touchActor = event.getStage().hit(x, y, true);
-		if (touchActor.getUserObject() != null && touchActor.getUserObject() instanceof UiConfig) {
-			EditorKernel.editorScreen().selectActor(touchActor);
-		}
 		
-		if (touchActor != null && touchActor.getParent() != null) {
+		if (touchActor != null && touchActor.getParent() != null && touchActor == EditorKernel.editorScreen().getSelectedActor()) {
 			tmp.set(x, y);
 			Vector2 offset = touchActor.stageToLocalCoordinates(tmp);
 			offsetX = offset.x;
@@ -115,14 +112,6 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 			break;
 		default:
 			break;
-		}
-	}
-	@Override
-	public void enter(InputEvent event, float x, float y, int pointer,
-			Actor fromActor) {
-		touchActor = event.getStage().hit(x, y, true);
-		if (touchActor.getUserObject() != null && touchActor.getUserObject() instanceof UiConfig) {
-			EditorKernel.editorScreen().selectActor(touchActor);
 		}
 	}
 }
