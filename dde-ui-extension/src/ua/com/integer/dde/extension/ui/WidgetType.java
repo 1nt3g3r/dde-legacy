@@ -3,7 +3,6 @@ package ua.com.integer.dde.extension.ui;
 import ua.com.integer.dde.extension.ui.actor.Box;
 import ua.com.integer.dde.extension.ui.actor.TextLabel;
 import ua.com.integer.dde.extension.ui.actor.TextureRegionButton;
-import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.ui.actor.TextureRegionGroupActor;
