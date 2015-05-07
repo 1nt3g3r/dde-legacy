@@ -28,6 +28,7 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	private Actor touchActor;
 	private Vector2 tmp = new Vector2();
 	private TextField commandText;
+	private Vector2 nearestGridPosition = new Vector2();
 	
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -48,9 +49,55 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	public void touchDragged(InputEvent event, float x, float y, int pointer) {
 		Group parent = touchActor.getParent();
 		
+		if (EditorKernel.editorScreen().isDrawGrid()) {
+			calculateNearestGrid(x - offsetX, y - offsetY);
+			x = nearestGridPosition.x;
+			y = nearestGridPosition.y;
+		}
+		
 		tmp.set(x, y);
 		Vector2 newPosition = parent.stageToLocalCoordinates(tmp);
-		touchActor.setPosition(newPosition.x - offsetX, newPosition.y - offsetY);
+		
+		if (EditorKernel.editorScreen().isDrawGrid()) {
+			touchActor.setPosition(newPosition.x, newPosition.y);
+		} else {
+			touchActor.setPosition(newPosition.x - offsetX, newPosition.y - offsetY);
+		}
+	}
+	
+	private void calculateNearestGrid(float touchX, float touchY) {
+		Group parent = touchActor.getParent();
+		nearestGridPosition.set(0, 0);
+		nearestGridPosition = parent.localToStageCoordinates(nearestGridPosition);
+		
+		float startX = nearestGridPosition.x;
+		float startY = nearestGridPosition.y;
+		
+		float endX = nearestGridPosition.x + parent.getWidth();
+		float endY = nearestGridPosition.y + parent.getHeight();
+		
+		float gridDelta = EditorKernel.editorScreen().getGridPercent();
+		
+		float deltaX = parent.getWidth() * gridDelta;
+		float deltaY = parent.getHeight() * gridDelta;
+		
+		float nearestDistance = Float.MAX_VALUE;
+		float nearestX = touchX;
+		float nearestY = touchY;
+		
+		for(float x = startX; x <= endX; x += deltaX) {
+			for (float y = startY; y <= endY; y += deltaY) {
+				float tmpDistance = Vector2.dst(x, y, touchX, touchY);
+				if (tmpDistance < nearestDistance) {
+					nearestX = x;
+					nearestY = y;
+					nearestDistance = tmpDistance;
+				}
+			}
+		}
+		
+		nearestGridPosition.x = nearestX;
+		nearestGridPosition.y = nearestY;
 	}
 
 	/**
@@ -113,5 +160,9 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 		default:
 			break;
 		}
+	}
+	
+	public TextField getCommandText() {
+		return commandText;
 	}
 }

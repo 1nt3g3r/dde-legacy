@@ -7,11 +7,13 @@ public class Settings {
 	private Preferences prefs;
 	
 	private static Settings instance = new Settings();
+	private Class<? extends Object> cl;
 	
 	private Settings() {
 	}
 	
 	public void setSettingsClass(Class<? extends Object> cl) {
+		this.cl = cl;
 		prefs = Preferences.userNodeForPackage(cl);
 	}
 	
@@ -113,5 +115,9 @@ public class Settings {
 	
 	public boolean getBoolean(String key, boolean defValue) {
 		return prefs.getBoolean(key, defValue);
+	}
+	
+	public Class<? extends Object> getSettingsClass() {
+		return cl;
 	}
 }

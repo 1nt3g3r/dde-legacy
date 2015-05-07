@@ -43,6 +43,11 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	private UiConfig config;
 	
 	private ConfigChangedListener configChangedListener;
+	private Vector2 tmpGrid = new Vector2();
+	
+	private boolean drawGrid;
+	private float gridPercent = 0.1f;
+	private WidgetDragListener dragListener;
 	
 	class SwitchColorTask extends Task {
 		@Override
@@ -65,6 +70,9 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		
 		addDefaultConfig();
 		updateHighlightActorSettings();
+		updateDrawGridSettings();
+		
+		getConfig().backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1f);
 	}
 	
 	private void addDefaultConfig() {
@@ -81,6 +89,15 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		drawRectangleAroundSelectedActor = sets.getBoolean("highlight-active-actor", true);
 		drawRectanglesAroundUnselectedActors = sets.getBoolean("highlight-inactive-actors", true);
 		drawStageBorders = sets.getBoolean("draw-stage-borders", true);
+	}
+	
+
+	private void updateDrawGridSettings() {
+		Settings sets = Settings.getInstance();
+		sets.setSettingsClass(UiEditorScreen.class);
+		
+		setDrawGrid(sets.getBoolean("draw-grid", true));
+		setGridPercent(Float.parseFloat(sets.getString("grid-percent", "0.1f")));
 	}
 	
 	/**
@@ -158,9 +175,22 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		shapeRenderer.setProjectionMatrix(getStage().getBatch().getProjectionMatrix());
 		shapeRenderer.setTransformMatrix(getStage().getBatch().getTransformMatrix());
 		
+		if (drawGrid && selectedActor != null) {
+			drawGrid(selectedActor.getParent());
+		}
+
 		shapeRenderer.begin(ShapeType.Line);
 			drawLinesAroundActor(getStage().getRoot());
 		shapeRenderer.end();
+		
+		if (dragListener != null && 
+			dragListener.getCommandText() != null && 
+			dragListener.getCommandText().isVisible() &&
+			dragListener.getCommandText().hasParent()) {
+				getBatch().begin();
+					dragListener.getCommandText().draw(getBatch(), 1f);
+				getBatch().end();
+		}
 	}
 	
 	private void drawLinesAroundActor(Actor actor) {
@@ -194,7 +224,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		float parentWidth = getSelectedActor().getParent().getWidth();
 		float parentHeight = getSelectedActor().getParent().getHeight();
 		
-		shapeRenderer.setColor(Color.BLUE);
+		shapeRenderer.setColor(Color.YELLOW);
 
 		switch(getSelectedConfig().parentCorner) {
 		case BOTTOM_LEFT :
@@ -212,7 +242,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		case CENTER :
 			shapeRenderer.setColor(Color.RED);
 			shapeRenderer.circle(dx + actorX + actorWidth/2, dy + actorY + actorHeight/2, 1);
-			shapeRenderer.setColor(Color.BLUE);
+			shapeRenderer.setColor(Color.YELLOW);
 			shapeRenderer.circle(dx + parentX + parentWidth/2, dy + parentY + parentHeight/2, 1);
 			shapeRenderer.line(dx + actorX + actorWidth/2, dy + actorY + actorHeight/2, dx + parentX + parentWidth/2, dy + parentY + parentHeight/2);
 			break;
@@ -274,7 +304,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					clearScreenListeners();
 					
 					getStage().clear();
-					WidgetDragListener dragListener = new WidgetDragListener();
+					dragListener = new WidgetDragListener();
 					addScreenEventListener(dragListener);
 					getStage().addListener(dragListener);
 					
@@ -432,5 +462,60 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		addActor(messageLabel);
 		
 		messageLabel.addAction(sequence(delay(0.5f), fadeOut(0.2f), Actions.removeActor()));
+	}
+	
+	private void drawGrid(Actor actor) {
+		if (selectedActor == null) {
+			return;
+		}
+		
+		float stepX = actor.getWidth() * gridPercent;
+		float stepY = actor.getHeight() * gridPercent;
+		
+		tmpGrid.set(0, 0);
+		Vector2 startPosition = actor.localToStageCoordinates(tmpGrid);
+
+		float startX = startPosition.x;
+		float startY = startPosition.y;
+		
+		float endX = startPosition.x + actor.getWidth();
+		float endY = startPosition.y + actor.getHeight();
+
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(Color.BLUE);
+		
+		for(float x = startX; x <= endX; x += stepX) {
+			shapeRenderer.line(x, startY, x, endY);
+		}
+		
+		for(float y = startY; y <= endY; y += stepY) {
+			shapeRenderer.line(startX, y, endX, y);
+		}
+		
+		shapeRenderer.end();
+	}
+	
+	public void setDrawGrid(boolean drawGrid) {
+		this.drawGrid = drawGrid;
+		
+		Settings sets = Settings.getInstance();
+		sets.setSettingsClass(UiEditorScreen.class);
+		sets.putBoolean("draw-grid", drawGrid);
+	}
+	
+	public boolean isDrawGrid() {
+		return drawGrid;
+	}
+	
+	public void setGridPercent(float gridPercent) {
+		this.gridPercent = gridPercent;
+		
+		Settings sets = Settings.getInstance();
+		sets.setSettingsClass(UiEditorScreen.class);
+		sets.putString("grid-percent", gridPercent + "");
+	}
+	
+	public float getGridPercent() {
+		return gridPercent;
 	}
 }

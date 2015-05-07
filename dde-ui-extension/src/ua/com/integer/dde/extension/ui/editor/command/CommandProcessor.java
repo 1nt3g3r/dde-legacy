@@ -3,6 +3,7 @@ package ua.com.integer.dde.extension.ui.editor.command;
 import ua.com.integer.dde.extension.ui.editor.command.imp.AlignActorCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.DefaultHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.FullscreenCommandHandler;
+import ua.com.integer.dde.extension.ui.editor.command.imp.GridCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.HighlightCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.LayoutCommandHandler;
 import ua.com.integer.dde.extension.ui.editor.command.imp.ResolutionCommandHandler;
@@ -20,6 +21,7 @@ public class CommandProcessor {
 		initHiglightHandler();
 		initLayoutHandler();
 		initAlignCommandHandler();
+		initGridCommandHandler();
 	}
 
 	private void initResolutionHandler() {
@@ -50,6 +52,11 @@ public class CommandProcessor {
 		CommandHandler alignHandler = new AlignActorCommandHandler();
 		commandHandlers.put("align", alignHandler);
 		commandHandlers.put("al", alignHandler);
+	}
+	
+	private void initGridCommandHandler() {
+		CommandHandler gridHandler = new GridCommandHandler();
+		commandHandlers.put("grid", gridHandler);
 	}
 	
 	public void executeCommand(String rawComand, UiEditorDialog screen) {

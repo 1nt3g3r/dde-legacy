@@ -74,9 +74,12 @@ public class TexturePacker {
 
 	private void packCustomDir(String inputPath, String outputPath,
 			String packName) {
+		System.out.println(outputPath);
 		File[] toDelete = new File(outputPath).listFiles(new StartsWithFilenameFilter(packName));
-		for(File toDelFile: toDelete) {
-			toDelFile.delete();
+		if (toDelete != null) {
+			for(File toDelFile: toDelete) {
+				toDelFile.delete();
+			}
 		}
 		
 		Settings sets = new Settings();
