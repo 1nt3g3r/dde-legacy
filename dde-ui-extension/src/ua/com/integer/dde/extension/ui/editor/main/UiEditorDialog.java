@@ -295,9 +295,6 @@ public class UiEditorDialog extends JDialog {
 		mnView = new JMenu("View");
 		menuBar.add(mnView);
 		
-		mnViewActorsAndProperties = new JCheckBoxMenuItem("Actors & properties");
-		mnView.add(mnViewActorsAndProperties);
-		
 		mnViewControlPanel = new JCheckBoxMenuItem("Console output");
 		mnView.add(mnViewControlPanel);
 		
@@ -327,6 +324,13 @@ public class UiEditorDialog extends JDialog {
 		mnViewShowBackground.addActionListener(new ShowBackgroundImageListener());
 		mnViewBackground.add(mnViewShowBackground);
 		
+		JSeparator separator_2 = new JSeparator();
+		mnView.add(separator_2);
+		
+		JMenuItem mnViewSetupGrid = new JMenuItem("Setup grid");
+		mnViewSetupGrid.addActionListener(new SetupGridListener());
+		mnView.add(mnViewSetupGrid);
+		
 		mnInsert = new JMenu("Insert");
 		setupInsertWidgetMenu();
 		menuBar.add(mnInsert);
@@ -340,8 +344,6 @@ public class UiEditorDialog extends JDialog {
 		
 		mnViewControlPanel.addActionListener(new ShowControlPanelClickListener());
 		mnViewActorHierarchy.addActionListener(new ShowActorHierarchyClickListener());
-		
-		mnViewActorsAndProperties.addActionListener(new ShowActorListClickListener());
 
 		loadResolutions();
 		//TODO если нужно редактировать с помощью Swing Designer, закомментировать эти строки
@@ -630,7 +632,6 @@ public class UiEditorDialog extends JDialog {
 	private JMenu mnUi;
 	private JMenu langMenu;
 	private JMenu mnView;
-	private JCheckBoxMenuItem mnViewActorsAndProperties;
 	private JCheckBoxMenuItem mnViewControlPanel;
 	private JCheckBoxMenuItem mnViewActorHierarchy;
 	private JMenu mnInsert;
@@ -804,11 +805,9 @@ public class UiEditorDialog extends JDialog {
 		mnViewHiglightSelectedActor.addActionListener(changeListener);
 		
 		mnViewActorHierarchy.setSelected(getSettings().getBoolean("show-actor-hierarchy", true));
-		mnViewActorsAndProperties.setSelected(getSettings().getBoolean("show-actors-list", true));
 		mnViewControlPanel.setSelected(getSettings().getBoolean("show-control-panel", true));
 		
 		actorHierarchy.setVisible(mnViewActorHierarchy.isSelected());
-		tabs.setVisible(mnViewActorsAndProperties.isSelected());
 		screenOptionsPanel.setVisible(mnViewControlPanel.isSelected());
 		
 		int frameWidth = Integer.parseInt(sets.getString("frame-width", "0"));
@@ -873,16 +872,6 @@ public class UiEditorDialog extends JDialog {
 			} else {
 				getEditorScreen().getConfig().needDrawBackgroundImage = false;
 			}
-		}
-	}
-	
-	class ShowActorListClickListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			tabs.setVisible(mnViewActorsAndProperties.isSelected());
-			
-			getSettings().putBoolean("show-actors-list", mnViewActorsAndProperties.isSelected());
-			//TODO resize
 		}
 	}
 	
@@ -959,6 +948,19 @@ public class UiEditorDialog extends JDialog {
 		int newWindowWidth = width + borderWidth + tabWidth + hierarchyWidth;
 		int newWindowHeight = height + borderHeight + controlPanelHeight;
 		setSize(newWindowWidth, newWindowHeight);
+	}
+	
+	class SetupGridListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					GridSettingsDialog settingsDialog = new GridSettingsDialog();
+					settingsDialog.setModal(true);
+					settingsDialog.setVisible(true);
+				}
+			});
+		}
 	}
 	
 	public void sendCommand(String command) {

@@ -96,8 +96,17 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 			}
 		}
 		
-		nearestGridPosition.x = nearestX;
-		nearestGridPosition.y = nearestY;
+		if (nearestDistance <= deltaX/5f) {
+			nearestGridPosition.x = nearestX;
+		} else {
+			nearestGridPosition.x = touchX;
+		}
+		
+		if (nearestDistance <= deltaY/5f) {
+			nearestGridPosition.y = nearestY;
+		} else {
+			nearestGridPosition.y = touchY;
+		}
 	}
 
 	/**

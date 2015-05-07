@@ -465,7 +465,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	}
 	
 	private void drawGrid(Actor actor) {
-		if (selectedActor == null) {
+		if (actor == null) {
 			return;
 		}
 		
