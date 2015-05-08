@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.UiConfigurator;
+import ua.com.integer.dde.extension.ui.editor.drag.GridSettings;
 import ua.com.integer.dde.extension.ui.editor.drag.WidgetDragListener;
 import ua.com.integer.dde.extension.ui.property.util.actor.ActorUtils;
 import ua.com.integer.dde.res.screen.AbstractScreen;
@@ -46,8 +47,9 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	private Vector2 tmpGrid = new Vector2();
 	
 	private boolean drawGrid;
-	private float gridPercent = 0.1f;
 	private WidgetDragListener dragListener;
+	
+	private float gridPercentX, gridPercentY;
 	
 	class SwitchColorTask extends Task {
 		@Override
@@ -96,8 +98,9 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		Settings sets = Settings.getInstance();
 		sets.setSettingsClass(UiEditorScreen.class);
 		
-		setDrawGrid(sets.getBoolean("draw-grid", true));
-		setGridPercent(Float.parseFloat(sets.getString("grid-percent", "0.1f")));
+		setDrawGrid(GridSettings.getInstance().needShowGrid());
+		setGridPercentX(GridSettings.getInstance().getGridPercentX());
+		setGridPercentY(GridSettings.getInstance().getGridPercentY());
 	}
 	
 	/**
@@ -177,6 +180,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		
 		if (drawGrid && selectedActor != null) {
 			drawGrid(selectedActor.getParent());
+			drawGrid3x3(selectedActor);
 		}
 
 		shapeRenderer.begin(ShapeType.Line);
@@ -469,8 +473,8 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 			return;
 		}
 		
-		float stepX = actor.getWidth() * gridPercent;
-		float stepY = actor.getHeight() * gridPercent;
+		float stepX = actor.getWidth() * gridPercentX;
+		float stepY = actor.getHeight() * gridPercentY;
 		
 		tmpGrid.set(0, 0);
 		Vector2 startPosition = actor.localToStageCoordinates(tmpGrid);
@@ -481,41 +485,63 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		float endX = startPosition.x + actor.getWidth();
 		float endY = startPosition.y + actor.getHeight();
 
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(Color.BLUE);
+		shapeRenderer.begin(ShapeType.Point);
+		shapeRenderer.setColor(Color.WHITE);
 		
 		for(float x = startX; x <= endX; x += stepX) {
-			shapeRenderer.line(x, startY, x, endY);
-		}
-		
-		for(float y = startY; y <= endY; y += stepY) {
-			shapeRenderer.line(startX, y, endX, y);
+			for(float y = startY; y <= endY; y += stepY) {
+				shapeRenderer.point(x, y, 0);
+				shapeRenderer.point(x-1, y, 0);
+				shapeRenderer.point(x+1, y, 0);
+				shapeRenderer.point(x, y-1, 0);
+				shapeRenderer.point(x, y+1, 0);
+			}
 		}
 		
 		shapeRenderer.end();
+		
 	}
+	
+	private void drawGrid3x3(Actor actor) {
+		tmpGrid.set(0, 0);
+		Vector2 startPosition = actor.localToStageCoordinates(tmpGrid);
+		
+		float x = startPosition.x;
+		float y = startPosition.y;
+
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(Color.DARK_GRAY);
+		for(int i = 0; i < 3; i++) {
+			float drawX = x + actor.getWidth() / 3f * (float) i;
+			
+			shapeRenderer.line(drawX, y, drawX, y + actor.getHeight());
+			
+			float drawY = y + actor.getHeight()/3f * (float) i;
+			
+			shapeRenderer.line(x, drawY, x + actor.getWidth(), drawY);
+		}
+		shapeRenderer.end();
+	}
+	
 	
 	public void setDrawGrid(boolean drawGrid) {
 		this.drawGrid = drawGrid;
-		
-		Settings sets = Settings.getInstance();
-		sets.setSettingsClass(UiEditorScreen.class);
-		sets.putBoolean("draw-grid", drawGrid);
 	}
 	
 	public boolean isDrawGrid() {
 		return drawGrid;
 	}
 	
-	public void setGridPercent(float gridPercent) {
-		this.gridPercent = gridPercent;
-		
-		Settings sets = Settings.getInstance();
-		sets.setSettingsClass(UiEditorScreen.class);
-		sets.putString("grid-percent", gridPercent + "");
+	public void setGridPercentX(float percent) {
+		gridPercentX = percent;
 	}
 	
-	public float getGridPercent() {
-		return gridPercent;
+	public void setGridPercentY(float percent) {
+		gridPercentY = percent;
+	}
+	
+	public void setGridSize(float cellWidth, float cellHeight) {
+		gridPercentX = cellWidth;
+		gridPercentY = cellHeight;
 	}
 }

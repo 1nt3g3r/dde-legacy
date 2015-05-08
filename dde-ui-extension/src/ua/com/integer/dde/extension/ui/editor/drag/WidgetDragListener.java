@@ -24,49 +24,176 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
  * @author 1nt3g3r
  */
 public class WidgetDragListener extends InputListener implements ScreenListener {
+	public static final int FREE_MOVE = 0;
+	public static final int SNAP_TO_BOTTOM_LEFT = 1;
+	public static final int SNAP_TO_LEFT_ONLY = 2;
+	public static final int SNAP_TO_TOP_LEFT = 3;
+	public static final int SNAP_TO_TOP_ONLY = 4;
+	public static final int SNAP_TO_TOP_RIGHT = 5;
+	public static final int SNAP_TO_RIGHT_ONLY = 6;
+	public static final int SNAP_TO_BOTTOM_RIGHT = 7;
+	public static final int SNAP_TO_BOTTOM_ONLY = 8;
+	public static final int SNAP_TO_CENTER = 9;
+	
 	private float offsetX, offsetY;
 	private Actor touchActor;
 	private Vector2 tmp = new Vector2();
 	private TextField commandText;
 	private Vector2 nearestGridPosition = new Vector2();
 	
+	private int dragMode;
+	
+	private float gridPercentX, gridPercentY;
+	
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 		touchActor = event.getStage().hit(x, y, true);
 		
 		if (touchActor != null && touchActor.getParent() != null && touchActor == EditorKernel.editorScreen().getSelectedActor()) {
+			gridPercentX = GridSettings.getInstance().getGridPercentX();
+			gridPercentY = GridSettings.getInstance().getGridPercentY();
+			
 			tmp.set(x, y);
 			Vector2 offset = touchActor.stageToLocalCoordinates(tmp);
 			offsetX = offset.x;
 			offsetY = offset.y;
+			
+			setupDragMode(offsetX, offsetY);
+			System.out.println("drag mode: " + dragMode);
+
 			return true;
 		}
 		
 		return false;
 	}
 	
+	private void setupDragMode(float touchX, float touchY) {
+		if (!GridSettings.getInstance().needSnapToGrid()) {
+			dragMode = FREE_MOVE;
+			return;
+		}
+		
+		float oneThirdWidth = touchActor.getWidth()/3f;
+		float oneThirdHeight = touchActor.getHeight()/3f;
+		
+		if (touchX <= oneThirdWidth) {
+			if (touchY <= oneThirdHeight) {
+				dragMode = SNAP_TO_BOTTOM_LEFT;
+			} else if (touchY > oneThirdHeight && touchY <= 2 * oneThirdHeight) {
+				dragMode = SNAP_TO_LEFT_ONLY;
+			} else {
+				dragMode = SNAP_TO_TOP_LEFT;
+			}
+		} else if (touchX > oneThirdWidth && touchX <= 2 * oneThirdWidth) {
+			if (touchY <= oneThirdHeight) {
+				dragMode = SNAP_TO_BOTTOM_ONLY;
+			} else if (touchY > oneThirdHeight && touchY <= 2 * oneThirdHeight) {
+				dragMode = SNAP_TO_CENTER;
+			} else {
+				dragMode = SNAP_TO_TOP_ONLY;
+			}
+		} else {
+			if (touchY <= oneThirdHeight) {
+				dragMode = SNAP_TO_BOTTOM_RIGHT;
+			} else if (touchY > oneThirdHeight && touchY <= 2 * oneThirdHeight) {
+				dragMode = SNAP_TO_RIGHT_ONLY;
+			} else {
+				dragMode = SNAP_TO_TOP_RIGHT;
+			}
+		}
+	}
+	
 	@Override
 	public void touchDragged(InputEvent event, float x, float y, int pointer) {
 		Group parent = touchActor.getParent();
 		
-		if (EditorKernel.editorScreen().isDrawGrid()) {
+		float drawOffsetX = 0;
+		float drawOffsetY = 0;
+		
+		switch(dragMode) {
+		case SNAP_TO_BOTTOM_LEFT:
 			calculateNearestGrid(x - offsetX, y - offsetY);
+			
 			x = nearestGridPosition.x;
 			y = nearestGridPosition.y;
+			
+			break;
+		case SNAP_TO_BOTTOM_RIGHT:
+			calculateNearestGrid(x - offsetX + touchActor.getWidth(), y - offsetY);
+			
+			x = nearestGridPosition.x;
+			y = nearestGridPosition.y;
+			
+			drawOffsetX = -touchActor.getWidth();
+			break;
+		case SNAP_TO_TOP_LEFT:
+			calculateNearestGrid(x - offsetX, y - offsetY + touchActor.getHeight());
+			
+			x = nearestGridPosition.x;
+			y = nearestGridPosition.y;
+			
+			drawOffsetY = -touchActor.getHeight();
+			break;
+		case SNAP_TO_TOP_RIGHT:
+			calculateNearestGrid(x - offsetX + touchActor.getWidth(), y - offsetY + touchActor.getHeight());
+
+			x = nearestGridPosition.x;
+			y = nearestGridPosition.y;
+			
+			drawOffsetX = -touchActor.getWidth();
+			drawOffsetY = -touchActor.getHeight();
+			break;
+		case SNAP_TO_LEFT_ONLY:
+			calculateNearestGrid(x - offsetX, y - offsetY);
+			
+			x = nearestGridPosition.x;
+			y = y - offsetY;
+			break;
+		case SNAP_TO_RIGHT_ONLY:
+			calculateNearestGrid(x - offsetX + touchActor.getWidth(), y - offsetY);
+
+			x = nearestGridPosition.x;
+			
+			drawOffsetX = -touchActor.getWidth();
+			y = y - offsetY;
+			break;
+		case SNAP_TO_TOP_ONLY:
+			calculateNearestGrid(x - offsetX, y - offsetY + touchActor.getHeight());
+
+			y = nearestGridPosition.y;
+			x = x -offsetX;
+			
+			drawOffsetY = -touchActor.getHeight();
+			break;
+		case SNAP_TO_BOTTOM_ONLY:
+			calculateNearestGrid(x - offsetX, y - offsetY);
+			y = nearestGridPosition.y;
+			x = x - offsetX;
+			break;
+		case SNAP_TO_CENTER:
+			calculateNearestGrid(x - offsetX + touchActor.getWidth()/2f, y - offsetY + touchActor.getHeight()/2f);
+
+			x = nearestGridPosition.x;
+			y = nearestGridPosition.y;
+			
+			drawOffsetX = -touchActor.getWidth()/2f;
+			drawOffsetY = -touchActor.getHeight()/2f;
+			break;
+		case FREE_MOVE:
+			drawOffsetX = -offsetX;
+			drawOffsetY = -offsetY;
+			break;
 		}
 		
 		tmp.set(x, y);
 		Vector2 newPosition = parent.stageToLocalCoordinates(tmp);
 		
-		if (EditorKernel.editorScreen().isDrawGrid()) {
-			touchActor.setPosition(newPosition.x, newPosition.y);
-		} else {
-			touchActor.setPosition(newPosition.x - offsetX, newPosition.y - offsetY);
-		}
+		touchActor.setPosition(newPosition.x + drawOffsetX, newPosition.y + drawOffsetY);
 	}
 	
 	private void calculateNearestGrid(float touchX, float touchY) {
 		Group parent = touchActor.getParent();
+		
 		nearestGridPosition.set(0, 0);
 		nearestGridPosition = parent.localToStageCoordinates(nearestGridPosition);
 		
@@ -76,33 +203,38 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 		float endX = nearestGridPosition.x + parent.getWidth();
 		float endY = nearestGridPosition.y + parent.getHeight();
 		
-		float gridDelta = EditorKernel.editorScreen().getGridPercent();
+		float deltaX = parent.getWidth() * gridPercentX;
+		float deltaY = parent.getHeight() * gridPercentY;
 		
-		float deltaX = parent.getWidth() * gridDelta;
-		float deltaY = parent.getHeight() * gridDelta;
-		
-		float nearestDistance = Float.MAX_VALUE;
+		float nearestDistanceX = Float.MAX_VALUE;
+		float nearestDistanceY = Float.MAX_VALUE;
 		float nearestX = touchX;
 		float nearestY = touchY;
 		
 		for(float x = startX; x <= endX; x += deltaX) {
-			for (float y = startY; y <= endY; y += deltaY) {
-				float tmpDistance = Vector2.dst(x, y, touchX, touchY);
-				if (tmpDistance < nearestDistance) {
-					nearestX = x;
-					nearestY = y;
-					nearestDistance = tmpDistance;
-				}
+			float tx = Math.abs(x - touchX);
+			if (tx < nearestDistanceX) {
+				nearestDistanceX = tx;
+				nearestX = x;
 			}
 		}
 		
-		if (nearestDistance <= deltaX/5f) {
+		for (float y = startY; y <= endY; y += deltaY) {
+			float ty = Math.abs(y - touchY);
+				
+			if (ty < nearestDistanceY) {
+				nearestDistanceY = ty;
+				nearestY = y;
+			}
+		}
+		
+		if (nearestDistanceX <= deltaX/2f) {
 			nearestGridPosition.x = nearestX;
 		} else {
 			nearestGridPosition.x = touchX;
 		}
 		
-		if (nearestDistance <= deltaY/5f) {
+		if (nearestDistanceY <= deltaY/2f) {
 			nearestGridPosition.y = nearestY;
 		} else {
 			nearestGridPosition.y = touchY;

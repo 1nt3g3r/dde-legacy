@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -21,16 +20,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
-import ua.com.integer.dde.extension.ui.editor.UiEditorScreen;
+import ua.com.integer.dde.extension.ui.editor.drag.GridSettings;
 import ua.com.integer.dde.startpanel.FrameTools;
-import ua.com.integer.dde.startpanel.Settings;
 
 public class GridSettingsDialog extends JDialog {
 	private static final long serialVersionUID = 8754643432150851241L;
 	private final JPanel contentPanel = new JPanel();
 	private JCheckBox showGridCheckbox;
-	private JLabel gridSizeLabel;
-	private JSpinner cellSize;
+	private JLabel cellWidthLabel;
+	private JSpinner cellWidthSpinner;
+	private JSpinner cellHeightSpinner;
+	private JCheckBox snapToGridCheckbox;
+	private JCheckBox sizeTheSameCheckbox;
 
 	/**
 	 * Launch the application.
@@ -51,7 +52,7 @@ public class GridSettingsDialog extends JDialog {
 	public GridSettingsDialog() {
 		getContentPane().setBackground(Color.GRAY);
 		setTitle("Grid settings");
-		setBounds(100, 100, 350, 150);
+		setBounds(100, 100, 260, 180);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,21 +61,42 @@ public class GridSettingsDialog extends JDialog {
 		showGridCheckbox = new JCheckBox("Show grid");
 		showGridCheckbox.setBackground(Color.GRAY);
 		
-		gridSizeLabel = new JLabel("Grid cell size(%):");
+		cellWidthLabel = new JLabel("Cell width (%):");
 		
-		cellSize = new JSpinner();
-		cellSize.setModel(new SpinnerNumberModel(1, 1, 100, 1));
+		cellWidthSpinner = new JSpinner();
+		cellWidthSpinner.setModel(new SpinnerNumberModel(new Float(10), new Float(1), new Float(100), new Float(5)));
+		
+		snapToGridCheckbox = new JCheckBox("Snap to grid");
+		snapToGridCheckbox.setForeground(Color.BLUE);
+		snapToGridCheckbox.setBackground(Color.GRAY);
+		
+		JLabel cellHeightLabel = new JLabel("Cell height (%):");
+		
+		cellHeightSpinner = new JSpinner();
+		cellHeightSpinner.setModel(new SpinnerNumberModel(10, 1, 100, 5));
+		
+		sizeTheSameCheckbox = new JCheckBox("Make both cells the same");
+		sizeTheSameCheckbox.setBackground(Color.GRAY);
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPanel.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(showGridCheckbox)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(gridSizeLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(cellSize, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(65, Short.MAX_VALUE))
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(sizeTheSameCheckbox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addComponent(showGridCheckbox)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(snapToGridCheckbox))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(cellWidthLabel)
+								.addComponent(cellHeightLabel))
+							.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(cellHeightSpinner)
+								.addComponent(cellWidthSpinner))))
+					.addContainerGap(110, Short.MAX_VALUE))
 		);
 		gl_contentPanel.setVerticalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
@@ -82,9 +104,18 @@ public class GridSettingsDialog extends JDialog {
 					.addContainerGap()
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(showGridCheckbox)
-						.addComponent(gridSizeLabel)
-						.addComponent(cellSize, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(97, Short.MAX_VALUE))
+						.addComponent(snapToGridCheckbox))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(cellWidthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cellWidthLabel))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(cellHeightLabel)
+						.addComponent(cellHeightSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(sizeTheSameCheckbox)
+					.addContainerGap(56, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(gl_contentPanel);
 		{
@@ -92,13 +123,6 @@ public class GridSettingsDialog extends JDialog {
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setBackground(Color.LIGHT_GRAY);
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
 		}
 		
 		loadSettings();
@@ -107,50 +131,94 @@ public class GridSettingsDialog extends JDialog {
 	}
 	
 	private void loadSettings() {
-		Settings sets = Settings.getInstance();
-		sets.setSettingsClass(UiEditorScreen.class);
+		showGridCheckbox.setSelected(sets().needShowGrid());
+		snapToGridCheckbox.setSelected(sets().needSnapToGrid());
+		sizeTheSameCheckbox.setSelected(sets().isNeedMakeBothDirectionsTheSame());
 		
-		boolean gridEnabled = sets.getBoolean("draw-grid", true);
-		showGridCheckbox.setSelected(gridEnabled);
+		cellHeightSpinner.setEnabled(!sizeTheSameCheckbox.isSelected());
 		
-		gridSizeLabel.setVisible(gridEnabled);
-		cellSize.setVisible(gridEnabled);
-		
-		float percent = Float.parseFloat(sets.getString("grid-percent", "0.1f"));
-		int intPercent = (int) (percent * 100f);
-		cellSize.setValue(intPercent);
+		cellWidthSpinner.setValue(getFloatPercentAs100(sets().getGridPercentX()));
+		cellHeightSpinner.setValue(getFloatPercentAs100(sets().getGridPercentY()));
 		
 		showGridCheckbox.addActionListener(new ShowGridStateChangeListener());
-		cellSize.addChangeListener(new GridSizeChangedListener());
+		sizeTheSameCheckbox.addActionListener(new MakeBothDirectionCellSizeTheSameListener());
+		snapToGridCheckbox.addActionListener(new SnapToGridStateChangeListener());
+		
+		cellWidthSpinner.addChangeListener(new CellWidthChangedListener());
+		cellHeightSpinner.addChangeListener(new CellHeightChangedListener());
+	}
+	
+	class MakeBothDirectionCellSizeTheSameListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			sets().setNeedMakeBothDirectionsTheSame(sizeTheSameCheckbox.isSelected());
+			cellHeightSpinner.setEnabled(!sizeTheSameCheckbox.isSelected());
+		}
 	}
 	
 	class ShowGridStateChangeListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			gridSizeLabel.setVisible(showGridCheckbox.isSelected());
-			cellSize.setVisible(showGridCheckbox.isSelected());
-			
-			EditorKernel.editorScreen().setDrawGrid(showGridCheckbox.isSelected());
+			if (showGridCheckbox.isSelected()) {
+				EditorKernel.sendCommand("grid show");
+			} else {
+				EditorKernel.sendCommand("grid hide");
+			}
 		}
 	}
 	
-	class GridSizeChangedListener implements ChangeListener {
+	class SnapToGridStateChangeListener implements ActionListener {
 		@Override
-		public void stateChanged(ChangeEvent arg0) {
-			int percent = Integer.parseInt(cellSize.getValue().toString());
-			float floatPercent = (float) percent / 100f;
-			EditorKernel.editorScreen().setGridPercent(floatPercent);
+		public void actionPerformed(ActionEvent e) {
+			if (snapToGridCheckbox.isSelected()) {
+				EditorKernel.sendCommand("grid on");
+			} else {
+				EditorKernel.sendCommand("grid off");
+			}
 		}
-		
 	}
 	
-	public JCheckBox getShowGridCheckbox() {
-		return showGridCheckbox;
+	class CellWidthChangedListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			try {
+				int cellWidth = (int) Float.parseFloat(cellWidthSpinner.getValue().toString());
+				sets().setGridPercentX(get100PercentAsFloat(cellWidth));
+				if (sizeTheSameCheckbox.isSelected()) {
+					sets().setGridPercentY(get100PercentAsFloat(cellWidth));
+					cellHeightSpinner.setValue(cellWidth);
+				}
+				
+				EditorKernel.editorScreen().setGridSize(sets().getGridPercentX(), sets().getGridPercentY());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
-	public JLabel getGridSizeLabel() {
-		return gridSizeLabel;
+	
+	class CellHeightChangedListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			try {
+				int cellHeight = (int) Float.parseFloat(cellHeightSpinner.getValue().toString());
+				sets().setGridPercentY(get100PercentAsFloat(cellHeight));
+				EditorKernel.editorScreen().setGridSize(sets().getGridPercentX(), sets().getGridPercentY());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+		}
 	}
-	public JSpinner getCellSize() {
-		return cellSize;
+	
+	private float get100PercentAsFloat(int percent) {
+		return (float) percent / 100f;
+	}
+	
+	private float getFloatPercentAs100(float percent) {
+		return (int) (100f * percent);
+	}
+	
+	private GridSettings sets() {
+		return GridSettings.getInstance();
 	}
 }

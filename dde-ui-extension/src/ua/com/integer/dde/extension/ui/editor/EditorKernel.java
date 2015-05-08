@@ -36,4 +36,8 @@ public class EditorKernel extends DDKernel {
 	public static UiEditorScreen editorScreen() {
 		return instance.getScreen(UiEditorScreen.class);
 	}
+	
+	public static void sendCommand(String command) {
+		instance.actorListDialog.sendCommand(command);
+	}
 }
