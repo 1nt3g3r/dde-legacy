@@ -1,5 +1,11 @@
 package ua.com.integer.dde.res;
 
+import ua.com.integer.dde.res.font.TTFFontManager;
+import ua.com.integer.dde.res.graphics.TextureManager;
+import ua.com.integer.dde.res.screen.ScreenManager;
+import ua.com.integer.dde.res.sound.MusicManager;
+import ua.com.integer.dde.res.sound.SoundManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -119,5 +125,25 @@ public class ResourceManager implements Disposable, LoadManager {
 			result += lm.getLoadedAssetCount();
 		}
 		return result;
+	}
+	
+	public TextureManager atlases() {
+		return getManager(TextureManager.class);
+	}
+	
+	public SoundManager sounds() {
+		return getManager(SoundManager.class);
+	}
+	
+	public MusicManager musics() {
+		return getManager(MusicManager.class);
+	}
+	
+	public TTFFontManager fonts() {
+		return getManager(TTFFontManager.class);
+	}
+	
+	public ScreenManager screens() {
+		return getManager(ScreenManager.class);
 	}
 }

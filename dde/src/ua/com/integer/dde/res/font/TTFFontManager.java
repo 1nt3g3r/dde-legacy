@@ -66,7 +66,7 @@ public class TTFFontManager implements LoadManager {
 		if (fontName.equals("standard")) return getFont(size);
 		
 		createFontGeneratorIfNeed(fontName);
-		createFontMapIfNeed(fontName, size);
+		createFontMapIfNeed(fontName);
 		createFontIfNeed(fontName, size);
 		
 		return fonts.get(fontName).get(size);
@@ -110,7 +110,7 @@ public class TTFFontManager implements LoadManager {
 		}
 	}
 	
-	private void createFontMapIfNeed(String fontName, int fontSize) {
+	private void createFontMapIfNeed(String fontName) {
 		if (fonts.get(fontName) == null) {
 			fonts.put(fontName, new HashMap<Integer, BitmapFont>());
 		}
@@ -168,7 +168,7 @@ public class TTFFontManager implements LoadManager {
 		fillLoadQueue();
 	}
 	
-	private void clearLoadQueue() {
+	public void clearLoadQueue() {
 		if (loadFontQueue == null) {
 			loadFontQueue = new Array<String>();
 		} else {
@@ -224,5 +224,13 @@ public class TTFFontManager implements LoadManager {
 	@Override
 	public int getLoadedAssetCount() {
 		return fGenerators.size;
+	}
+	
+	public void addFont(String fontName, int fontSize, BitmapFont font) {
+		createFontMapIfNeed(fontName);
+		if (fonts.get(fontName).get(fontSize) != null) {
+			Gdx.app.log("Font manager", "font with " + fontName + " will be overriden by given you font!");
+		}
+		fonts.get(fontName).put(fontSize, font);
 	}
 }

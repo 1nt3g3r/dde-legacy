@@ -8,6 +8,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Менеджер текстур загружает изображения из ".pack" файлов. Вы 
@@ -25,6 +26,8 @@ public class TextureManager implements LoadManager {
 	private Array<String> loadedPacks;
 	
 	private String packDirectory;
+	
+	private ObjectMap<String, TextureAtlas> customAtlases = new ObjectMap<String, TextureAtlas>(); 
 	
 	/**
 	 * Создает менеджера, используя экземпляр {@link AssetManager}.
@@ -123,11 +126,19 @@ public class TextureManager implements LoadManager {
 		return loadedPacks;
 	}
 	
+	public ObjectMap<String, TextureAtlas> getCustomPacks() {
+		return customAtlases;
+	}
+	
 	/**
 	 * Возвращает список регионов текстур в выбранном атласе
 	 * @param packName имя атласа
 	 */
 	public Array<AtlasRegion> getRegionsFromPack(String packName) {
+		if (customAtlases.containsKey(packName)) {
+			return getAtlas(packName).getRegions();
+		}
+		
 		if (!isPackLoaded(packName)) {
 			throw new IllegalStateException("Pack " + packName + " isn't loaded!");
 		}
@@ -142,6 +153,10 @@ public class TextureManager implements LoadManager {
 	 * @param packName имя атласа
 	 */
 	public void loadPack(String packName) {
+		if (customAtlases.containsKey(packName)) {
+			return;
+		}
+		
 		assets.load(packDirectory + "/" + packName + ".pack", TextureAtlas.class);
 		loadedPacks.add(packName);
 	}
@@ -152,6 +167,10 @@ public class TextureManager implements LoadManager {
 	 * @return true если атлас существует
 	 */
 	public boolean packExists(String packName) {
+		if (customAtlases.containsKey(packName)) {
+			return true;
+		}
+		
 		return Gdx.files.internal(packDirectory + "/" + packName + ".pack").exists();
 	}
 	
@@ -177,6 +196,12 @@ public class TextureManager implements LoadManager {
 	 * @param packName имя атласа
 	 */
 	public void unloadPack(String packName) {
+		if (customAtlases.containsKey(packName)) {
+			customAtlases.get(packName).dispose();
+			customAtlases.remove(packName);
+			return;
+		}
+		
 		if (isPackLoaded(packName)) {
 			assets.unload(packDirectory + "/" + packName + ".pack");
 			assets.finishLoading();
@@ -208,15 +233,20 @@ public class TextureManager implements LoadManager {
 	 * @param packname имя атласа
 	 */
 	public TextureAtlas getAtlas(String packname) {
+		if (customAtlases.containsKey(packname)) {
+			return customAtlases.get(packname);
+		}
+
 		if (!isPackLoaded(packname)) {
 			loadPack(packname);
 			assets.finishLoading();
 		}
+		
 		return assets.get(packDirectory + "/" + packname+".pack", TextureAtlas.class);
 	}
 	
 	private boolean isPackLoaded(String packName) {
-		return assets.isLoaded(packDirectory + "/" + packName+".pack");
+		return assets.isLoaded(packDirectory + "/" + packName+".pack") || customAtlases.containsKey(packName);
 	}
 
 	@Override
@@ -234,9 +264,19 @@ public class TextureManager implements LoadManager {
 		for(String pack : loadedPacks) {
 			unloadPack(pack);
 		}
+		
+		disposeCustomAtlases();
+		
 		assets.dispose();
 		assets = null;
 		Gdx.app.log("dde", "Texture manager dispose!");
+	}
+
+	private void disposeCustomAtlases() {
+		for(TextureAtlas customAtlas : customAtlases.values()) {
+			customAtlas.dispose();
+		}
+		customAtlases.clear();
 	}
 
 	@Override
@@ -253,5 +293,9 @@ public class TextureManager implements LoadManager {
 			}
 		}
 		return result;
+	}
+	
+	public void addAtlas(String atlasName, TextureAtlas atlas) {
+		customAtlases.put(atlasName, atlas);
 	}
 }

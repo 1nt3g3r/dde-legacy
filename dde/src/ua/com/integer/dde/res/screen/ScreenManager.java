@@ -222,4 +222,12 @@ public class ScreenManager implements Disposable, LoadManager {
 	public int getLoadedAssetCount() {
 		return 0;
 	}
+	
+	public void disposeScreen(Class<? extends AbstractScreen> screen) {
+		AbstractScreen screenToRemove = getScreen(screen);
+		String screenName = screenToRemove.getScreenName();
+		
+		screenToRemove.dispose();
+		screens.remove(screenName);
+	}
 }

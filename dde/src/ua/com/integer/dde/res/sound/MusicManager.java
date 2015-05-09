@@ -156,8 +156,8 @@ public class MusicManager implements Disposable, LoadManager {
 	}
 	
 	/**
-	 * Disposes sound
-	 * @param name name of the sound
+	 * Disposes music
+	 * @param name name of the music
 	 */
 	public void disposeMusic(String name) {
 		Music music = musics.get(name);
@@ -184,5 +184,9 @@ public class MusicManager implements Disposable, LoadManager {
 	@Override
 	public int getLoadedAssetCount() {
 		return loadedMusicCount;
+	}
+	
+	public void addMusic(String name, Music music) {
+		musics.put(name, music);
 	}
 }

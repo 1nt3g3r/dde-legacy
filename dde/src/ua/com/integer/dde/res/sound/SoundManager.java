@@ -190,4 +190,8 @@ public class SoundManager implements Disposable, LoadManager {
 	public int getLoadedAssetCount() {
 		return loadedSoundCount;
 	}
+	
+	public void addSound(String soundName, Sound sound) {
+		sounds.put(soundName, sound);
+	}
 }

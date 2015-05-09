@@ -212,7 +212,6 @@ public class AbstractScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		//stage.dispose();
 		notifyAboutEvent(ScreenEvent.DISPOSE);
 	}
 	
@@ -259,5 +258,9 @@ public class AbstractScreen implements Screen {
 		seqTask.addAction(Actions.delay(delay));
 		seqTask.addAction(Actions.run(task));
 		getStage().addAction(seqTask);
+	}
+	
+	public void showScreen(Class<? extends AbstractScreen> screen) {
+		getKernel().showScreen(screen);
 	}
 }
