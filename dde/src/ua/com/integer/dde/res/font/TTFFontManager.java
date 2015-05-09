@@ -215,4 +215,14 @@ public class TTFFontManager implements LoadManager {
 		
 		return fontNames;
 	}
+
+	@Override
+	public int getAssetCount() {
+		return totalFontCount;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		return fGenerators.size;
+	}
 }

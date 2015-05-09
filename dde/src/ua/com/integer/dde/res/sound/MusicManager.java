@@ -23,13 +23,19 @@ public class MusicManager implements Disposable, LoadManager {
 	private int totalMusicCount, loadedMusicCount;
 	private boolean useSeparateThread = true;
 
-	private ObjectMap<String, Music> music;
+	private ObjectMap<String, Music> musics;
+	
+	private static final String[] MUSIC_EXTENSIONS = {
+		"ogg",
+		"mp3",
+		"wav"
+	};
 
 	/**
 	 * Creates music manager.
 	 */
 	public MusicManager() {
-		music = new ObjectMap<String, Music>();
+		musics = new ObjectMap<String, Music>();
 		loadQueue = new Array<String>();
 	}
 	
@@ -55,8 +61,11 @@ public class MusicManager implements Disposable, LoadManager {
 
 		loadQueue.clear();
 		for (FileHandle musicHandle : Gdx.files.internal(musicDirectory).list()) {
-			if (!musicHandle.isDirectory() && musicHandle.extension().equals("mp3")) {
-				loadQueue.add(musicHandle.nameWithoutExtension());
+			if (!musicHandle.isDirectory()) {
+				String extension = musicHandle.extension();
+				if (canLoadSound(extension)) {
+					loadQueue.add(musicHandle.nameWithoutExtension());
+				}
 			}
 		}
 
@@ -97,14 +106,15 @@ public class MusicManager implements Disposable, LoadManager {
 	}
 
 	private void tryToLoadMusic(String name) {
-		FileHandle musicFile = Gdx.files.internal(musicDirectory + "/" + name + ".mp3");
-		if (musicFile.exists()) {
-			music.put(name, Gdx.audio.newMusic(musicFile));
-			loadedMusicCount++;
-		} else {
-			Gdx.app.error("Music manager", "Error during loading music " + name);
-			System.exit(0);
+		for(String extension: MUSIC_EXTENSIONS) {
+			FileHandle musicFile = Gdx.files.internal(musicDirectory + "/" + name + "." + extension);
+			if (musicFile.exists()) {
+				musics.put(name, Gdx.audio.newMusic(musicFile));
+				loadedMusicCount++;
+				return;
+			}
 		}
+		Gdx.app.error("Music manager", "Error during loading music " + name);
 	}
 
 	@Override
@@ -119,10 +129,10 @@ public class MusicManager implements Disposable, LoadManager {
 	 * Returns music. If music file is not loaded, manager try to load it.
 	 */
 	public Music getMusic(String name) {
-		Music musicFile = music.get(name);
+		Music musicFile = musics.get(name);
 		if (musicFile == null) {
 			tryToLoadMusic(name);
-			musicFile = music.get(name);
+			musicFile = musics.get(name);
 		}
 		return musicFile;
 	}
@@ -132,7 +142,7 @@ public class MusicManager implements Disposable, LoadManager {
 	 */
 	public Array<String> getLoadedMusic() {
 		Array<String> result = new Array<String>();
-		for (String musicName : music.keys()) {
+		for (String musicName : musics.keys()) {
 			result.add(musicName);
 		}
 		return result;
@@ -140,9 +150,39 @@ public class MusicManager implements Disposable, LoadManager {
 
 	@Override
 	public void dispose() {
-		for (Music musicFile : music.values()) {
+		for (Music musicFile : musics.values()) {
 			musicFile.dispose();
 		}
 	}
+	
+	/**
+	 * Disposes sound
+	 * @param name name of the sound
+	 */
+	public void disposeMusic(String name) {
+		Music music = musics.get(name);
+		if (music != null) {
+			music.dispose();
+		}
+		musics.remove(name);
+	}
 
+	private boolean canLoadSound(String extension) {
+		for(String allowed : MUSIC_EXTENSIONS) {
+			if (extension.toLowerCase().equals(allowed)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int getAssetCount() {
+		return totalMusicCount;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		return loadedMusicCount;
+	}
 }

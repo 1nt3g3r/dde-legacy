@@ -212,4 +212,14 @@ public class ScreenManager implements Disposable, LoadManager {
 		}
 		return (float) loadedScreenCount / (float) totalScreenCountToLoad;
 	}
+
+	@Override
+	public int getAssetCount() {
+		return 0;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		return 0;
+	}
 }

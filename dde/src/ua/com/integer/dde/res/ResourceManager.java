@@ -3,6 +3,7 @@ package ua.com.integer.dde.res;
 import ua.com.integer.dde.res.loading.LoadManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -49,11 +50,12 @@ public class ResourceManager implements Disposable, LoadManager {
 	 * Возвращает суммарный прогресс загрузки для всех менеджеров.
 	 */
 	public float getLoadPercent() {
-		float totalProgress = 0;
-		for(LoadManager loadManager : loadManagers) {
-			totalProgress += loadManager.getLoadPercent();
+		if (getAssetCount() <= 0) {
+			return 1f;
 		}
-		return totalProgress / (float) loadManagers.size;
+		
+		float result = (float) getLoadedAssetCount() / (float) getAssetCount();
+		return MathUtils.clamp(result, 0f, 1f);
 	}
 	
 	/**
@@ -101,5 +103,23 @@ public class ResourceManager implements Disposable, LoadManager {
 	 */
 	public void addManager(LoadManager manager) {
 		loadManagers.add(manager);
+	}
+
+	@Override
+	public int getAssetCount() {
+		int result = 0;
+		for(LoadManager lm : loadManagers) {
+			result += lm.getAssetCount();
+		}
+		return result;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		int result = 0;
+		for(LoadManager lm : loadManagers) {
+			result += lm.getLoadedAssetCount();
+		}
+		return result;
 	}
 }

@@ -25,4 +25,6 @@ public interface LoadManager extends Disposable {
 	 * Возвращает число в пределах 0..1 - прогресс загрузки
 	 */
 	public float getLoadPercent();
+	public int getAssetCount();
+	public int getLoadedAssetCount();
 }

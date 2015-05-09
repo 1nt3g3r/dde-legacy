@@ -25,6 +25,12 @@ public class SoundManager implements Disposable, LoadManager {
 	private boolean useSeparateThread = true;
 
 	private ObjectMap<String, Sound> sounds;
+	
+	private static final String[] SOUND_EXTENSIONS = {
+			"ogg",
+			"mp3",
+			"wav"
+	};
 
 	/**
 	 * Creates sound manager.
@@ -56,9 +62,11 @@ public class SoundManager implements Disposable, LoadManager {
 
 		loadQueue.clear();
 		for (FileHandle soundHandle : Gdx.files.internal(soundDirectory).list()) {
-			if (!soundHandle.isDirectory()
-					&& soundHandle.extension().equals("mp3")) {
-				loadQueue.add(soundHandle.nameWithoutExtension());
+			if (!soundHandle.isDirectory()) {
+				String extension = soundHandle.extension();
+				if (canLoadSound(extension)) {
+					loadQueue.add(soundHandle.nameWithoutExtension());
+				}
 			}
 		}
 
@@ -101,14 +109,16 @@ public class SoundManager implements Disposable, LoadManager {
 	}
 
 	private void tryToLoadSound(String name) {
-		FileHandle soundFile = Gdx.files.internal(soundDirectory + "/" + name + ".mp3");
-		if (soundFile.exists()) {
-			sounds.put(name, Gdx.audio.newSound(soundFile));
-			loadedSoundCount++;
-		} else {
-			Gdx.app.error("Sound manager", "Error during loading sound " + name);
-			System.exit(0);
+		for(String extension: SOUND_EXTENSIONS) {
+			FileHandle soundFile = Gdx.files.internal(soundDirectory + "/" + name + "." + extension);
+			if (soundFile.exists()) {
+				sounds.put(name, Gdx.audio.newSound(soundFile));
+				loadedSoundCount++;
+				return;
+			}
 		}
+		
+		Gdx.app.error("Sound manager", "Error during loading sound " + name);
 	}
 
 	@Override
@@ -149,5 +159,35 @@ public class SoundManager implements Disposable, LoadManager {
 			sound.dispose();
 		}
 	}
+	
+	/**
+	 * Disposes sound
+	 * @param name name of the sound
+	 */
+	public void disposeSound(String name) {
+		Sound sound = sounds.get(name);
+		if (sound != null) {
+			sound.dispose();
+		}
+		sounds.remove(name);
+	}
+	
+	private boolean canLoadSound(String extension) {
+		for(String allowed : SOUND_EXTENSIONS) {
+			if (extension.toLowerCase().equals(allowed)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
+	@Override
+	public int getAssetCount() {
+		return totalSoundCount;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		return loadedSoundCount;
+	}
 }

@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -160,7 +162,7 @@ public class AbstractScreen implements Screen {
 	}
 	
 	protected void renderStage(float delta) {
-		stage.act(delta);
+		stage.act(Math.min(delta, 1 / 30f));
 		stage.draw();
 	}
 
@@ -243,5 +245,19 @@ public class AbstractScreen implements Screen {
 	public static void disposeBatch() {
 		batch.dispose();
 		batch = null;
+	}
+	
+	/**
+	 * Исполняет указанную задачу через указанный промежуток времени. 
+	 * Особенность - если экран будет спрятан до начала времени выполнения задачи, 
+	 * то задача не будет выполнена
+	 * @param delay задержка в секундах перед выполнением задания
+	 * @param task задача
+	 */
+	public void postTask(float delay, Runnable task) {
+		SequenceAction seqTask = Actions.sequence();
+		seqTask.addAction(Actions.delay(delay));
+		seqTask.addAction(Actions.run(task));
+		getStage().addAction(seqTask);
 	}
 }

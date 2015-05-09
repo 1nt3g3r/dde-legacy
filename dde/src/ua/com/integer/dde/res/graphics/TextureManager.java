@@ -30,7 +30,6 @@ public class TextureManager implements LoadManager {
 	 * Создает менеджера, используя экземпляр {@link AssetManager}.
 	 */
 	public TextureManager(AssetManager assets) {
-		//Texture.setAssetManager(assets);
 		if (assets == null) {
 			throw new IllegalArgumentException("AssetManager instance can't be null!");
 		}
@@ -238,5 +237,21 @@ public class TextureManager implements LoadManager {
 		assets.dispose();
 		assets = null;
 		Gdx.app.log("dde", "Texture manager dispose!");
+	}
+
+	@Override
+	public int getAssetCount() {
+		return loadedPacks.size;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		int result = 0;
+		for(String pack : loadedPacks) {
+			if (isPackLoaded(pack)) {
+				result ++;
+			}
+		}
+		return result;
 	}
 }

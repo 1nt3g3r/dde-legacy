@@ -20,20 +20,20 @@ public class DDKernelConfig {
 	/**
 	 * Каталог, где хранятся упакованные в атласы текстуры
 	 */
-	public String packDirectory = "data/image_packs";
+	public String packDirectory = "data/dde-atlases";
 	/**
-	 * Каталог для хранения TrueType шрифтов
+	 * Каталог для хранения TrueType шрифтов (ttf)
 	 */
-	public String fontDirectory = "data/ttf_fonts";
+	public String fontDirectory = "data/dde-fonts";
 	/**
-	 * Каталог для хранения mp3 звуков
+	 * Каталог для хранения звуков в форматах ogg, mp3, wav
 	 */
-	public String soundDirectory = "data/mp3_sound";
+	public String soundDirectory = "data/dde-sounds";
 	/**
-	 * Каталог для хранения музыки в mp3. Звук и музыка отличаются способом хранения в памяти - 
+	 * Каталог для хранения музыки в ogg, mp3, wav. Звук и музыка отличаются способом хранения в памяти - 
 	 * звук целиком загружается в память, музыка же по мере проигрывания загружается с диска (streaming)
 	 */
-	public String musicDirectory = "data/mp3_music";
+	public String musicDirectory = "data/dde-musics";
 	/**
 	 * Нужно ли обрабатывать клавишу "Назад" на android телефонах (на компьютере мы считаем, что 
 	 * это кнопка Escape). По умолчанию обработка включена
