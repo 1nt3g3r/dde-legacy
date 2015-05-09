@@ -1,5 +1,7 @@
 package ua.com.integer.dde.extension.ui.editor.drag;
 
+import java.awt.Cursor;
+
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
@@ -24,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
  * @author 1nt3g3r
  */
 public class WidgetDragListener extends InputListener implements ScreenListener {
+	public static final int QUAD_SIZE_TO_RESIZE = 10;
+	
 	public static final int FREE_MOVE = 0;
 	public static final int SNAP_TO_BOTTOM_LEFT = 1;
 	public static final int SNAP_TO_LEFT_ONLY = 2;
@@ -34,6 +38,7 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	public static final int SNAP_TO_BOTTOM_RIGHT = 7;
 	public static final int SNAP_TO_BOTTOM_ONLY = 8;
 	public static final int SNAP_TO_CENTER = 9;
+	public static final int RESIZE = 10;
 	
 	private float offsetX, offsetY;
 	private Actor touchActor;
@@ -44,12 +49,16 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	private int dragMode;
 	
 	private float gridPercentX, gridPercentY;
+	private float deltaX, deltaY;
+	
+	private boolean needSnapToGrid;
 	
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 		touchActor = event.getStage().hit(x, y, true);
 		
 		if (touchActor != null && touchActor.getParent() != null && touchActor == EditorKernel.editorScreen().getSelectedActor()) {
+			needSnapToGrid = GridSettings.getInstance().needSnapToGrid();
 			gridPercentX = GridSettings.getInstance().getGridPercentX();
 			gridPercentY = GridSettings.getInstance().getGridPercentY();
 			
@@ -58,17 +67,33 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 			offsetX = offset.x;
 			offsetY = offset.y;
 			
+			deltaX = touchActor.getWidth() - offsetX;
+			deltaY = touchActor.getHeight() - offsetY;
+			
 			setupDragMode(offsetX, offsetY);
-			System.out.println("drag mode: " + dragMode);
-
+			setupCursor();
+			
 			return true;
 		}
 		
 		return false;
 	}
 	
+	private void setupCursor() {
+		if (dragMode == RESIZE) {
+			EditorKernel.getInstance().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+		} else {
+			EditorKernel.getInstance().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+		}
+	}
+	
 	private void setupDragMode(float touchX, float touchY) {
-		if (!GridSettings.getInstance().needSnapToGrid()) {
+		if (touchX >= touchActor.getWidth() - QUAD_SIZE_TO_RESIZE && touchY >= touchActor.getHeight() - QUAD_SIZE_TO_RESIZE) {
+			dragMode = RESIZE;
+			return;
+		}
+		
+		if (!needSnapToGrid) {
 			dragMode = FREE_MOVE;
 			return;
 		}
@@ -105,6 +130,35 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	
 	@Override
 	public void touchDragged(InputEvent event, float x, float y, int pointer) {
+		if (dragMode == RESIZE) {
+			handleWidgetResizing(x, y);
+		} else {
+			handleWidgetMoving(x, y);
+		}
+	}
+	
+	private void handleWidgetResizing(float x, float y) {
+		if (needSnapToGrid) {
+			calculateNearestGrid(x - deltaX, y - deltaY);
+			tmp.set(nearestGridPosition);
+		} else {
+			tmp.set(x, y);
+		}
+
+		Vector2 touchActorCoords = touchActor.stageToLocalCoordinates(tmp);
+		
+		float newWidth = touchActorCoords.x;
+		float newHeight = touchActorCoords.y;
+		
+		if (!needSnapToGrid) {
+			newWidth += deltaX;
+			newHeight += deltaY;
+		}
+
+		touchActor.setSize(newWidth, newHeight);
+	}
+
+	private void handleWidgetMoving(float x, float y) {
 		Group parent = touchActor.getParent();
 		
 		float drawOffsetX = 0;
@@ -191,6 +245,11 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 		touchActor.setPosition(newPosition.x + drawOffsetX, newPosition.y + drawOffsetY);
 	}
 	
+	/**
+	 * Параметры передаются в координатах относительно Stage
+	 * @param touchX
+	 * @param touchY
+	 */
 	private void calculateNearestGrid(float touchX, float touchY) {
 		Group parent = touchActor.getParent();
 		
@@ -254,12 +313,27 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 			return;
 		}
 		
-		UiConfig config = (UiConfig) touchActor.getUserObject();
-		config.loadFromActor(touchActor);
+		if (dragMode == RESIZE) {
+			touchUpOnResize();
+		} else {
+			touchUpOnDragging();
+		}
 		
-		EditorKernel.editorScreen().updatePropertyPanel();
+		EditorKernel.getInstance().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 		touchActor = null;
+		EditorKernel.editorScreen().updatePropertyPanel();
+
+	}
+	
+	private void touchUpOnResize() {
+		UiConfig config = (UiConfig) touchActor.getUserObject();
+		config.loadSizeFromActor(touchActor);
+	}
+
+	private void touchUpOnDragging() {
+		UiConfig config = (UiConfig) touchActor.getUserObject();
+		config.loadPositionFromActor(touchActor);
 	}
 	
 	@Override
@@ -283,7 +357,7 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 			commandText.remove();
 			String command = commandText.getText();
 			commandText.setText("");
-			EditorKernel.getInstance().getActorListDialog().sendCommand(command);
+			EditorKernel.getInstance().getMainWindow().sendCommand(command);
 			return true;
 		}
 		

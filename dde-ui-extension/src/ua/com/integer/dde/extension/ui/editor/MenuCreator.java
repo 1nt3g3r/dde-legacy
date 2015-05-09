@@ -41,7 +41,7 @@ public class MenuCreator {
 		public void actionPerformed(ActionEvent e) {
 			getEditorScreen().removeUiConfig(getUiConfig());
 			
-			EditorKernel.getInstance().getActorListDialog().updateActorTree();
+			EditorKernel.getInstance().getMainWindow().updateActorTree();
 		}
 	};
 	
@@ -70,7 +70,7 @@ public class MenuCreator {
 			
 			new File("tmp.actor").delete();
 			
-			EditorKernel.getInstance().getActorListDialog().updateActorTree();
+			EditorKernel.getInstance().getMainWindow().updateActorTree();
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class MenuCreator {
 				
 				new File("tmp.actor").delete();
 				
-				EditorKernel.getInstance().getActorListDialog().updateActorTree();
+				EditorKernel.getInstance().getMainWindow().updateActorTree();
 			}
 		}
 	}
@@ -202,7 +202,7 @@ public class MenuCreator {
 			
 			getEditorScreen().selectActorByConfig(config);
 			
-			EditorKernel.getInstance().getActorListDialog().updateActorTree();
+			EditorKernel.getInstance().getMainWindow().updateActorTree();
 		}
 	}
 	
@@ -238,13 +238,13 @@ public class MenuCreator {
 			getUiConfig().children.add(UiConfig.fromFile(configFile));
 			getEditorScreen().updateConfig();
 			
-			EditorKernel.getInstance().getActorListDialog().updateActorTree();
+			EditorKernel.getInstance().getMainWindow().updateActorTree();
 		}
 	};
 	
 	private JMenu createInserUiConfigMenu() {
 		JMenu toReturn = new JMenu("Config");
-		for(File actorFile : EditorKernel.getInstance().getActorListDialog().getActorFiles()) {
+		for(File actorFile : EditorKernel.getInstance().getMainWindow().getActorFiles()) {
 			JMenuItem toInsert = new JMenuItem(actorFile.getName().split("\\.")[0]);
 			toInsert.addActionListener(new InsertDialogListener(actorFile));
 			toReturn.add(toInsert);

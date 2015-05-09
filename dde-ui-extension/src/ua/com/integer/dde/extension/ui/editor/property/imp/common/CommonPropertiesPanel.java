@@ -191,7 +191,7 @@ public class CommonPropertiesPanel extends ConfigEditor implements PropertyChang
 			protected void saveStringToConfig(String value) {
 				config.name = value;
 				
-				EditorKernel.getInstance().getActorListDialog().updateActorTree();
+				EditorKernel.getInstance().getMainWindow().updateActorTree();
 			}
 			
 			@Override

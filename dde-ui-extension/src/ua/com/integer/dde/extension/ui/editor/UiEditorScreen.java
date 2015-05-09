@@ -45,6 +45,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	
 	private ConfigChangedListener configChangedListener;
 	private Vector2 tmpGrid = new Vector2();
+	private Vector2 tmpResizeVector = new Vector2();
 	
 	private boolean drawGrid;
 	private WidgetDragListener dragListener;
@@ -139,7 +140,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		this.selectedActor = selectedActor;
 		getStage().setScrollFocus(selectedActor);
 		
-		if (needUpdateProperties && EditorKernel.getInstance().getActorListDialog() != null) {
+		if (needUpdateProperties && EditorKernel.getInstance().getMainWindow() != null) {
 			updatePropertyPanel();
 		}
 	}
@@ -148,7 +149,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	 * Updates properties of selected actor. This method can be useful if you changed {@link UiConfig} of this actor
 	 */
 	public void updatePropertyPanel() {
-		EditorKernel.getInstance().getActorListDialog().updatePropertyPanelForSelectedActor();
+		EditorKernel.getInstance().getMainWindow().updatePropertyPanelForSelectedActor();
 	}
 	
 	/**
@@ -182,6 +183,8 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 			drawGrid(selectedActor.getParent());
 			drawGrid3x3(selectedActor);
 		}
+		
+		drawResizePoint(selectedActor);
 
 		shapeRenderer.begin(ShapeType.Line);
 			drawLinesAroundActor(getStage().getRoot());
@@ -340,7 +343,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					JOptionPane.showMessageDialog(null, "Config incorrect!");
 				}
 				
-				EditorKernel.getInstance().getActorListDialog().updateActorTree();
+				EditorKernel.getInstance().getMainWindow().updateActorTree();
 			}
 		});
 		
@@ -486,7 +489,11 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		float endY = startPosition.y + actor.getHeight();
 
 		shapeRenderer.begin(ShapeType.Point);
-		shapeRenderer.setColor(Color.WHITE);
+		if (GridSettings.getInstance().needSnapToGrid()) {
+			shapeRenderer.setColor(Color.WHITE);
+		} else {
+			shapeRenderer.setColor(Color.DARK_GRAY);
+		}
 		
 		for(float x = startX; x <= endX; x += stepX) {
 			for(float y = startY; y <= endY; y += stepY) {
@@ -543,5 +550,23 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	public void setGridSize(float cellWidth, float cellHeight) {
 		gridPercentX = cellWidth;
 		gridPercentY = cellHeight;
+	}
+	
+	public void drawResizePoint(Actor actor) {
+		if (actor == null) {
+			return;
+		}
+		
+		tmpResizeVector.set(0, 0);
+		Vector2 position = actor.localToStageCoordinates(tmpResizeVector);
+
+		float resizeQuadSize = 10;
+		float x = position.x + actor.getWidth() - resizeQuadSize;
+		float y = position.y + actor.getHeight() - resizeQuadSize;
+		
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(Color.ORANGE);
+			shapeRenderer.rect(x, y, resizeQuadSize, resizeQuadSize);
+		shapeRenderer.end();
 	}
 }

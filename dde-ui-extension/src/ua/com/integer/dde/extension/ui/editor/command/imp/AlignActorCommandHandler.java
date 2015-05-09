@@ -26,22 +26,22 @@ public class AlignActorCommandHandler implements CommandHandler {
 					float freeHorizontalSpace = parent.getWidth() - actor.getWidth();
 					float dstX = freeHorizontalSpace/2f;
 					actor.setX(dstX);
-					selected.loadFromActor(actor);
+					selected.loadPositionFromActor(actor);
 				} else if (mode.equalsIgnoreCase("vertically") || mode.equals("v")) {
 					float freeVerticalSpace = parent.getHeight() - actor.getHeight();
 					float dstY = freeVerticalSpace/2f;
 					actor.setY(dstY);
-					selected.loadFromActor(actor);
+					selected.loadPositionFromActor(actor);
 				} else if (mode.equals("both") || mode.equals("b")) {
 					float freeHorizontalSpace = parent.getWidth() - actor.getWidth();
 					float dstX = freeHorizontalSpace/2f;
 					actor.setX(dstX);
-					selected.loadFromActor(actor);
+					selected.loadPositionFromActor(actor);
 					
 					float freeVerticalSpace = parent.getHeight() - actor.getHeight();
 					float dstY = freeVerticalSpace/2f;
 					actor.setY(dstY);
-					selected.loadFromActor(actor);
+					selected.loadPositionFromActor(actor);
 				}
 			}
 		}

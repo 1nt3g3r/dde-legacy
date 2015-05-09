@@ -2,6 +2,7 @@ package ua.com.integer.dde.extension.ui.editor.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -564,7 +565,7 @@ public class UiEditorDialog extends JDialog {
 		
 		getEditorScreen().getStage().getRoot().setPosition(0, 0);
 		
-		EditorKernel.getInstance().getActorListDialog().updateActorTree();
+		EditorKernel.getInstance().getMainWindow().updateActorTree();
 		EditorKernel.getInstance().getScreen(UiEditorScreen.class).selectRoot();
 	}
 	
@@ -969,5 +970,10 @@ public class UiEditorDialog extends JDialog {
 	
 	public void setConsoleOutput(String text) {
 		outputText.setText(text);
+	}
+	
+	@Override
+	public void setCursor(Cursor cursor) {
+		lCanvas.setCursor(cursor);
 	}
 }

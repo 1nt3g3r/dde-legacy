@@ -55,7 +55,7 @@ public class ActorInputListener extends InputListener {
 	}
 	
 	private void showMenu() {
-		JDialog frame = EditorKernel.getInstance().getActorListDialog();
+		JDialog frame = EditorKernel.getInstance().getMainWindow();
 		menu = MenuCreator.getInstance().createMenu(actor, getUiConfig());
 		menu.show(frame, frame.getMousePosition().x, frame.getMousePosition().y);
 	}

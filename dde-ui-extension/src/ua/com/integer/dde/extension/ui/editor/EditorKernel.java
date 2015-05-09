@@ -23,7 +23,7 @@ public class EditorKernel extends DDKernel {
 		this.actorListDialog = dialog;
 	}
 	
-	public UiEditorDialog getActorListDialog() {
+	public UiEditorDialog getMainWindow() {
 		return actorListDialog;
 	}
 	

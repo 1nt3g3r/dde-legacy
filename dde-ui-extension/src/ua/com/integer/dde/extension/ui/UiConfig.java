@@ -100,7 +100,7 @@ public class UiConfig {
 	 * Updates properties of this config (horizontalDistance and verticalDistance) from the given actor. 
 	 * You should use this method if you drag actor by mouse and want to save position to config
 	 */
-	public void loadFromActor(Actor actor) {
+	public void loadPositionFromActor(Actor actor) {
 		switch(parentCorner) {
 		case BOTTOM_LEFT:
 			loadFromActorBottomLeft(actor);
@@ -162,5 +162,16 @@ public class UiConfig {
 	private void updateDistances(Actor actor, float dstX, float dstY) {
 		horizontalDistance.loadFromValue(actor, dstX);
 		verticalDistance.loadFromValue(actor, dstY);
+	}
+	
+	public void loadSizeFromActor(Actor actor) {
+		float oldX = actor.getX();
+		float oldY = actor.getY();
+		
+		height.loadFromValue(actor, actor.getHeight());
+		width.loadFromValue(actor, actor.getWidth());
+		
+		actor.setPosition(oldX, oldY);
+		loadPositionFromActor(actor);
 	}
 }
