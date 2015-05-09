@@ -1,6 +1,4 @@
-package ua.com.integer.dde.res.loading;
-
-import ua.com.integer.dde.res.ResourceManager;
+package ua.com.integer.dde.res;
 
 import com.badlogic.gdx.utils.Disposable;
 

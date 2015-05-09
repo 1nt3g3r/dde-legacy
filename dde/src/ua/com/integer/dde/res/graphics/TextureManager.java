@@ -1,6 +1,6 @@
 package ua.com.integer.dde.res.graphics;
 
-import ua.com.integer.dde.res.loading.LoadManager;
+import ua.com.integer.dde.res.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;

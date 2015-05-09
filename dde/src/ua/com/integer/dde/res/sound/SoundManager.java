@@ -1,7 +1,7 @@
 package ua.com.integer.dde.res.sound;
 
 
-import ua.com.integer.dde.res.loading.LoadManager;
+import ua.com.integer.dde.res.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
