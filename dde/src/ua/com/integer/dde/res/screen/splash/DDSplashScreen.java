@@ -1,6 +1,9 @@
-package ua.com.integer.dde.res.screen;
+package ua.com.integer.dde.res.screen.splash;
 
 import ua.com.integer.dde.res.ResourceManager;
+import ua.com.integer.dde.res.screen.AbstractScreen;
+import ua.com.integer.dde.res.screen.ScreenEvent;
+import ua.com.integer.dde.res.screen.ScreenListener;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,10 +16,17 @@ public class DDSplashScreen extends AbstractScreen {
 	private Label progressLabel;
 	private float lastPercent;
 	
+	private SplashConfig splashConfig;
+	
 	public DDSplashScreen() {
+		this.splashConfig = new SplashConfig();
 		getConfig().backgroundColor = Color.DARK_GRAY;
 		initScreenListener();
 		initLabel();
+	}
+	
+	public SplashConfig getSplashConfig() {
+		return splashConfig;
 	}
 	
 	public Label getProgressLabel() {
@@ -45,7 +55,26 @@ public class DDSplashScreen extends AbstractScreen {
 					loadStep(0f);
 					postTask(0.2f, new Runnable() {
 						public void run() {
-							res.loadAll();
+							if (splashConfig.loadAllAtlases) {
+								res.atlases().loadAll();
+							}
+							
+							if (splashConfig.loadAllFonts) {
+								res.fonts().loadAll();
+							}
+							
+							if (splashConfig.loadAllSounds) {
+								res.sounds().loadAll();
+							}
+							
+							if (splashConfig.loadAllMusic) {
+								res.musics().loadAll();
+							}
+							
+							if (splashConfig.loadAllScreens) {
+								res.screens().loadAll();
+							}
+							
 							canGoToNextScreen = true;
 						}
 					});

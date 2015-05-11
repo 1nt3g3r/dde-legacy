@@ -33,7 +33,7 @@ public class DDKernelConfig {
 	 * Каталог для хранения музыки в ogg, mp3, wav. Звук и музыка отличаются способом хранения в памяти - 
 	 * звук целиком загружается в память, музыка же по мере проигрывания загружается с диска (streaming)
 	 */
-	public String musicDirectory = "data/dde-musics";
+	public String musicDirectory = "data/dde-music";
 	/**
 	 * Нужно ли обрабатывать клавишу "Назад" на android телефонах (на компьютере мы считаем, что 
 	 * это кнопка Escape). По умолчанию обработка включена

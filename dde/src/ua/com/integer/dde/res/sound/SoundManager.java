@@ -194,4 +194,8 @@ public class SoundManager implements Disposable, LoadManager {
 	public void addSound(String soundName, Sound sound) {
 		sounds.put(soundName, sound);
 	}
+	
+	public void loadSound(String name) {
+		loadQueue.add(name);
+	}
 }
