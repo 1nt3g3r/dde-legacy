@@ -70,8 +70,14 @@ public class SoundManager implements Disposable, LoadManager {
 			}
 		}
 
-		totalSoundCount = loadQueue.size;
+		totalSoundCount += loadQueue.size;
 		
+		if (useSeparateThread) {
+			loadInSeparateThread();
+		}
+	}
+	
+	public void startLoading() {
 		if (useSeparateThread) {
 			loadInSeparateThread();
 		}
@@ -193,9 +199,16 @@ public class SoundManager implements Disposable, LoadManager {
 	
 	public void addSound(String soundName, Sound sound) {
 		sounds.put(soundName, sound);
+		loadedSoundCount++;
+		totalSoundCount++;
 	}
 	
 	public void loadSound(String name) {
 		loadQueue.add(name);
+		totalSoundCount++;
+	}
+	
+	public boolean isSoundLoaded(String soundName) {
+		return sounds.containsKey(soundName);
 	}
 }

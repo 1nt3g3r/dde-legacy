@@ -1,16 +1,22 @@
 package ua.com.integer.dde.startpanel.util.color;
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import ua.com.integer.dde.startpanel.FrameTools;
 
 /**
  * Панель для выбора цвета в формате RGBA. Помещается в JoptionPane для удобного пользования
@@ -30,6 +36,7 @@ public class SelectColorPanel extends JPanel {
 	private JLabel alphaLabel;
 	
 	private ColorListener colorChangeListener;
+	private JTextField htmlColorNotation;
 
 	/**
 	 * Create the panel.
@@ -76,6 +83,12 @@ public class SelectColorPanel extends JPanel {
 		blueLabel = new JLabel("1");
 		
 		alphaLabel = new JLabel("1");
+		
+		JLabel lblHtml = new JLabel("HTML:");
+		
+		htmlColorNotation = new JTextField();
+		htmlColorNotation.addKeyListener(new HTMLTextListener());
+		htmlColorNotation.setColumns(10);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -86,23 +99,25 @@ public class SelectColorPanel extends JPanel {
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblRed)
 								.addComponent(lblGreen)
-								.addComponent(lblBlue))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(blueSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(greenSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(redSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(lblBlue, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+								.addComponent(lblAlpha))
+							.addPreferredGap(ComponentPlacement.RELATED))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblAlpha)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(alphaSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(lblHtml)
+							.addGap(17)))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(htmlColorNotation)
+						.addComponent(alphaSlider, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+						.addComponent(blueSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(greenSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(redSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(redLabel)
 						.addComponent(greenLabel)
 						.addComponent(blueLabel)
 						.addComponent(alphaLabel))
-					.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+					.addGap(57)
 					.addComponent(examplePanel, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
@@ -110,9 +125,9 @@ public class SelectColorPanel extends JPanel {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-							.addComponent(examplePanel, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE, false)
+							.addComponent(examplePanel, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
 							.addComponent(redLabel))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -125,15 +140,19 @@ public class SelectColorPanel extends JPanel {
 								.addComponent(greenLabel, Alignment.LEADING))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblBlue)
 								.addComponent(blueSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(blueLabel))
+								.addComponent(blueLabel)
+								.addComponent(lblBlue))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblAlpha)
-								.addComponent(alphaSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(alphaLabel))))
-					.addContainerGap(25, Short.MAX_VALUE))
+								.addComponent(alphaLabel)
+								.addComponent(alphaSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblHtml)
+								.addComponent(htmlColorNotation, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(50, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		
@@ -153,12 +172,33 @@ public class SelectColorPanel extends JPanel {
 	class ColorChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
+			System.out.println("State changed");
 			examplePanel.setBackground(getColor());
 		
 			updateLabels();
 			
+			String htmlColor = getHTMLColor();
+			if (!htmlColor.equals(htmlColorNotation.getText())) {
+				htmlColorNotation.setText(htmlColor);
+			}
+			
 			if (colorChangeListener != null) colorChangeListener.colorChanged(getColor());
 		}
+	}
+	
+	private String getHTMLColor() {
+		String result = "";
+		String hexR = Integer.toHexString(getColor().getRed());
+		String hexG = Integer.toHexString(getColor().getBlue());
+		String hexB = Integer.toHexString(getColor().getGreen());
+		String hexA = Integer.toHexString(getColor().getAlpha());
+		result = hexR + hexG + hexB;
+
+		if (!hexA.toLowerCase().equals("ff")) {
+			result += hexA;
+		}
+		
+		return result.toLowerCase();
 	}
 	
 	public void setColorListener(ColorListener colorListener) {
@@ -183,6 +223,44 @@ public class SelectColorPanel extends JPanel {
 	private int to1_100(int value) {
 		return (int) (((float) value / 255f) * 100f);
 	}
+	
+	class HTMLTextListener extends KeyAdapter {
+		@Override
+		public void keyReleased(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				String htmlColor = htmlColorNotation.getText();
+				if (htmlColor.length() == 6 || htmlColor.length() == 8) {
+					String r = htmlColor.substring(0, 2);
+					String g = htmlColor.substring(2, 4);
+					String b = htmlColor.substring(4, 6);
+					String a = "ff";
+					if (htmlColor.length() == 8) {
+						a = htmlColor.substring(6, 8);
+					}
+					
+					try {
+						int intR = Integer.valueOf(r, 16);
+						int intG = Integer.valueOf(g, 16);
+						int intB = Integer.valueOf(b, 16);
+						int intA = Integer.valueOf(a, 16);
+						
+						Color newColor = new Color(intR, intG, intB, intA);
+						setColor(newColor);
+					} catch (Exception ex) {
+						showError();
+					}
+				} else {
+					showError();
+				}
+			}
+			super.keyReleased(e);
+		}
+		
+		private void showError() {
+			JOptionPane.showMessageDialog(null, "Input color in html notation. Example: \"rrggbb\" or \"rrggbbaa\"");
+		}
+	}
+	
 	public JSlider getGreenSlider() {
 		return greenSlider;
 	}
@@ -209,5 +287,12 @@ public class SelectColorPanel extends JPanel {
 	}
 	public JLabel getAlphaLabel() {
 		return alphaLabel;
+	}
+	public JTextField getHtmlColorNotation() {
+		return htmlColorNotation;
+	}
+	
+	public static void main(String[] args) {
+		FrameTools.testingFrame(new SelectColorPanel());
 	}
 }

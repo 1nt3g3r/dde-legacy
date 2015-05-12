@@ -189,4 +189,19 @@ public class MusicManager implements Disposable, LoadManager {
 	public void addMusic(String name, Music music) {
 		musics.put(name, music);
 	}
+	
+	public void loadMusic(String name) {
+		totalMusicCount++;
+		loadQueue.add(name);
+	}
+	
+	public void startLoading() {
+		if (useSeparateThread) {
+			startLoadingMusicInSeparateThread();
+		}
+	}
+	
+	public boolean isMusicLoaded(String name) {
+		return musics.containsKey(name);
+	}
 }

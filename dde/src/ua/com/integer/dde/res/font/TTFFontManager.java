@@ -55,6 +55,15 @@ public class TTFFontManager implements LoadManager {
 		this.fontDirectory = fontDirectory;
 	}
 	
+	public BitmapFont getFont(String fontName, int size) {
+		FreeTypeFontParameter param = new FreeTypeFontParameter();
+		param.size = size;
+		param.characters = charsToGenerate;
+		param.flip = false;
+
+		return getFont(fontName, size, param);
+	}
+	
 	/**
 	 * Возвращает шрифт указанного размера. Если шрифт еще не создан, 
 	 * создает и кеширует его для последующих вызовов.
@@ -62,12 +71,13 @@ public class TTFFontManager implements LoadManager {
 	 * @param size размер шрифта
 	 * @return
 	 */
-	public BitmapFont getFont(String fontName, int size) {
+	public BitmapFont getFont(String fontName, int size, FreeTypeFontParameter param) {
 		if (fontName.equals("standard")) return getFont(size);
 		
 		createFontGeneratorIfNeed(fontName);
 		createFontMapIfNeed(fontName);
-		createFontIfNeed(fontName, size);
+		
+		createFontIfNeed(fontName, size, param);
 		
 		return fonts.get(fontName).get(size);
 	}
@@ -116,13 +126,9 @@ public class TTFFontManager implements LoadManager {
 		}
 	}
 	
-	private void createFontIfNeed(String fontName, int size) {
+	private void createFontIfNeed(String fontName, int size, FreeTypeFontParameter parameter) {
 		if (fonts.get(fontName).get(size) == null) {
-			FreeTypeFontParameter param = new FreeTypeFontParameter();
-			param.size = size;
-			param.characters = charsToGenerate;
-			param.flip = false;
-			BitmapFont font = fGenerators.get(fontName).generateFont(param);
+			BitmapFont font = fGenerators.get(fontName).generateFont(parameter);
 			fonts.get(fontName).put(size, font);
 		}
 	}
@@ -232,5 +238,10 @@ public class TTFFontManager implements LoadManager {
 			Gdx.app.log("Font manager", "font with " + fontName + " will be overriden by given you font!");
 		}
 		fonts.get(fontName).put(fontSize, font);
+	}
+	
+	public void addFont(String fontName, int fontSize, FreeTypeFontParameter parameter) {
+		createFontGeneratorIfNeed(fontName);
+		
 	}
 }
