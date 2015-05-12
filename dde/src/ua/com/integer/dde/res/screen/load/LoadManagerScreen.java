@@ -76,4 +76,19 @@ public class LoadManagerScreen extends AbstractScreen {
 		super.render(delta);
 	}
 	
+	public LoadManager getLoadManager() {
+		return loadManager;
+	}
+	
+	public LoadListener getLoadListener() {
+		return loadListener;
+	}
+	
+	public float getPercent() {
+		return lastPercent;
+	}
+	
+	public Class<? extends AbstractScreen> getNextScreen() {
+		return nextScreen;
+	}
 }
