@@ -1,25 +1,27 @@
 package ua.com.integer.dde.res.load;
 
-import ua.com.integer.dde.res.load.descriptor.FilePathDescriptor;
+import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
-public class FileHandleDescriptorLoadManager implements LoadManager {
-	protected FilePathDescriptor descriptor;
+public abstract class PathDescriptorLoadManager implements LoadManager {
+	protected PathDescriptor descriptor;
 	protected Array<String> objectsToLoad = new Array<String>();
 	protected ObjectMap<String, Object> loadedObjects = new ObjectMap<String, Object>();
 	protected Array<String> extensions = new Array<String>();
 	
+	private boolean loadingInSeparateThread;
+
 	private String currentName;
 	
-	public void setDescriptor(FilePathDescriptor descriptor) {
+	public void setDescriptor(PathDescriptor descriptor) {
 		this.descriptor = descriptor;
 	}
 	
-	public FilePathDescriptor getDescriptor() {
+	public PathDescriptor getDescriptor() {
 		return descriptor;
 	}
 	
@@ -39,10 +41,24 @@ public class FileHandleDescriptorLoadManager implements LoadManager {
 	}
 
 	@Override
-	public void loadAll() {}
+	public void loadAll() {
+		for (FileHandle handle : descriptor.getDirectory().list()) {
+			if (!handle.isDirectory()) {
+				String extension = handle.extension();
+				if (extensions.contains(extension, false)) {
+					objectsToLoad.add(handle.nameWithoutExtension());
+				}
+			}
+		}
+	}
 
 	@Override
 	public boolean loadStep() {
+		if (getLoadedAssetCount() == getAssetCount()) {
+			return true;
+		}
+		
+		loadObject(getNextHandle());
 		return false;
 	}
 	
@@ -62,7 +78,7 @@ public class FileHandleDescriptorLoadManager implements LoadManager {
 		} else {
 			for(String extension: extensions) {
 				FileHandle result = descriptor.getFile(name + "." + extension);
-				if (result != null) {
+				if (result.exists()) {
 					return result;
 				}
 			}
@@ -98,4 +114,28 @@ public class FileHandleDescriptorLoadManager implements LoadManager {
 	public boolean isLoaded(String name) {
 		return loadedObjects.containsKey(name);
 	}
+	
+	public void startLoadingInSeparateThread() {
+		if (!loadingInSeparateThread) {
+			loadingInSeparateThread = true;
+			new Thread() {
+				public void run() {
+					while(getLoadedAssetCount() != getAssetCount()) {
+						loadStep();
+					}
+				}
+			}.start();
+		}
+	}
+	
+	public boolean isLoadingInSeparateThread() {
+		return loadingInSeparateThread;
+	}
+	
+	protected void loadObject(FileHandle handle) {
+		String name = handle.nameWithoutExtension();
+		loadedObjects.put(name, createItem(handle));
+	}
+	
+	protected abstract Object createItem(FileHandle handle);
 }

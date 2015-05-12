@@ -2,9 +2,9 @@ package ua.com.integer.dde.res.load;
 
 import ua.com.integer.dde.res.font.TTFFontManager;
 import ua.com.integer.dde.res.graphics.TextureManager;
+import ua.com.integer.dde.res.load.imp.MusicManager;
+import ua.com.integer.dde.res.load.imp.SoundManager;
 import ua.com.integer.dde.res.screen.ScreenManager;
-import ua.com.integer.dde.res.sound.MusicManager;
-import ua.com.integer.dde.res.sound.SoundManager;
 
 /**
  * Менеджер ресурсов для стандартных ресурсов. Стандартные ресурсы включают в себя следующие:
@@ -36,5 +36,10 @@ public class ResourceManager extends CompositeLoadManager {
 	
 	public ScreenManager screens() {
 		return getManager(ScreenManager.class);
+	}
+	
+	public void startLoading() {
+		sounds().startLoadingInSeparateThread();
+		musics().startLoadingInSeparateThread();
 	}
 }

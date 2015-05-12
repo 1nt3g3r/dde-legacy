@@ -109,7 +109,7 @@ public class DDKernel extends Game {
 		musicManager = new MusicManager();
 		resourceManager.addManager(musicManager);
 		musicManager.setMusicDirectory(config.musicDirectory);
-
+		
 		uiBuilder = new UIBuilder(this);
 		AbstractScreen.setKernel(this);
 		if (config.stopManageTexturesAfterLoading) {

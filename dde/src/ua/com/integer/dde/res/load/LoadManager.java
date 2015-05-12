@@ -33,8 +33,6 @@ public interface LoadManager extends Disposable {
 	public int getLoadedAssetCount();
 	/**
 	 * Загружен ли элемент
-	 * @param name
-	 * @return
 	 */
 	public boolean isLoaded(String name);
 }

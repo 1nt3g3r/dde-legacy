@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 
-import ua.com.integer.dde.res.load.FileHandleDescriptorLoadManager;
-import ua.com.integer.dde.res.load.descriptor.FilePathDescriptor;
+import ua.com.integer.dde.res.load.PathDescriptorLoadManager;
+import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
-public class SoundManager extends FileHandleDescriptorLoadManager {
-	public SoundManager(FilePathDescriptor descriptor) {
+public class SoundManager extends PathDescriptorLoadManager {
+	public SoundManager(PathDescriptor descriptor) {
 		setDescriptor(descriptor);
 		
 		addExtension("ogg");
@@ -16,19 +16,12 @@ public class SoundManager extends FileHandleDescriptorLoadManager {
 		addExtension("wav");
 	}
 	
-	@Override
-	public boolean loadStep() {
-		if (super.loadStep()) {
-			return true;
-		}
-		
-		FileHandle soundHandle = getNextHandle();
-		String soundName = getCurrentFileHandleName();
-		loadedObjects.put(soundName, Gdx.audio.newSound(soundHandle));
-		return false;
-	}
-	
 	public Sound getSound(String name) {
 		return (Sound) loadedObjects.get(name);
+	}
+
+	@Override
+	protected Object createItem(FileHandle handle) {
+		return Gdx.audio.newSound(handle);
 	}
 }

@@ -1,6 +1,5 @@
 package ua.com.integer.dde.res.load;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 public class CompositeLoadManager implements LoadManager {
@@ -64,8 +63,8 @@ public class CompositeLoadManager implements LoadManager {
 	
 	/**
 	 * Возвращает первый LoadManager по его классу. Например, если мы хотим получить экземпляр TextureManager - 
-	 * вызываем getManager(TextureManager.class), и он вернет нам экземпляр TextureManager. Если же нет обьекта для 
-	 * запрошенного класса (вы не добавили ранее этот менеджер загрузки), будет брошено исключение IllegalArgumentException
+	 * вызываем getManager(TextureManager.class), и он вернет нам экземпляр TextureManager. Если такого менеджера нет, 
+	 * он создается, добавляется в список менеджеров, и возвращается
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends LoadManager> T getManager(Class<T> type) {
@@ -74,11 +73,12 @@ public class CompositeLoadManager implements LoadManager {
 				return (T) loadManager;
 			}
 		}
-		throw new IllegalArgumentException("No load manager for this class!");
+		
+		return addManager(type);
 	}
 	
 	/**
-	 * Возвращает все экземпляры типа type. Если таких нет, возвращается пустой массив
+	 * Возвращает все экземпляры менеджеров типа type. Если таких нет, возвращается пустой массив
 	 * @param type
 	 * @return
 	 */
@@ -99,12 +99,14 @@ public class CompositeLoadManager implements LoadManager {
 	 * Следует заметить, что в этому случае у вашего менеджера загрузки должен быть конструктор по умолчанию - без параметров. 
 	 * Позже вы можете обратиться к добавленному менеджеру загрузки через вызов {@link #getManager(Class)}
 	 */
-	public <T extends LoadManager> void addManager(Class<T> type) {
+	@SuppressWarnings("unchecked")
+	public <T extends LoadManager> T addManager(Class<T> type) {
 		try {
 			LoadManager loadManager = type.newInstance();
 			loadManagers.add(loadManager);
+			return (T) loadManager;
 		} catch (Exception e) {
-			Gdx.app.error("ResourceManager", "Error during loading " + type + " manager");
+			throw new IllegalArgumentException("Error while adding " + type + " manager!");
 		}
 	}
 
