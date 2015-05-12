@@ -1,6 +1,6 @@
 package ua.com.integer.dde.res.screen;
 import ua.com.integer.dde.kernel.DDKernel;
-import ua.com.integer.dde.res.LoadManager;
+import ua.com.integer.dde.res.load.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -229,5 +229,10 @@ public class ScreenManager implements Disposable, LoadManager {
 		
 		screenToRemove.dispose();
 		screens.remove(screenName);
+	}
+
+	@Override
+	public boolean isLoaded(String name) {
+		return screens.containsKey(name);
 	}
 }

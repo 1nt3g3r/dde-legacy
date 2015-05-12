@@ -3,7 +3,7 @@ package ua.com.integer.dde.res.font;
 import java.util.HashMap;
 import java.util.Map;
 
-import ua.com.integer.dde.res.LoadManager;
+import ua.com.integer.dde.res.load.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -243,5 +243,10 @@ public class TTFFontManager implements LoadManager {
 	public void addFont(String fontName, int fontSize, FreeTypeFontParameter parameter) {
 		createFontGeneratorIfNeed(fontName);
 		
+	}
+
+	@Override
+	public boolean isLoaded(String name) {
+		return fGenerators.containsKey(name);
 	}
 }

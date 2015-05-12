@@ -1,4 +1,4 @@
-package ua.com.integer.dde.res;
+package ua.com.integer.dde.res.load;
 
 import com.badlogic.gdx.utils.Disposable;
 
@@ -23,6 +23,18 @@ public interface LoadManager extends Disposable {
 	 * Возвращает число в пределах 0..1 - прогресс загрузки
 	 */
 	public float getLoadPercent();
+	/**
+	 * Возвращает общее количество элементов в этом менеджере
+	 */
 	public int getAssetCount();
+	/**
+	 * Возвращает количество загруженных элементов
+	 */
 	public int getLoadedAssetCount();
+	/**
+	 * Загружен ли элемент
+	 * @param name
+	 * @return
+	 */
+	public boolean isLoaded(String name);
 }

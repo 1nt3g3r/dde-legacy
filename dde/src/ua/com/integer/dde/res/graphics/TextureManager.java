@@ -1,6 +1,6 @@
 package ua.com.integer.dde.res.graphics;
 
-import ua.com.integer.dde.res.LoadManager;
+import ua.com.integer.dde.res.load.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -297,5 +297,10 @@ public class TextureManager implements LoadManager {
 	
 	public void addAtlas(String atlasName, TextureAtlas atlas) {
 		customAtlases.put(atlasName, atlas);
+	}
+
+	@Override
+	public boolean isLoaded(String name) {
+		return isPackLoaded(name);
 	}
 }

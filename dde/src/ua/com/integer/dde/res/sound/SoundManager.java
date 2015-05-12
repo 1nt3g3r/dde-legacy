@@ -1,7 +1,7 @@
 package ua.com.integer.dde.res.sound;
 
 
-import ua.com.integer.dde.res.LoadManager;
+import ua.com.integer.dde.res.load.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -210,5 +210,10 @@ public class SoundManager implements Disposable, LoadManager {
 	
 	public boolean isSoundLoaded(String soundName) {
 		return sounds.containsKey(soundName);
+	}
+
+	@Override
+	public boolean isLoaded(String name) {
+		return isSoundLoaded(name);
 	}
 }

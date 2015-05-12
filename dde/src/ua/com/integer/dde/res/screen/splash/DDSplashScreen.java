@@ -1,6 +1,6 @@
 package ua.com.integer.dde.res.screen.splash;
 
-import ua.com.integer.dde.res.ResourceManager;
+import ua.com.integer.dde.res.load.ResourceManager;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenEvent;
 import ua.com.integer.dde.res.screen.ScreenListener;

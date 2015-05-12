@@ -1,6 +1,6 @@
 package ua.com.integer.dde.res.sound;
 
-import ua.com.integer.dde.res.LoadManager;
+import ua.com.integer.dde.res.load.LoadManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -203,5 +203,10 @@ public class MusicManager implements Disposable, LoadManager {
 	
 	public boolean isMusicLoaded(String name) {
 		return musics.containsKey(name);
+	}
+
+	@Override
+	public boolean isLoaded(String name) {
+		return isMusicLoaded(name);
 	}
 }

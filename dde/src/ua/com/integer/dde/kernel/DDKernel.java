@@ -1,9 +1,9 @@
 package ua.com.integer.dde.kernel;
 
 import ua.com.integer.dde.net.ClientCommandManager;
-import ua.com.integer.dde.res.ResourceManager;
 import ua.com.integer.dde.res.font.TTFFontManager;
 import ua.com.integer.dde.res.graphics.TextureManager;
+import ua.com.integer.dde.res.load.ResourceManager;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenManager;
 import ua.com.integer.dde.res.sound.MusicManager;
@@ -225,5 +225,11 @@ public class DDKernel extends Game {
 	 */
 	public boolean isCreated() {
 		return created;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		getResourceManager().dispose();
 	}
 }
