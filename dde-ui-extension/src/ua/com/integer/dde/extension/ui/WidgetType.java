@@ -5,6 +5,7 @@ import ua.com.integer.dde.extension.ui.actor.TextLabel;
 import ua.com.integer.dde.extension.ui.actor.TextureRegionButton;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
 import ua.com.integer.dde.res.screen.AbstractScreen;
+import ua.com.integer.dde.ui.actor.PageControl;
 import ua.com.integer.dde.ui.actor.TextureRegionGroupActor;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -37,6 +38,10 @@ public enum WidgetType {
 	 * Горизонтальная группа
 	 */
 	BOX,
+	/**
+	 * Страничный скроллинг
+	 */
+	PAGE_CONTROL,
 	/**
 	 * Группа с фоном-текстурой
 	 */
@@ -84,7 +89,7 @@ public enum WidgetType {
 	};
 	
 	public static final WidgetType[] CONTAINER_WIDGETS = {
-		EMPTY_GROUP, TEXTURE_REGION_GROUP_ACTOR, BOX, SCROLL_PANE
+		EMPTY_GROUP, TEXTURE_REGION_GROUP_ACTOR, BOX, SCROLL_PANE, PAGE_CONTROL
 	};
 	
 	public static final WidgetType[] OTHER_WIDGETS = {
@@ -106,41 +111,41 @@ public enum WidgetType {
 	}
 	
 	public Actor createWidget() {
+		Actor result = null;
 		switch(this) {
 		case EMPTY_GROUP: 
-			return new Group();
+			result = new Group();
+			break;
 		case TEXTURE_REGION_GROUP_ACTOR : 
-			return new TextureRegionGroupActor();
+			result = new TextureRegionGroupActor();
+			break;
 		case TEXT_LABEL : 
-			return new TextLabel();
+			result = new TextLabel();
+			break;
 		case BOX : 
-			return new Box();
+			result = new Box();
+			break;
 		case TEXTURE_REGION_BUTTON : 
-			return new TextureRegionButton();
+			result = new TextureRegionButton();
+			break;
 		case SCROLL_PANE : 
-			ScrollPane scroll = new ScrollPane(null);
-			if (isEditor()) {
-				scroll.clearListeners();
-			}
-			return scroll;
+			result = new ScrollPane(null);
+			break;
 		case TEXT_FIELD : 
 			TextField toReturn = new TextField("", DefaultSkin.getInstance().getSkin());
-			if (isEditor()) {
-				toReturn.clearListeners();
-			}
 			TextFieldStyle copyStyle = new TextFieldStyle(toReturn.getStyle());
 			toReturn.setStyle(copyStyle);
-			return toReturn;
+			
+			result = toReturn;
+			break;
 		case IMAGE: 
 			return new Image();
 		case BUTTON:
 			Button toReturnButton = new Button(DefaultSkin.getInstance().getSkin());
-			if (isEditor()) {
-				toReturnButton.clearListeners();
-			}
 			ButtonStyle copyButtonStyle = new ButtonStyle(toReturnButton.getStyle());
 			toReturnButton.setStyle(copyButtonStyle);
-			return toReturnButton;
+			result = toReturnButton;
+			break;
 		case TEXT_BUTTON:
 			TextButton toReturnTextButton  = new TextButton("Button", DefaultSkin.getInstance().getSkin());
 			if (isEditor()) {
@@ -149,28 +154,37 @@ public enum WidgetType {
 			}
 			TextButtonStyle copyTextButtonStyle = new TextButtonStyle(toReturnTextButton.getStyle());
 			toReturnTextButton.setStyle(copyTextButtonStyle);
-			return toReturnTextButton;
+			result = toReturnTextButton;
+			break;
 		case CHECKBOX:
 			CheckBox checkbox = new CheckBox("Checkbox", DefaultSkin.getInstance().getSkin());
-			if (isEditor()) {
-				checkbox.clearListeners();
-			}
 			CheckBoxStyle checkboxStyle = new CheckBoxStyle(checkbox.getStyle());
 			checkbox.setStyle(checkboxStyle);
-			return checkbox;
+			result = checkbox;
+			break;
 		case TOUCHPAD:
 			Touchpad touchpad = new Touchpad(2, DefaultSkin.getInstance().getSkin());
-			if (isEditor()) {
-				touchpad.clearListeners();
-			}
 			TouchpadStyle touchpadStyle = new TouchpadStyle(touchpad.getStyle());
 			touchpad.setStyle(touchpadStyle);
-			return touchpad;
+			result = touchpad;
+			break;
+		case PAGE_CONTROL:
+			PageControl slideControl = new PageControl();
+			if (isEditor()) {
+				makeInnerActorsUntochable(slideControl);
+			}
+			result = slideControl;
+			break;
 		default:
 			break;
 		}
 		
-		return null;
+		if (isEditor()) {
+			result.setTouchable(Touchable.enabled);
+			result.clearListeners();
+		}
+		
+		return result;
 	}
 	
 	public String getShortDescription() {
@@ -187,6 +201,7 @@ public enum WidgetType {
 		case TEXT_BUTTON : return "Text button";
 		case CHECKBOX : return "Checkbox";
 		case TOUCHPAD : return "Touchpad";
+		case PAGE_CONTROL: return "Page slide control";
 		default: return "";
 		}
 	}

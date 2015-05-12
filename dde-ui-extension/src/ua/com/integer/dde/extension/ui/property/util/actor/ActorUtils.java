@@ -8,6 +8,7 @@ import ua.com.integer.dde.extension.ui.property.PropertyUtils;
 import ua.com.integer.dde.extension.ui.property.imp.common.CommonPropertySupporter;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenEvent;
+import ua.com.integer.dde.ui.actor.PageControl;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -42,6 +43,8 @@ public class ActorUtils {
 		
 		if (parent instanceof ScrollPane) {
 			((ScrollPane) parent).setWidget(actor);
+		} else if (parent instanceof PageControl) {
+			((PageControl) parent).setWidget(actor);
 		} else {
 			parent.addActor(actor);
 		}

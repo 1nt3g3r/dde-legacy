@@ -6,6 +6,7 @@ import ua.com.integer.dde.extension.ui.property.imp.box.BoxPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.button.ButtonPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.checkbox.CheckboxPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.image.ImagePropertySupporter;
+import ua.com.integer.dde.extension.ui.property.imp.pagecontrol.PageControlPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.scrollbar.ScrollPanelPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.textbutton.TextButtonPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.textfield.TextFieldPropertySupporter;
@@ -36,6 +37,7 @@ public class PropertyUtils {
 		
 		propertySupporters.put(WidgetType.BOX, new BoxPropertySupporter());
 		propertySupporters.put(WidgetType.SCROLL_PANE, new ScrollPanelPropertySupporter());
+		propertySupporters.put(WidgetType.PAGE_CONTROL, new PageControlPropertySupporter());
 	}
 	
 	public static void setupActor(UiConfig config, Actor actor, DDKernel kernel) {

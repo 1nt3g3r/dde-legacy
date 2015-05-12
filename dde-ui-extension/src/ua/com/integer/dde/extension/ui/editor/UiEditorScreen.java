@@ -490,7 +490,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 
 		shapeRenderer.begin(ShapeType.Point);
 		if (GridSettings.getInstance().needSnapToGrid()) {
-			shapeRenderer.setColor(Color.WHITE);
+			shapeRenderer.setColor(Color.LIGHT_GRAY);
 		} else {
 			shapeRenderer.setColor(Color.DARK_GRAY);
 		}
@@ -498,10 +498,6 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		for(float x = startX; x <= endX; x += stepX) {
 			for(float y = startY; y <= endY; y += stepY) {
 				shapeRenderer.point(x, y, 0);
-				shapeRenderer.point(x-1, y, 0);
-				shapeRenderer.point(x+1, y, 0);
-				shapeRenderer.point(x, y-1, 0);
-				shapeRenderer.point(x, y+1, 0);
 			}
 		}
 		

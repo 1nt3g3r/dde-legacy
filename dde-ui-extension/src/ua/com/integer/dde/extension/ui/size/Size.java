@@ -44,6 +44,13 @@ public class Size {
 		return JsonWorker.JSON.fromJson(Size.class, json);
 	}
 	
+	public static Size create(float value, SizeType type) {
+		Size result = new Size();
+		result.sizeType = type;
+		result.sizeValue = value;
+		return result;
+	}
+	
 	public boolean needParentActor() {
 		return sizeType == SizeType.PARENT_WIDTH || sizeType == SizeType.PARENT_HEIGHT;
 	}
