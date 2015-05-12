@@ -172,7 +172,6 @@ public class SelectColorPanel extends JPanel {
 	class ColorChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			System.out.println("State changed");
 			examplePanel.setBackground(getColor());
 		
 			updateLabels();
@@ -226,8 +225,9 @@ public class SelectColorPanel extends JPanel {
 	
 	class HTMLTextListener extends KeyAdapter {
 		@Override
-		public void keyReleased(KeyEvent e) {
+		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				e.consume();
 				String htmlColor = htmlColorNotation.getText();
 				if (htmlColor.length() == 6 || htmlColor.length() == 8) {
 					String r = htmlColor.substring(0, 2);
