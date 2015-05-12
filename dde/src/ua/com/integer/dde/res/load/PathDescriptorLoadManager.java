@@ -42,6 +42,9 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 
 	@Override
 	public void loadAll() {
+		objectsToLoad.clear();
+		loadedObjects.clear();
+		
 		for (FileHandle handle : descriptor.getDirectory().list()) {
 			if (!handle.isDirectory()) {
 				String extension = handle.extension();
@@ -76,7 +79,8 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		if (extensions.size == 0) {
 			return descriptor.getFile(name);
 		} else {
-			for(String extension: extensions) {
+			for(int i = 0; i < extensions.size; i++) {
+				String extension = extensions.get(i);
 				FileHandle result = descriptor.getFile(name + "." + extension);
 				if (result.exists()) {
 					return result;
