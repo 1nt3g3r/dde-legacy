@@ -29,31 +29,31 @@ public class TextLabel extends Label {
 	public void setAlign(Align al) {
 		switch(al) {
 		case CENTER: 
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center, com.badlogic.gdx.scenes.scene2d.utils.Align.center);
+			setAlignment(com.badlogic.gdx.utils.Align.center, com.badlogic.gdx.utils.Align.center);
 			break;
 		case TOP_LEFT:
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.left | com.badlogic.gdx.scenes.scene2d.utils.Align.top, com.badlogic.gdx.scenes.scene2d.utils.Align.left);
+			setAlignment(com.badlogic.gdx.utils.Align.left | com.badlogic.gdx.utils.Align.top, com.badlogic.gdx.utils.Align.left);
 			break;
 		case BOTTOM_CENTER:
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center | com.badlogic.gdx.scenes.scene2d.utils.Align.bottom, com.badlogic.gdx.scenes.scene2d.utils.Align.center);
+			setAlignment(com.badlogic.gdx.utils.Align.center | com.badlogic.gdx.utils.Align.bottom, com.badlogic.gdx.utils.Align.center);
 			break;
 		case BOTTOM_LEFT:
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.bottom | com.badlogic.gdx.scenes.scene2d.utils.Align.left, com.badlogic.gdx.scenes.scene2d.utils.Align.left);
+			setAlignment(com.badlogic.gdx.utils.Align.bottom | com.badlogic.gdx.utils.Align.left, com.badlogic.gdx.utils.Align.left);
 			break;
 		case BOTTOM_RIGHT: 
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.bottom | com.badlogic.gdx.scenes.scene2d.utils.Align.right, com.badlogic.gdx.scenes.scene2d.utils.Align.right);
+			setAlignment(com.badlogic.gdx.utils.Align.bottom | com.badlogic.gdx.utils.Align.right, com.badlogic.gdx.utils.Align.right);
 			break;
 		case LEFT_CENTER: 
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.left | com.badlogic.gdx.scenes.scene2d.utils.Align.center, com.badlogic.gdx.scenes.scene2d.utils.Align.left);
+			setAlignment(com.badlogic.gdx.utils.Align.left | com.badlogic.gdx.utils.Align.center, com.badlogic.gdx.utils.Align.left);
 			break;
 		case RIGHT_CENTER: 
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.right | com.badlogic.gdx.scenes.scene2d.utils.Align.center, com.badlogic.gdx.scenes.scene2d.utils.Align.right);
+			setAlignment(com.badlogic.gdx.utils.Align.right | com.badlogic.gdx.utils.Align.center, com.badlogic.gdx.utils.Align.right);
 			break;
 		case TOP_CENTER:
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center | com.badlogic.gdx.scenes.scene2d.utils.Align.top, com.badlogic.gdx.scenes.scene2d.utils.Align.center);
+			setAlignment(com.badlogic.gdx.utils.Align.center | com.badlogic.gdx.utils.Align.top, com.badlogic.gdx.utils.Align.center);
 			break;
 		case TOP_RIGHT: 
-			setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.top | com.badlogic.gdx.scenes.scene2d.utils.Align.right, com.badlogic.gdx.scenes.scene2d.utils.Align.right);
+			setAlignment(com.badlogic.gdx.utils.Align.top | com.badlogic.gdx.utils.Align.right, com.badlogic.gdx.utils.Align.right);
 			break;
 		default:
 			break;

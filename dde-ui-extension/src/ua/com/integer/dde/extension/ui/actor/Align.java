@@ -21,38 +21,38 @@ public enum Align {
 	 * константы из com.badlogic.gdx.scenes.scene2d.utils.Align
 	 */
 	public int getAlign() {
-		int toReturn = com.badlogic.gdx.scenes.scene2d.utils.Align.center;
+		int toReturn = com.badlogic.gdx.utils.Align.center;
 		
 		switch(this) {
 		case BOTTOM_CENTER: 
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.bottom;
+			toReturn |= com.badlogic.gdx.utils.Align.bottom;
 			break;
 		case BOTTOM_LEFT: 
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.bottom;
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.left;
+			toReturn |= com.badlogic.gdx.utils.Align.bottom;
+			toReturn |= com.badlogic.gdx.utils.Align.left;
 			break;
 		case BOTTOM_RIGHT:
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.bottom;
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.right;
+			toReturn |= com.badlogic.gdx.utils.Align.bottom;
+			toReturn |= com.badlogic.gdx.utils.Align.right;
 			break;
 		case CENTER:
 			break;
 		case LEFT_CENTER:
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.left;
+			toReturn |= com.badlogic.gdx.utils.Align.left;
 			break;
 		case RIGHT_CENTER:
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.right;
+			toReturn |= com.badlogic.gdx.utils.Align.right;
 			break;
 		case TOP_CENTER:
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.top;
+			toReturn |= com.badlogic.gdx.utils.Align.top;
 			break;
 		case TOP_LEFT:
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.top;
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.left;
+			toReturn |= com.badlogic.gdx.utils.Align.top;
+			toReturn |= com.badlogic.gdx.utils.Align.left;
 			break;
 		case TOP_RIGHT:
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.top;
-			toReturn |= com.badlogic.gdx.scenes.scene2d.utils.Align.right;
+			toReturn |= com.badlogic.gdx.utils.Align.top;
+			toReturn |= com.badlogic.gdx.utils.Align.right;
 			break;
 		}
 		

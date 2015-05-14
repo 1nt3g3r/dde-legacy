@@ -16,7 +16,7 @@ public class AtlasManager extends PathDescriptorLoadManager {
 	}
 	
 	public TextureAtlas getAtlas(String name) {
-		return (TextureAtlas) loadedObjects.get(name);
+		return (TextureAtlas) get(name);
 	}
 
 	@Override

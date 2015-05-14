@@ -17,7 +17,7 @@ public class MusicManager extends PathDescriptorLoadManager {
 	}
 
 	public Music getMusic(String name) {
-		return (Music) loadedObjects.get(name);
+		return (Music) get(name);
 	}
 	
 	@Override

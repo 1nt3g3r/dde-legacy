@@ -10,13 +10,13 @@ public class TextureManager extends PathDescriptorLoadManager {
 	public TextureManager(PathDescriptor descriptor) {
 		setDescriptor(descriptor);
 		
+		addExtension("png");
 		addExtension("jpg");
 		addExtension("jpeg");
-		addExtension("png");
 	}
 	
 	public Texture getTexture(String name) {
-		return (Texture) loadedObjects.get(name);
+		return (Texture) get(name);
 	}
 
 	@Override

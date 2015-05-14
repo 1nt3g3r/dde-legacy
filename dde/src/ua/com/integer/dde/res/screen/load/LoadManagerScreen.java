@@ -62,7 +62,10 @@ public class LoadManagerScreen extends AbstractScreen {
 				loadListener.loadPercentChanged(1f);
 				loadListener.finished();
 			}
-			getKernel().showScreen(nextScreen);
+			
+			if (nextScreen != null) {
+				getKernel().showScreen(nextScreen);
+			}
 		} else {
 			float currentPercent = loadManager.getLoadPercent();
 			if (loadListener != null) {

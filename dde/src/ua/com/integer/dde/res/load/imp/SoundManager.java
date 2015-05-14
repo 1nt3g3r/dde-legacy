@@ -17,7 +17,7 @@ public class SoundManager extends PathDescriptorLoadManager {
 	}
 	
 	public Sound getSound(String name) {
-		return (Sound) loadedObjects.get(name);
+		return (Sound) get(name);
 	}
 
 	@Override

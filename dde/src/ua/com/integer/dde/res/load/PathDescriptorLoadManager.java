@@ -38,6 +38,7 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		}
 		
 		loadedObjects.clear();
+		objectsToLoad.clear();
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		return getHandle(currentName);
 	}
 	
-	protected String getCurrentFileHandleName() {
+	protected String getCurrentName() {
 		return currentName;
 	}
 	
@@ -81,8 +82,9 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		} else {
 			for(int i = 0; i < extensions.size; i++) {
 				String extension = extensions.get(i);
-				FileHandle result = descriptor.getFile(name + "." + extension);
-				if (result.exists()) {
+				String fullFileName = name + "." + extension;
+				FileHandle result = descriptor.getFile(fullFileName);
+				if (result != null && result.exists()) {
 					return result;
 				}
 			}
@@ -107,7 +109,9 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 	}
 	
 	public void load(String name) {
-		objectsToLoad.add(name);
+		if (!objectsToLoad.contains(name, false)) {
+			objectsToLoad.add(name);
+		}
 	}
 	
 	public void add(String name, Object item) {
@@ -137,8 +141,21 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 	}
 	
 	protected void loadObject(FileHandle handle) {
-		String name = handle.nameWithoutExtension();
-		loadedObjects.put(name, createItem(handle));
+		Object item = createItem(handle);
+		loadedObjects.put(currentName, item);
+	}
+	
+	protected Object get(String name) {
+		if (!loadedObjects.containsKey(name)) {
+			objectsToLoad.insert(0, name);
+			loadStep();
+		}
+		
+		return loadedObjects.get(name);
+	}
+	
+	public ObjectMap<String, Object> getLoadedObjects() {
+		return loadedObjects;
 	}
 	
 	protected abstract Object createItem(FileHandle handle);

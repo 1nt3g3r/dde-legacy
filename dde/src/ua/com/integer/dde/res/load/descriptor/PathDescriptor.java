@@ -26,7 +26,7 @@ public class PathDescriptor {
 	
 	public FileHandle getDirectory() {
 		FileHandle handle = Gdx.files.getFileHandle(path, fileType);
-		if (handle.exists() && handle.isDirectory()) {
+		if (handle.exists()) {
 			return handle;
 		} else {
 			return null;
@@ -34,6 +34,10 @@ public class PathDescriptor {
 	};
 	
 	public FileHandle getFile(String name) {
+		if (getDirectory() == null) {
+			return null;
+		}
+		
 		return getDirectory().child(name);
 	}
 	

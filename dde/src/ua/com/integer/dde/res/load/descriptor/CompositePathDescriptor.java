@@ -15,15 +15,23 @@ public class CompositePathDescriptor extends PathDescriptor {
 	}
 	
 	public FileHandle getDirectory() {
-		for(PathDescriptor descriptor: descriptors) {
-			FileHandle handle = descriptor.getDirectory();
-			if (handle != null) {
-				return handle;
-			}
-		}
-		
 		return null;
 	};
+	
+	@Override
+	public FileHandle getFile(String name) {
+		for(PathDescriptor descriptor: descriptors) {
+			FileHandle dir = descriptor.getDirectory();
+			if (dir != null) {
+				FileHandle handle = dir.child(name);
+				if (handle.exists()) {
+					return handle;
+				}
+			}
+		}
+
+		return null;
+	}
 	
 	public static CompositePathDescriptor multiple(PathDescriptor ... multipleDescriptors) {
 		CompositePathDescriptor result = new CompositePathDescriptor();

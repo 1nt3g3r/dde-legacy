@@ -9,6 +9,7 @@ import ua.com.integer.dde.kernel.DDKernel;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Align;
 
 public class TextFieldPropertySupporter extends PropertySupporter {
 
@@ -104,7 +105,9 @@ public class TextFieldPropertySupporter extends PropertySupporter {
 		}
 		
 		if (exists("right-align")) {
-			textField.setRightAligned(getBoolean("right-align"));
+			textField.setAlignment(Align.right);
+		} else {
+			textField.setAlignment(Align.left);
 		}
 		
 		textField.setStyle(textField.getStyle());
