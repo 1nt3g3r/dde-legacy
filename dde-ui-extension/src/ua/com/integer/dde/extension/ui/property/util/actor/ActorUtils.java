@@ -1,5 +1,6 @@
 package ua.com.integer.dde.extension.ui.property.util.actor;
 
+import ua.com.integer.dde.extension.ui.Actors;
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.UiConfigurator;
 import ua.com.integer.dde.extension.ui.layout.LayoutListener;
@@ -59,6 +60,15 @@ public class ActorUtils {
 		CommonPropertySupporter.getInstance().setup(config, actor, AbstractScreen.getKernel());
 		
 		return actor;
+	}
+	
+	/**
+	 * Inflates UI config by given configName to given screen
+	 * @param screen screen config will be inflated to
+	 * @param configName name of config
+	 */
+	public static void deployConfigToScreen(AbstractScreen screen, String configName) {
+		deployConfigToScreen(screen, Actors.getInstance().getConfig(configName));
 	}
 	
 	/**
