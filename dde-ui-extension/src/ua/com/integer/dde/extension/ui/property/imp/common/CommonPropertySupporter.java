@@ -3,7 +3,7 @@ package ua.com.integer.dde.extension.ui.property.imp.common;
 import javax.swing.JPanel;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesExpandPanel;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
 import ua.com.integer.dde.util.GraphicUtils;
@@ -18,7 +18,7 @@ public class CommonPropertySupporter extends PropertySupporter {
 	
 	@Override
 	public JPanel createSetupPanel(UiConfig config, Actor actor) {
-		return new CommonPropertiesPanel();
+		return new CommonPropertiesExpandPanel();
 	}
 
 	@Override

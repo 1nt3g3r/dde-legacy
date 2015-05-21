@@ -82,7 +82,11 @@ public enum WidgetType {
 	/**
 	 * Тачпад из scene2d
 	 */
-	TOUCHPAD;
+	TOUCHPAD,
+	/**
+	 * Актер расширения
+	 */
+	EXTENSION_ACTOR;
 	
 	public static final WidgetType[] SIMPLE_WIDGETS = {
 		IMAGE, TEXT_LABEL, BUTTON, TEXT_BUTTON, CHECKBOX, TEXT_FIELD, TOUCHPAD

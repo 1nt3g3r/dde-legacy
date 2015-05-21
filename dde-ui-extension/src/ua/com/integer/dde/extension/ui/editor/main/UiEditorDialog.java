@@ -3,7 +3,6 @@ package ua.com.integer.dde.extension.ui.editor.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -57,7 +57,7 @@ import ua.com.integer.dde.extension.ui.editor.MenuCreator;
 import ua.com.integer.dde.extension.ui.editor.UiEditorScreen;
 import ua.com.integer.dde.extension.ui.editor.command.CommandProcessor;
 import ua.com.integer.dde.extension.ui.editor.property.ConfigEditor;
-import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesExpandPanel;
 import ua.com.integer.dde.extension.ui.property.PropertyUtils;
 import ua.com.integer.dde.startpanel.FrameTools;
 import ua.com.integer.dde.startpanel.Settings;
@@ -130,7 +130,7 @@ public class UiEditorDialog extends JDialog {
 		propertyPanel.setBackground(Color.GRAY);
 		tabs.addTab("Properties", propertyPanel);
 		tabs.setBackgroundAt(1, Color.GRAY);
-		propertyPanel.setLayout(new BoxLayout(propertyPanel, BoxLayout.X_AXIS));
+		propertyPanel.setLayout(new BoxLayout(propertyPanel, BoxLayout.Y_AXIS));
 		
 		propertyScroll = new JScrollPane();
 		propertyScroll.getViewport().setBackground(Color.GRAY);
@@ -690,44 +690,40 @@ public class UiEditorDialog extends JDialog {
 		}
 	};
 	
+	private UiConfig previousConfig;
+	private CommonPropertiesExpandPanel commonEditor;
+	private ConfigEditor specificEditor;
+	
+	
 	public void updatePropertyPanelForSelectedActor() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				//TODO hot point
 				final UiConfig config = EditorKernel.getInstance().getScreen(UiEditorScreen.class).getSelectedConfig();
 				
-				CommonPropertiesPanel commonEditor = new CommonPropertiesPanel();
-				Gdx.app.postRunnable(new SetConfigRunnable(config, commonEditor));
-				
-				ConfigEditor specificEditor;
-				
-				try {
-					specificEditor = (ConfigEditor) PropertyUtils.getSupporter(config.widgetType).createSetupPanel(config, null);
-					Gdx.app.postRunnable(new SetConfigRunnable(config, specificEditor));
-				} catch (Exception ex) {
-					specificEditor = null;
+				if (commonEditor == null) {
+					commonEditor = new CommonPropertiesExpandPanel();
 				}
-
-				int totalWidth = commonEditor.getMaximumSize().width;
-				int totalHeight = commonEditor.getMaximumSize().height;
+				new SetConfigRunnable(config, commonEditor).run();
 				
-				if (specificEditor != null) {
-					totalHeight += specificEditor.getMaximumSize().height;
+				if (previousConfig == null || previousConfig.differs(config)) {
+					try {
+						specificEditor = (ConfigEditor) PropertyUtils.getSupporter(config).createSetupPanel(config, null);
+						new SetConfigRunnable(config, specificEditor).run();;
+					} catch (Exception ex) {
+						specificEditor = null;
+					}
 				}
 				
-				Dimension size = new Dimension(totalWidth, totalHeight);
+				previousConfig = config;
 				
 				JPanel resultPanel = new JPanel();
 				resultPanel.setBackground(Color.GRAY);
-				resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.PAGE_AXIS));
+				resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
 				resultPanel.add(commonEditor);
+				resultPanel.add(Box.createVerticalStrut(5));
 				if (specificEditor != null) {
 					resultPanel.add(specificEditor);
 				}
-				
-				resultPanel.setPreferredSize(size);
-				resultPanel.setMaximumSize(size);
-				resultPanel.setMinimumSize(size);
 				
 				propertyScroll.setViewportView(resultPanel);
 				propertyScroll.getVerticalScrollBar().setUnitIncrement(20);
@@ -882,7 +878,6 @@ public class UiEditorDialog extends JDialog {
 			actorHierarchy.setVisible(mnViewActorHierarchy.isSelected());
 			
 			getSettings().putBoolean("show-actor-hierarchy", mnViewActorHierarchy.isSelected());
-			//TODO resize
 		}
 	}
 	

@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  * @author 1nt3g3r
  */
 public class TextLabel extends Label {
+	private Align align;
+	
 	public TextLabel() {
 		super("Text", new LabelStyle(AbstractScreen.getKernel().getFont(Gdx.graphics.getWidth()/10), Color.WHITE));
 		
@@ -27,6 +29,8 @@ public class TextLabel extends Label {
 	}
 	
 	public void setAlign(Align al) {
+		this.align = al;
+		
 		switch(al) {
 		case CENTER: 
 			setAlignment(com.badlogic.gdx.utils.Align.center, com.badlogic.gdx.utils.Align.center);
@@ -58,5 +62,9 @@ public class TextLabel extends Label {
 		default:
 			break;
 		}
+	}
+	
+	public Align getAlign() {
+		return align;
 	}
 }

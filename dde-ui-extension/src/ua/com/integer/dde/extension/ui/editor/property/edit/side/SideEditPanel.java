@@ -14,6 +14,7 @@ import javax.swing.DefaultComboBoxModel;
 
 import ua.com.integer.dde.extension.ui.Side;
 import ua.com.integer.dde.extension.ui.UiConfig;
+import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
 
@@ -86,6 +87,10 @@ public class SideEditPanel extends JPanel implements PropertyEditComponent {
 			if (config != null) {
 				config.parentCorner = Side.valueOf(sideCombobox.getSelectedItem().toString());
 				config.targetCorner = Side.valueOf(sideCombobox.getSelectedItem().toString());
+				
+				if (EditorKernel.editorScreen().getSelectedActor() != null) {
+					config.loadPositionFromActor(EditorKernel.editorScreen().getSelectedActor());
+				}
 				
 				if (listener != null) listener.propertyChanged();
 			}

@@ -241,7 +241,7 @@ public class ImageChooser extends JDialog {
 	private void loadSettings() {
 		if (DDEStartPanel.isInitialized() && DDEStartPanel.getInstance().getKernel() != null) Settings.getInstance().setSettingsClass(DDEStartPanel.getInstance().getKernel().getClass());
 		
-		imageDirectory = Settings.getInstance().getString("raw-images-directory", "./");
+		imageDirectory = Settings.getInstance().getString("raw-images-directory", "../res/raw-images");
 		if (!new File(imageDirectory).exists()) {
 			JOptionPane.showMessageDialog(null, "Can't find raw images directory! Set as ./");
 			imageDirectory = "./";

@@ -2,6 +2,7 @@ package ua.com.integer.dde.extension.ui.property;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.WidgetType;
+import ua.com.integer.dde.extension.ui.actor.DDEExtensionActors;
 import ua.com.integer.dde.extension.ui.property.imp.box.BoxPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.button.ButtonPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.checkbox.CheckboxPropertySupporter;
@@ -44,7 +45,11 @@ public class PropertyUtils {
 		propertySupporters.get(config.widgetType).setup(config, actor, kernel);
 	}
 	
-	public static PropertySupporter getSupporter(WidgetType type) {
-		return propertySupporters.get(type);
+	public static PropertySupporter getSupporter(UiConfig config) {
+		if (config.widgetType == WidgetType.EXTENSION_ACTOR) {
+			return DDEExtensionActors.getInstance().getSupporter(config.extensionId);
+		} else {
+			return propertySupporters.get(config.widgetType);
+		}
 	}
 }

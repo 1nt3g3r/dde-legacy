@@ -12,6 +12,7 @@ import javax.swing.JSeparator;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.WidgetType;
+import ua.com.integer.dde.extension.ui.actor.DDEExtensionActors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -211,9 +212,15 @@ public class MenuCreator {
 			toReturn.add(createAddWidgetMenu("Simple", WidgetType.SIMPLE_WIDGETS));
 			toReturn.add(createAddWidgetMenu("Container", WidgetType.CONTAINER_WIDGETS));
 			toReturn.add(createAddWidgetMenu("Other", WidgetType.OTHER_WIDGETS));
+			if (DDEExtensionActors.getInstance().hasActors()) {
+				for(String category: DDEExtensionActors.getInstance().getCategories()) {
+					toReturn.add(createAddExtensionWidgetMenu(category));
+				}
+			}
 			toReturn.add(createInserUiConfigMenu());
 		return toReturn;
 	}
+	
 	
 	public JMenu createAddWidgetMenu(String menuName, WidgetType ... widgets) {
 		JMenu toReturn = new JMenu(menuName);
@@ -222,6 +229,51 @@ public class MenuCreator {
 				insertItem.addActionListener(new CreateWidgetListener(type));
 				toReturn.add(insertItem);
 			}
+		return toReturn;
+	}
+	
+	class CreateExtensionWidgetListener implements ActionListener {
+		private String id;
+		
+		public CreateExtensionWidgetListener(String id) {
+			this.id = id;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (getUiConfig() == null) {
+				JOptionPane.showMessageDialog(null, "Select parent widget!");
+				return;
+			}
+			
+			if (!getUiConfig().widgetType.isContainer()) {
+				JOptionPane.showMessageDialog(null, "Selected widget can't contain other widgets!");
+				return;
+			}
+			
+			UiConfig config = new UiConfig();
+			config.name = id;
+			config.extensionId = id;
+			config.widgetType = WidgetType.EXTENSION_ACTOR;
+			
+			getUiConfig().children.add(config);
+			getEditorScreen().updateConfig();
+			
+			getEditorScreen().selectActorByConfig(config);
+			
+			EditorKernel.getInstance().getMainWindow().updateActorTree();
+		}
+		
+	}
+	public JMenu createAddExtensionWidgetMenu(String category) {
+		JMenu toReturn = new JMenu(category);
+		for(String id: DDEExtensionActors.getInstance().getIdsFromCategory(category)) {
+			String name = DDEExtensionActors.getInstance().getDescription(id);
+			JMenuItem insertItem = new JMenuItem(name);
+			insertItem.addActionListener(new CreateExtensionWidgetListener(id));
+			toReturn.add(insertItem);
+			
+		}
 		return toReturn;
 	}
 	

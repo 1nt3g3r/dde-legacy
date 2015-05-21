@@ -22,6 +22,7 @@ public class UiConfig {
 	public String name;
 	
 	public WidgetType widgetType = WidgetType.TEXTURE_REGION_GROUP_ACTOR;
+	public String extensionId;
 	public Side parentCorner = Side.CENTER;
 	public Side targetCorner = Side.CENTER;
 	public Size horizontalDistance = new Size();
@@ -45,6 +46,11 @@ public class UiConfig {
 	public void setSide(Side side) {
 		parentCorner = side;
 		targetCorner = side;
+	}
+	
+	public void setSize(Side side, Actor target) {
+		setSide(side);
+		loadPositionFromActor(target);
 	}
 
 	public static UiConfig fromFileHandle(FileHandle handle) {
@@ -173,5 +179,17 @@ public class UiConfig {
 		
 		actor.setPosition(oldX, oldY);
 		loadPositionFromActor(actor);
+	}
+
+	public boolean differs(UiConfig config) {
+		if (config.widgetType != widgetType) {
+			return true;
+		}
+		
+		if (config.widgetType == widgetType && widgetType == WidgetType.EXTENSION_ACTOR) {
+			return !config.extensionId.equals(extensionId);
+		}
+		
+		return true;
 	}
 }

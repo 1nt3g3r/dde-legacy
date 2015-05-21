@@ -3,6 +3,8 @@ package ua.com.integer.dde.extension.ui.property.util.actor;
 import ua.com.integer.dde.extension.ui.Actors;
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.UiConfigurator;
+import ua.com.integer.dde.extension.ui.WidgetType;
+import ua.com.integer.dde.extension.ui.actor.DDEExtensionActors;
 import ua.com.integer.dde.extension.ui.layout.LayoutListener;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.extension.ui.property.PropertyUtils;
@@ -34,7 +36,12 @@ public class ActorUtils {
 	 * @param parent группа, куда будет добавлен созданный файл
 	 */
 	public static Actor addActor(AbstractScreen screen, UiConfig config, Group parent) {
-		Actor actor = config.widgetType.createWidget();
+		Actor actor = null;
+		if (config.widgetType == WidgetType.EXTENSION_ACTOR) {
+			actor = DDEExtensionActors.getInstance().create(config.extensionId);
+		} else {
+			actor = config.widgetType.createWidget();
+		}
 		actor.setName(config.name);
 		actor.setUserObject(config);
 		
@@ -52,7 +59,7 @@ public class ActorUtils {
 		screen.addScreenEventListener(configurator);
 		configurator.eventHappened(screen, ScreenEvent.RESIZE);
 		
-		PropertySupporter actorSpecificSupporter = PropertyUtils.getSupporter(config.widgetType);
+		PropertySupporter actorSpecificSupporter = PropertyUtils.getSupporter(config);
 		if (actorSpecificSupporter != null) {
 			actorSpecificSupporter.setup(config, actor, AbstractScreen.getKernel());
 		}

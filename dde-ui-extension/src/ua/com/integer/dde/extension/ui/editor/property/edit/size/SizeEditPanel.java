@@ -53,7 +53,7 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		add(propertyName);
 		
 		sizeTypeBox = new JComboBox();
-		sizeTypeBox.addActionListener(new SizeListener());
+		sizeTypeBox.addActionListener(new SizeTypeChangeListener());
 		sizeTypeBox.setBackground(Color.LIGHT_GRAY);
 		sizeTypeBox.setModel(new DefaultComboBoxModel(SizeType.values()));
 		add(sizeTypeBox);
@@ -62,9 +62,9 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		add(multLabel);
 		
 		multSpinner = new JSpinner();
-		multSpinner.setPreferredSize(new Dimension(50, 20));
-		multSpinner.setMinimumSize(new Dimension(50, 20));
-		multSpinner.setMaximumSize(new Dimension(50, 20));
+		multSpinner.setPreferredSize(new Dimension(60, 20));
+		multSpinner.setMinimumSize(new Dimension(60, 20));
+		multSpinner.setMaximumSize(new Dimension(60, 20));
 		multSpinner.addChangeListener(new SizeListener());
 		multSpinner.setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(0.01f)));
 		multSpinner.getEditor().setBackground(Color.LIGHT_GRAY);
@@ -86,7 +86,7 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		updateUiFromConfig();
 	}
 	
-	private void updateUiFromConfig() {
+	protected void updateUiFromConfig() {
 		if (config != null && uiPropertyName != null) {
 			Size size = Size.fromString(config.get(uiPropertyName, getDefaultValue()));
 			
@@ -122,19 +122,34 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 
 		private void updateConfigFromUi() {
 			if (config != null && uiPropertyName != null) {
-				Size size = new Size();
-				size.setSizeValue(Float.parseFloat(multSpinner.getValue().toString()));
-				size.setType(SizeType.valueOf(sizeTypeBox.getSelectedItem().toString()));
-				
-				writeChangesIntoConfig(size);
-				
+				writeChangesIntoConfig();
 				if (listener != null) listener.propertyChanged();
 			}
 		}
+
 	}
 	
-	protected void writeChangesIntoConfig(Size size) {
+	protected void writeChangesIntoConfig() {
+		Size size = getCurrentSize();
 		config.set(uiPropertyName, size.toString());
+	}
+
+	protected Size getCurrentSize() {
+		Size size = new Size();
+		size.setSizeValue(Float.parseFloat(multSpinner.getValue().toString()));
+		size.setType(SizeType.valueOf(sizeTypeBox.getSelectedItem().toString()));
+		return size;
+	}
+	
+	class SizeTypeChangeListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			sizeTypeChanged();
+		}
+	}
+	
+	protected void sizeTypeChanged() {
+		writeChangesIntoConfig();
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
