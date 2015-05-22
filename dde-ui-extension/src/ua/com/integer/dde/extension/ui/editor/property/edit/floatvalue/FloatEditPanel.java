@@ -8,6 +8,7 @@ public class FloatEditPanel extends IntegerEditPanel {
 	private static final long serialVersionUID = 6214336700528383860L;
 	
 	public FloatEditPanel() {
+		defaultValue = "1.0";
 		valueSpinner.setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(0.01f)));
 	}
 	

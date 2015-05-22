@@ -22,6 +22,8 @@
 		</javac>
 		
 		<copydir dest="build/classes/ua/com/integer/dde/extension/ui/skin" src="src/ua/com/integer/dde/extension/ui/skin"></copydir>
+		<copydir dest="build/classes/ua/com/integer/dde/extension/ui//res/icon" src="src/ua/com/integer/dde/extension/ui/res/icon"></copydir>
+		
 		
 		<delete file="build/classes/ua/com/integer/dde/extension/ui/skin/DefaultSkin.java"></delete>
 	</target>

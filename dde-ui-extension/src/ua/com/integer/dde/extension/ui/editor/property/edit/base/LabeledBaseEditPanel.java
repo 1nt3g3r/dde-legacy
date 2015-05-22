@@ -22,4 +22,10 @@ public class LabeledBaseEditPanel extends BaseEditPanel {
 	public String getLabel() {
 		return propertyNameLabel.getText();
 	}
+	
+	@Override
+	public void setPropertyName(String propertyName) {
+		super.setPropertyName(propertyName);
+		setLabel(propertyName);
+	}
 }

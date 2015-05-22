@@ -165,6 +165,7 @@ public class MusicManager implements Disposable, LoadManager {
 			music.dispose();
 		}
 		musics.remove(name);
+		totalMusicCount--;
 	}
 
 	private boolean canLoadSound(String extension) {

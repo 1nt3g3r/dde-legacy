@@ -256,10 +256,4 @@ public class CommonPropertiesExpandPanel extends ExpandEditPanel {
 					rotationPanel, 
 					centerOrigin);
 	}
-	
-	@Override
-	public void propertyChanged() {
-		super.propertyChanged();
-		EditorKernel.editorScreen().updateConfig();
-	}
 }
