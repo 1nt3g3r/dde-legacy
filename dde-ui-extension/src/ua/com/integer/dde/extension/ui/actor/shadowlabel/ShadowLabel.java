@@ -6,15 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 
 public class ShadowLabel extends TextLabel {
 	public static final String ID = "ua.com.integer.dde.ui.shadow.label";
-	public static final String CATEGORY = "Labels";
-	public static final String DESCRIPTION = "Label with shadow";
+	public static final String CATEGORY = "Custom Labels";
+	public static final String DESCRIPTION = "Shadow label";
 	
 	private TextLabel shadowLabel = new TextLabel();
-	private float offsetX = 2, offsetY = 2;
+	private float offsetX = 4, offsetY = -4;
 	private Color shadowColor = Color.BLACK;
-	
-	public ShadowLabel() {
-	}
 	
 	@Override
 	public void act(float delta) {
@@ -32,6 +29,13 @@ public class ShadowLabel extends TextLabel {
 		
 		shadowLabel.act(delta);
 		super.act(delta);
+	}
+	
+	@Override
+	public void setWrap(boolean wrap) {
+		super.setWrap(wrap);
+		
+		shadowLabel.setWrap(wrap);
 	}
 	
 	public float getOffsetX() {
@@ -56,5 +60,9 @@ public class ShadowLabel extends TextLabel {
 	
 	public Color getShadowColor() {
 		return shadowColor;
+	}
+	
+	public TextLabel getShadowLabel() {
+		return shadowLabel;
 	}
 }

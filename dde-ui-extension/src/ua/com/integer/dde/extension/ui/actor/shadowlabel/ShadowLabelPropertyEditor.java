@@ -1,35 +1,55 @@
 package ua.com.integer.dde.extension.ui.actor.shadowlabel;
 
-import java.awt.Dimension;
+import java.awt.Color;
 
-import ua.com.integer.dde.extension.ui.UiConfig;
+import javax.swing.SpinnerNumberModel;
+
+import ua.com.integer.dde.extension.ui.editor.property.edit.color.ColorEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.size.SizeEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.imp.textlabel.TextLabelPropertyEditor;
+import ua.com.integer.dde.extension.ui.size.Size;
+import ua.com.integer.dde.extension.ui.size.SizeType;
 
 public class ShadowLabelPropertyEditor extends TextLabelPropertyEditor {
 	private static final long serialVersionUID = 4313828412941313458L;
-	private CustomShadowPropertiesEditor customShadowProperties;
 	
 	private SizeEditPanel offsetX, offsetY;
+	private ColorEditPanel shadowColor;
 	
 	public ShadowLabelPropertyEditor() {
-		//offsetX = new SizeEditPanel();
-		//add(offsetX);
-		
-		customShadowProperties = new CustomShadowPropertiesEditor();
-		add(customShadowProperties);
+		offsetX = new SizeEditPanel();
+		offsetX.setDefaultSize(getPxSize(4));
+		offsetX.setPropertyChangedListener(this);
+		offsetX.setPropertyName("Offset X");
+		offsetX.setUiPropertyName("shadow-offset-x");
+		offsetX.getMultSpinner().setModel(new SpinnerNumberModel(new Float(1), null, null, new Float(1f)));
 
-//		Dimension newSize = new Dimension(getPreferredSize());
-//		newSize.height += customShadowProperties.getHeight();
-//		setPreferredSize(newSize);
-//		setMinimumSize(newSize);
-//		setMaximumSize(newSize);
+		offsetY = new SizeEditPanel();
+		offsetY.setPropertyChangedListener(this);
+		offsetY.setPropertyName("Offset Y");
+		offsetY.setUiPropertyName("shadow-offset-y");
+		offsetY.setDefaultSize(getPxSize(-4));
+		offsetY.getMultSpinner().setModel(new SpinnerNumberModel(new Float(1), null, null, new Float(1f)));
 		
-		//System.out.println(newSize.height);
-		//setSize(newSize);
+		shadowColor = new ColorEditPanel();
+		shadowColor.setPropertyChangedListener(this);
+		shadowColor.setPropertyName("Shadow color");
+		shadowColor.setUiPropertyName("shadow-color");
+		shadowColor.setDefaultColor(Color.BLACK);
+		
+		addContent(
+				subHeader("Shadow offset"),
+					offsetX, 
+					offsetY,
+				subHeader("Shadow color"),
+					shadowColor
+				);
 	}
 	
-	public void setConfig(UiConfig config) {
-		super.setConfig(config);
-	};
+	private Size getPxSize(int size) {
+		Size result = new Size();
+		result.setSizeValue(size);
+		result.setType(SizeType.ABSOLUTE);
+		return result;
+	}
 }

@@ -20,7 +20,7 @@ public class DDEExtensionActors {
 	private Array<String> tmpNamesFromCategories = new Array<String>();
 	
 	private DDEExtensionActors() {
-		//register(ShadowLabel.ID, ShadowLabel.class, ShadowLabel.DESCRIPTION, ShadowLabel.CATEGORY, new ShadowLabelPropertySupporter());
+		register(ShadowLabel.ID, ShadowLabel.class, ShadowLabel.DESCRIPTION, ShadowLabel.CATEGORY, new ShadowLabelPropertySupporter());
 	}
 
 	public static DDEExtensionActors getInstance() {

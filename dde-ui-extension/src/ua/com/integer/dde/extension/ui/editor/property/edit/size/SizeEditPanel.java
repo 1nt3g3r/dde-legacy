@@ -160,4 +160,8 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 	public void setDefaultSize(Size defaultSize) {
 		defaultValue = defaultSize.toString();
 	}
+	
+	public JSpinner getMultSpinner() {
+		return multSpinner;
+	}
 }

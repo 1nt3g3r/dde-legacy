@@ -50,7 +50,11 @@ public class TextLabelPropertySupporter extends PropertySupporter {
 	}
 	
 	private void checkText() {
-		textLabel.setText(getLocalizedText("text"));
+		String newText = getLocalizedText("text");
+		if (newText.equals("")) {
+			newText = "Text label";
+		}
+		textLabel.setText(newText);
 	}
 
 	private void checkTextColor() {
@@ -60,10 +64,12 @@ public class TextLabelPropertySupporter extends PropertySupporter {
 	}
 	
 	private void checkFont() {
-		if (exists("font-name")) {
-			textLabel.getTextLabel().getStyle().font = getFont("font-name");
-			textLabel.getTextLabel().setStyle(textLabel.getTextLabel().getStyle());
+		if (!exists("font-name")) {
+			config.set("font-name", "standard");
 		}
+		
+		textLabel.getTextLabel().getStyle().font = getFont("font-name");
+		textLabel.getTextLabel().setStyle(textLabel.getTextLabel().getStyle());
 	}
 	
 	private void checkTextAlignment() {
