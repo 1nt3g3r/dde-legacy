@@ -27,7 +27,15 @@ public class ScalingEditPanel extends LabeledBaseEditPanel {
 		valueField.setModel(new DefaultComboBoxModel<Scaling>(Scaling.values()));
 		add(valueField);
 	}
-
+	
+	@Override
+	protected void updateUIFromConfig() {
+		if (config != null) {
+			String scalingStr = config.get(uiPropertyName, getDefaultValue());
+			Scaling scaling = Scaling.valueOf(scalingStr);
+			valueField.setSelectedItem(scaling);
+		}
+	}
 	
 	class ScalingSelectListener implements ActionListener {
 		@Override

@@ -85,6 +85,10 @@ public class UiEditorDialog extends JDialog {
 	
 	private CommandProcessor commandProcessor = new CommandProcessor();
 	
+	private UiConfig previousConfig;
+	private CommonPropertiesExpandPanel commonEditor;
+	private ConfigEditor specificEditor;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -694,11 +698,6 @@ public class UiEditorDialog extends JDialog {
 		}
 	};
 	
-	private UiConfig previousConfig;
-	private CommonPropertiesExpandPanel commonEditor;
-	private ConfigEditor specificEditor;
-	
-	
 	public void updatePropertyPanelForSelectedActor() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -709,14 +708,15 @@ public class UiEditorDialog extends JDialog {
 				}
 				new SetConfigRunnable(config, commonEditor).run();
 				
-				if (specificEditor == null || previousConfig.differs(config)) {
+				
+				if (specificEditor == null || previousConfig == null || previousConfig.differs(config)) {
 					try {
 						specificEditor = (ConfigEditor) PropertyUtils.getSupporter(config).createSetupPanel(config, null);
-						new SetConfigRunnable(config, specificEditor).run();;
 					} catch (Exception ex) {
 						specificEditor = null;
 					}
 				}
+				
 				
 				previousConfig = config;
 				
@@ -725,7 +725,9 @@ public class UiEditorDialog extends JDialog {
 				resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
 				resultPanel.add(commonEditor);
 				resultPanel.add(Box.createVerticalStrut(5));
+				
 				if (specificEditor != null) {
+					new SetConfigRunnable(config, specificEditor).run();;
 					resultPanel.add(specificEditor);
 				}
 				

@@ -190,6 +190,6 @@ public class UiConfig {
 			return !config.extensionId.equals(extensionId);
 		}
 		
-		return true;
+		return false;
 	}
 }
