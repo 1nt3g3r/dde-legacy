@@ -1,5 +1,7 @@
 package ua.com.integer.dde.extension.ui.actor;
 
+import ua.com.integer.dde.extension.ui.actor.animated.FrameAnimation;
+import ua.com.integer.dde.extension.ui.actor.animated.FrameAnimationPropertySupporter;
 import ua.com.integer.dde.extension.ui.actor.shadowlabel.ShadowLabel;
 import ua.com.integer.dde.extension.ui.actor.shadowlabel.ShadowLabelPropertySupporter;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
@@ -21,6 +23,8 @@ public class DDEExtensionActors {
 	
 	private DDEExtensionActors() {
 		register(ShadowLabel.ID, ShadowLabel.class, ShadowLabel.DESCRIPTION, ShadowLabel.CATEGORY, new ShadowLabelPropertySupporter());
+		register(FrameAnimation.ID, FrameAnimation.class, FrameAnimation.DESCRIPTION, FrameAnimation.CATEGORY, new FrameAnimationPropertySupporter());
+
 	}
 
 	public static DDEExtensionActors getInstance() {
@@ -61,7 +65,6 @@ public class DDEExtensionActors {
 	}
 	
 	public Actor create(String id) {
-		System.out.println("create for " + id);
 		try {
 			return actors.get(id).newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {

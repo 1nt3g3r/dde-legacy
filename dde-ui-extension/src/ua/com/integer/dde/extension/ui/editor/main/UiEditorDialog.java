@@ -109,7 +109,7 @@ public class UiEditorDialog extends JDialog {
 	public UiEditorDialog() {
 		getContentPane().setBackground(Color.GRAY);
 		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ActorListCloseListener());
 
 		setTitle("DDE Actor Editor");
@@ -548,6 +548,7 @@ public class UiEditorDialog extends JDialog {
 	 * точку (0, 0)
 	 */
 	private void openSelectedActorConfig() {
+
 		try {
 			getSelectedActorConfig();
 		} catch (Exception ex) {
@@ -559,7 +560,10 @@ public class UiEditorDialog extends JDialog {
 			getCurrentUiConfig().saveToFile(previousActorFile);
 		}
 		
+		
 		showUiConfig(getSelectedActorConfig());
+
+		setTitle("DDE UI Editor - " + getSelectedActorFile().getName().split("\\.")[0]);
 		
 		previousActorFile = getSelectedActorFile();
 		
@@ -705,7 +709,7 @@ public class UiEditorDialog extends JDialog {
 				}
 				new SetConfigRunnable(config, commonEditor).run();
 				
-				if (previousConfig == null || previousConfig.differs(config)) {
+				if (specificEditor == null || previousConfig.differs(config)) {
 					try {
 						specificEditor = (ConfigEditor) PropertyUtils.getSupporter(config).createSetupPanel(config, null);
 						new SetConfigRunnable(config, specificEditor).run();;
@@ -767,12 +771,21 @@ public class UiEditorDialog extends JDialog {
 	
 	class ActorListCloseListener extends WindowAdapter {
 		@Override
+		public void windowClosed(WindowEvent e) {
+		}
+		
+		@Override
 		public void windowClosing(WindowEvent e) {
-			Settings sets = Settings.getInstance();
-			sets.setSettingsClass(UiEditorDialog.class);
-			sets.putString("frame-width", getWidth() + "");
-			sets.putString("frame-height", getHeight() + "");
-			System.exit(0);
+			String ask = "Do you want to quit?";
+			
+			int answer = JOptionPane.showConfirmDialog(null, ask, "Close", JOptionPane.YES_NO_OPTION);
+			if (answer == JOptionPane.YES_OPTION) {
+				Settings sets = Settings.getInstance();
+				sets.setSettingsClass(UiEditorDialog.class);
+				sets.putString("frame-width", getWidth() + "");
+				sets.putString("frame-height", getHeight() + "");
+				System.exit(0);
+			}
 		}
 	}
 	

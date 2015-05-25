@@ -56,6 +56,9 @@ public class IntegerEditPanel extends LabeledBaseEditPanel {
 		}
 	}
 	
+	public JSpinner getValueSpinner() {
+		return valueSpinner;
+	}
 	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {

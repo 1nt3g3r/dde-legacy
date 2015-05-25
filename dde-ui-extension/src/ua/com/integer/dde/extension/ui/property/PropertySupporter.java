@@ -15,7 +15,9 @@ import ua.com.integer.dde.util.GraphicUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
@@ -23,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 
 public abstract class PropertySupporter {
@@ -45,6 +48,17 @@ public abstract class PropertySupporter {
 	public TextureRegion getImageRegion(String name) {
 		String[] nameParts = config.get(name).split(";");
 		return AbstractScreen.getRegion(nameParts[0], nameParts[1]);
+	}
+	
+	public TextureAtlas getAtlas(String fullName) {
+		String[] nameParts = config.get(fullName).split(";");
+		return AbstractScreen.getKernel().getResourceManager().atlases().getAtlas(nameParts[0]);
+	}
+	
+	public Array<AtlasRegion> getRegions(String fullName) {
+		String[] nameParts = config.get(fullName).split(";");
+		String animationName = nameParts[1].split("_")[0];
+		return getAtlas(fullName).findRegions(animationName);
 	}
 	
 	public int getInt(String name) {
