@@ -55,7 +55,6 @@ import ua.com.integer.dde.extension.ui.WidgetType;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.editor.MenuCreator;
 import ua.com.integer.dde.extension.ui.editor.UiEditorScreen;
-import ua.com.integer.dde.extension.ui.editor.command.CommandProcessor;
 import ua.com.integer.dde.extension.ui.editor.property.ConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.imp.common.CommonPropertiesExpandPanel;
 import ua.com.integer.dde.extension.ui.property.PropertyUtils;
@@ -82,8 +81,6 @@ public class UiEditorDialog extends JDialog {
 	private LwjglAWTCanvas lCanvas;
 
 	private String fullActorPath;
-	
-	private CommandProcessor commandProcessor = new CommandProcessor();
 	
 	private UiConfig previousConfig;
 	private CommonPropertiesExpandPanel commonEditor;
@@ -935,9 +932,8 @@ public class UiEditorDialog extends JDialog {
 			if (parts.length > 1) {
 				multiplier = parts[1];
 			}
-			sendCommand("res " + dimension[0] + " " + dimension[1] + " " + multiplier);
+			EditorKernel.executeCommand("res " + dimension[0] + " " + dimension[1] + " " + multiplier);
 		}
-		
 	}
 	
 	public void setEditorViewportSize(int width, int height) {
@@ -972,10 +968,6 @@ public class UiEditorDialog extends JDialog {
 				}
 			});
 		}
-	}
-	
-	public void sendCommand(String command) {
-		commandProcessor.executeCommand(command, this);
 	}
 	
 	public void setConsoleOutput(String text) {

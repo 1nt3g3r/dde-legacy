@@ -160,9 +160,9 @@ public class GridSettingsDialog extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (showGridCheckbox.isSelected()) {
-				EditorKernel.sendCommand("grid show");
+				EditorKernel.executeCommand("grid show");
 			} else {
-				EditorKernel.sendCommand("grid hide");
+				EditorKernel.executeCommand("grid hide");
 			}
 		}
 	}
@@ -171,9 +171,9 @@ public class GridSettingsDialog extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (snapToGridCheckbox.isSelected()) {
-				EditorKernel.sendCommand("grid on");
+				EditorKernel.executeCommand("grid on");
 			} else {
-				EditorKernel.sendCommand("grid off");
+				EditorKernel.executeCommand("grid off");
 			}
 		}
 	}

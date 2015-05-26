@@ -20,7 +20,7 @@ public class ActorInputListener extends InputListener {
 	public ActorInputListener(UiEditorScreen screen) {
 		this.screen = screen;
 	}
-	
+
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer,
 			int button) {

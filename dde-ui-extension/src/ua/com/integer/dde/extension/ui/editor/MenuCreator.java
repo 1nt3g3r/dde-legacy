@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
 public class MenuCreator {
 	private Actor actor;
-	private UiConfig temporary;
 	
 	private static MenuCreator instance = new MenuCreator();
 	
@@ -40,82 +39,23 @@ public class MenuCreator {
 	class DeleteItemListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			getEditorScreen().removeUiConfig(getUiConfig());
-			
-			EditorKernel.getInstance().getMainWindow().updateActorTree();
+			EditorKernel.executeCommand("rm");
 		}
 	};
 	
 	class CopyListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			temporary = getUiConfig();
-			temporary.saveToFile(new File("tmp.actor"));
-			temporary = UiConfig.fromFile(new File("tmp.actor"));
-			
-			new File("tmp.actor").delete();
-			
+			EditorKernel.executeCommand("copy");
 		}
 	}
 	
 	class PasteListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			temporary.saveToFile(new File("tmp.actor"));
-			UiConfig toInsert = UiConfig.fromFile(new File("tmp.actor"));
-			
-			getUiConfig().children.add(toInsert);
-			getEditorScreen().updateConfig();
-			
-			getEditorScreen().selectActorByConfig(toInsert);
-			
-			new File("tmp.actor").delete();
-			
-			EditorKernel.getInstance().getMainWindow().updateActorTree();
+			EditorKernel.executeCommand("paste");
 		}
 	}
-	
-	/**
-	 * Слушатель на вставку конфига до\после актера
-	 * 
-	 * @author 1nt3g3r
-	 */
-	class InsertAfterListener implements ActionListener {
-		private int addIndex;
-		
-		/**
-		 * Смещение относительно текущего актера. 
-		 * Чтобы вставить актера ПОСЛЕ текущего - addIndex должен быть 1
-		 * Чтобы ПЕРЕД текущим - addIndex должен быть 0
-		 */
-		public InsertAfterListener(int addIndex) {
-			this.addIndex = addIndex;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			temporary.saveToFile(new File("tmp.actor"));
-			UiConfig toInsert = UiConfig.fromFile(new File("tmp.actor"));
-			
-			Group parentActor = actor.getParent();
-			UiConfig parentConfig = (UiConfig) parentActor.getUserObject();
-			if (parentConfig != null) {
-				int configIndex = parentConfig.children.indexOf(getUiConfig(), true);
-				if (configIndex < 1) {
-					configIndex = 1;
-				}
-				parentConfig.children.insert(configIndex + addIndex, toInsert);
-				
-				getEditorScreen().updateConfig();
-				getEditorScreen().selectActorByConfig(toInsert);
-				
-				new File("tmp.actor").delete();
-				
-				EditorKernel.getInstance().getMainWindow().updateActorTree();
-			}
-		}
-	}
-	
 	
 	private JPopupMenu createMenu() {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -135,19 +75,9 @@ public class MenuCreator {
 			toReturn.add(copyItem);
 			
 			if (canPasteIntoActor()) {
-				JMenuItem pasteItem = new JMenuItem("Paste into");
+				JMenuItem pasteItem = new JMenuItem("Paste");
 				pasteItem.addActionListener(new PasteListener());
 				toReturn.add(pasteItem);
-			}
-				
-			if (canPasteAfterAndBefore()) {
-				JMenuItem insertAfterItem = new JMenuItem("Paste after");
-				insertAfterItem.addActionListener(new InsertAfterListener(1));
-				toReturn.add(insertAfterItem);
-				
-				JMenuItem insertBeforeItem = new JMenuItem("Paste before");
-				insertBeforeItem.addActionListener(new InsertAfterListener(-1));
-				toReturn.add(insertBeforeItem);
 			}
 		return toReturn;
 	}
@@ -158,21 +88,13 @@ public class MenuCreator {
 	 * и актер является группой
 	 */
 	private boolean canPasteIntoActor() {
+		UiConfig temporary = EditorKernel.getInstance().getTemporary();
+		
 		if (actor instanceof ScrollPane) {
 			return temporary != null && ((ScrollPane) actor).getWidget() == null;
 		}
 		
 		return temporary != null && actor instanceof Group;
-	}
-	
-	/**
-	 * Можно ли вставить конфиг до или после выбранного актера. Вставка конфига 
-	 * возможна лишь в случае, если есть родительський конфиг
-	 */
-	private boolean canPasteAfterAndBefore() {
-		return temporary != null && 
-			   actor.getParent() != null &&
-			   actor.getParent().getUserObject() != null;
 	}
 	
 	class CreateWidgetListener implements ActionListener {
@@ -198,12 +120,7 @@ public class MenuCreator {
 			config.name = widgetType.getShortDescription();
 			config.widgetType = widgetType;
 			
-			getUiConfig().children.add(config);
-			getEditorScreen().updateConfig();
-			
-			getEditorScreen().selectActorByConfig(config);
-			
-			EditorKernel.getInstance().getMainWindow().updateActorTree();
+			getEditorScreen().addConfig(getUiConfig(), config);
 		}
 	}
 	
@@ -256,12 +173,7 @@ public class MenuCreator {
 			config.extensionId = id;
 			config.widgetType = WidgetType.EXTENSION_ACTOR;
 			
-			getUiConfig().children.add(config);
-			getEditorScreen().updateConfig();
-			
-			getEditorScreen().selectActorByConfig(config);
-			
-			EditorKernel.getInstance().getMainWindow().updateActorTree();
+			getEditorScreen().addConfig(getUiConfig(), config);
 		}
 		
 	}
@@ -287,10 +199,7 @@ public class MenuCreator {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			getUiConfig().children.add(UiConfig.fromFile(configFile));
-			getEditorScreen().updateConfig();
-			
-			EditorKernel.getInstance().getMainWindow().updateActorTree();
+			getEditorScreen().addConfig(getUiConfig(), UiConfig.fromFile(configFile));
 		}
 	};
 	

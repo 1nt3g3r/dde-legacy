@@ -357,7 +357,7 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 			commandText.remove();
 			String command = commandText.getText();
 			commandText.setText("");
-			EditorKernel.getInstance().getMainWindow().sendCommand(command);
+			EditorKernel.executeCommand(command);
 			return true;
 		}
 		

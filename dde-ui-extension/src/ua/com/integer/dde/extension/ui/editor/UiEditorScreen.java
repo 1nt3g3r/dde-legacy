@@ -4,12 +4,16 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.io.File;
+
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.UiConfigurator;
 import ua.com.integer.dde.extension.ui.editor.drag.GridSettings;
 import ua.com.integer.dde.extension.ui.editor.drag.WidgetDragListener;
+import ua.com.integer.dde.extension.ui.editor.shortcut.KeyboardListener;
 import ua.com.integer.dde.extension.ui.property.util.actor.ActorUtils;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenEvent;
@@ -25,7 +29,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -51,6 +57,8 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	private WidgetDragListener dragListener;
 	
 	private float gridPercentX, gridPercentY;
+	
+	private Array<UiConfig> savedActions = new Array<UiConfig>();
 	
 	class SwitchColorTask extends Task {
 		@Override
@@ -311,7 +319,10 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					clearScreenListeners();
 					
 					getStage().clear();
-					dragListener = new WidgetDragListener();
+					if (dragListener == null) {
+						//TODO here bad place
+						dragListener = new WidgetDragListener();
+					}
 					addScreenEventListener(dragListener);
 					getStage().addListener(dragListener);
 					
@@ -340,15 +351,30 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					}
 					ex.printStackTrace();
 
-					JOptionPane.showMessageDialog(null, "Config incorrect!");
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							JOptionPane.showMessageDialog(null, "Config incorrect!");
+						}
+					});
 				}
 				
 				EditorKernel.getInstance().getMainWindow().updateActorTree();
+				
+				getStage().addListener(new KeyboardListener());
 			}
 		});
 		
 	}
 	
+	public void saveCurrentConfig() {
+		if (config == null) {
+			return;
+		}
+		
+		config.saveToFile(new File("saved.actor"));
+		savedActions.add(UiConfig.fromFile(new File("saved.actor")));
+		new File("saved.actor").delete();
+	}
 	/**
 	 * Рекурсивно добавляет actor и его детям (если они есть) слушатель на 
 	 * редактирование
@@ -402,13 +428,19 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	 * выдается сообщение про ошибку
 	 */
 	public void removeUiConfig(UiConfig config) {
-		if (config == null) return;
+		if (config == null || this.config == config) return;
+		saveCurrentConfig();
+		removeConfig(getUiConfig(), config);
+	}
+	
+	public void addConfig(UiConfig parent, UiConfig toInsert) {
+		saveCurrentConfig();
 		
-		if (this.config == config) {
-			JOptionPane.showMessageDialog(null, "Can't delete root actor!");
-		} else {
-			removeConfig(getUiConfig(), config);
-		}
+		parent.children.add(toInsert);
+		updateConfig();
+		EditorKernel.getInstance().getMainWindow().updateActorTree();
+		
+		selectActorByConfig(toInsert);
 	}
 
 	/**
@@ -564,5 +596,24 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		shapeRenderer.setColor(Color.ORANGE);
 			shapeRenderer.rect(x, y, resizeQuadSize, resizeQuadSize);
 		shapeRenderer.end();
+	}
+
+	public boolean isCommandFieldVisible() {
+		TextField commandText = dragListener.getCommandText();
+		
+		if (commandText == null) {
+			return false;
+		}
+		
+		return commandText.isVisible();
+	}
+	
+	public void undoAction() {
+		if (savedActions.size > 0) {
+			UiConfig previous = savedActions.pop();
+			setConfig(previous);
+			
+			selectActorByConfig(previous);
+		}
 	}
 }
