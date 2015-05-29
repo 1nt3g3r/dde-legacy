@@ -247,13 +247,14 @@ public class CommonPropertiesExpandPanel extends ExpandEditPanel {
 				header("Position"),
 					cornerPanel,
 					xDistancePanel, 
-					yDistancePanel, 
+					yDistancePanel,
 				header("Scale"), 
 					scaleXPanel, 
-					scaleYPanel, 
+					scaleYPanel,
 				header("Other properties"), 
 					colorPanel, 
 					rotationPanel, 
-					centerOrigin);
+					centerOrigin
+					);
 	}
 }

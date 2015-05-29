@@ -17,6 +17,7 @@ public class IntegerEditPanel extends LabeledBaseEditPanel {
 	private static final long serialVersionUID = -5563346076050032646L;
 
 	protected JSpinner valueSpinner;
+	protected IntegerValueChangeListener changeListener = new IntegerValueChangeListener();
 
 	/**
 	 * Create the panel.
@@ -27,13 +28,14 @@ public class IntegerEditPanel extends LabeledBaseEditPanel {
 		valueSpinner = new JSpinner();
 		valueSpinner.setForeground(Color.LIGHT_GRAY);
 		valueSpinner.setBackground(Color.LIGHT_GRAY);
-		valueSpinner.addChangeListener(new IntegerValueChangeListener());
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(valueSpinner);
 	}
 	
 	protected void setSpinnerValue(String value) {
+		valueSpinner.removeChangeListener(changeListener);
 		valueSpinner.setValue((int) Float.parseFloat(value));
+		valueSpinner.addChangeListener(changeListener);
 	}
 	
 	@Override

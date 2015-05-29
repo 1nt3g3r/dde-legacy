@@ -27,6 +27,8 @@ public class SideEditPanel extends JPanel implements PropertyEditComponent {
 	private PropertyChangeListener listener;
 	@SuppressWarnings("rawtypes")
 	private JComboBox sideCombobox;
+	
+	private SideChangeListener sideListener = new SideChangeListener();
 
 	/**
 	 * Create the panel.
@@ -46,7 +48,7 @@ public class SideEditPanel extends JPanel implements PropertyEditComponent {
 		add(propertyName);
 		
 		sideCombobox = new JComboBox();
-		sideCombobox.addActionListener(new SideChangeListener());
+		sideCombobox.addActionListener(sideListener);
 		sideCombobox.setModel(new DefaultComboBoxModel(Side.values()));
 		sideCombobox.setBackground(Color.LIGHT_GRAY);
 		add(sideCombobox);
@@ -57,7 +59,9 @@ public class SideEditPanel extends JPanel implements PropertyEditComponent {
 		this.config = config;
 		
 		if (config != null) {
+			sideCombobox.removeActionListener(sideListener);
 			sideCombobox.setSelectedItem(config.parentCorner);
+			sideCombobox.addActionListener(sideListener);
 		}
 	}
 

@@ -15,13 +15,14 @@ public class AlignEditPanel extends LabeledBaseEditPanel {
 	private static final long serialVersionUID = 1871482774965698728L;
 	
 	private JComboBox<Align> alignBox;
+	private AlignSelectListener alignListener = new AlignSelectListener();
 
 	/**
 	 * Create the panel.
 	 */
 	public AlignEditPanel() {
 		alignBox = new JComboBox<Align>();
-		alignBox.addActionListener(new AlignSelectListener());
+		alignBox.addActionListener(alignListener);
 		alignBox.setModel(new DefaultComboBoxModel<Align>(Align.values()));
 		alignBox.setBackground(Color.LIGHT_GRAY);
 		add(alignBox);
@@ -37,7 +38,9 @@ public class AlignEditPanel extends LabeledBaseEditPanel {
 
 	private void updateUiFromConfig() {
 		if (config != null && uiPropertyName != null) {
+			alignBox.removeActionListener(alignListener);
 			alignBox.setSelectedItem(Align.valueOf(config.get(uiPropertyName, getDefaultValue())));
+			alignBox.addActionListener(alignListener);
 		}
 	}
 	

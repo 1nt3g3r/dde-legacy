@@ -14,6 +14,7 @@ public class PlayModeEditPanel extends LabeledBaseEditPanel {
 	private static final long serialVersionUID = 8434740669668473954L;
 
 	private JComboBox<PlayMode> playMode;
+	private PlayModeChangeListener playModeListener = new PlayModeChangeListener();
 
 	public PlayModeEditPanel() {
 		setLabel("Play mode");
@@ -21,7 +22,7 @@ public class PlayModeEditPanel extends LabeledBaseEditPanel {
 		setDefaultValue(PlayMode.LOOP + "");
 		
 		playMode = new JComboBox<PlayMode>();
-		playMode.addActionListener(new PlayModeChangeListener());
+		playMode.addActionListener(playModeListener);
 		playMode.setModel(new DefaultComboBoxModel<PlayMode>(PlayMode.values()));
 		playMode.setSelectedIndex(2);
 		add(playMode);
@@ -30,9 +31,13 @@ public class PlayModeEditPanel extends LabeledBaseEditPanel {
 	@Override
 	protected void updateUIFromConfig() {
 		if (config != null) {
+			playMode.removeActionListener(playModeListener);
+			
 			String playModeStr = config.get(uiPropertyName, getDefaultValue());
 			PlayMode mode = PlayMode.valueOf(playModeStr);
 			playMode.setSelectedItem(mode);
+			
+			playMode.addActionListener(playModeListener);
 		}
 	}
 	

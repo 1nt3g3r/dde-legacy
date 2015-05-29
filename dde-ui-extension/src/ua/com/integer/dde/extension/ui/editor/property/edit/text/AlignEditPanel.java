@@ -13,6 +13,7 @@ import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEdit
 public class AlignEditPanel extends LabeledBaseEditPanel {
 	private static final long serialVersionUID = 13348312730673242L;
 	private JComboBox<Align> alignValue;
+	private AlignSelectListener alignListener = new AlignSelectListener();
 
 	/**
 	 * Create the panel.
@@ -21,7 +22,7 @@ public class AlignEditPanel extends LabeledBaseEditPanel {
 		setDefaultValue(Align.CENTER.toString());
 		
 		alignValue = new JComboBox<Align>();
-		alignValue.addActionListener(new AlignSelectListener());
+		alignValue.addActionListener(alignListener);
 		alignValue.setBackground(Color.LIGHT_GRAY);
 		alignValue.setModel(new DefaultComboBoxModel<Align>(Align.values()));
 		add(alignValue);
@@ -30,7 +31,9 @@ public class AlignEditPanel extends LabeledBaseEditPanel {
 	@Override
 	protected void updateUIFromConfig() {
 		if (config != null && uiPropertyName != null) {
+			alignValue.removeActionListener(alignListener);
 			alignValue.setSelectedItem(Align.valueOf(config.get(uiPropertyName, getDefaultValue())));
+			alignValue.addActionListener(alignListener);
 		}
 	}
 	

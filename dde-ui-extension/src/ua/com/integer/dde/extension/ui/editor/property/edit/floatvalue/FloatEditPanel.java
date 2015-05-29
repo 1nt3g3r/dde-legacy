@@ -14,7 +14,9 @@ public class FloatEditPanel extends IntegerEditPanel {
 	
 	@Override
 	protected void setSpinnerValue(String value) {
+		valueSpinner.removeChangeListener(changeListener);
 		valueSpinner.setValue(Float.parseFloat(value));
+		valueSpinner.addChangeListener(changeListener);
 	}
 	
 }

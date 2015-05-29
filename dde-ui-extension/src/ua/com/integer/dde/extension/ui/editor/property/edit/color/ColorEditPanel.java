@@ -31,7 +31,6 @@ public class ColorEditPanel extends LabeledBaseEditPanel implements ColorListene
 		setMaximumSize(new Dimension(300, 20));
 		
 		colorValue = new JPanel();
-//		colorValue.setBorder(new LineBorder(new Color(0, 0, 0)));
 		colorValue.setBackground(Color.WHITE);
 		
 		chooseColor = new JButton("Choose...");

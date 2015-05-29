@@ -186,6 +186,10 @@ public enum WidgetType {
 		if (isEditor()) {
 			result.setTouchable(Touchable.enabled);
 			result.clearListeners();
+			
+			if (result instanceof Group) {
+				makeInnerActorsUntochable((Group) result);
+			}
 		}
 		
 		return result;

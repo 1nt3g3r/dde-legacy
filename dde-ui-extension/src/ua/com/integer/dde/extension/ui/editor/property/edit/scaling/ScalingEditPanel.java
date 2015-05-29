@@ -15,6 +15,8 @@ public class ScalingEditPanel extends LabeledBaseEditPanel {
 	private static final long serialVersionUID = -9219486169697324844L;
 	private JComboBox<Scaling> valueField;
 	
+	private ScalingSelectListener scalingListener = new ScalingSelectListener();
+	
 	/**
 	 * Create the panel.
 	 */
@@ -22,7 +24,7 @@ public class ScalingEditPanel extends LabeledBaseEditPanel {
 		defaultValue = Scaling.none.toString();
 		
 		valueField = new JComboBox<Scaling>();
-		valueField.addActionListener(new ScalingSelectListener());
+		valueField.addActionListener(scalingListener);
 		valueField.setBackground(Color.LIGHT_GRAY);
 		valueField.setModel(new DefaultComboBoxModel<Scaling>(Scaling.values()));
 		add(valueField);
@@ -33,7 +35,10 @@ public class ScalingEditPanel extends LabeledBaseEditPanel {
 		if (config != null) {
 			String scalingStr = config.get(uiPropertyName, getDefaultValue());
 			Scaling scaling = Scaling.valueOf(scalingStr);
+			
+			valueField.removeActionListener(scalingListener);
 			valueField.setSelectedItem(scaling);
+			valueField.addActionListener(scalingListener);
 		}
 	}
 	
