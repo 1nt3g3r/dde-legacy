@@ -1,12 +1,12 @@
 package ua.com.integer.dde.extension.ui.editor.property.imp.box;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.box.AlignEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.size.SizeEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 import ua.com.integer.dde.extension.ui.size.Size;
 import ua.com.integer.dde.extension.ui.size.SizeType;
 
-public class BoxPropertyEditor extends ExpandEditPanel {
+public class BoxPropertyEditor extends ExpandableConfigEditor {
 	private static final long serialVersionUID = 8004306707819739535L;
 	
 	private AlignEditPanel alignEditPanel;

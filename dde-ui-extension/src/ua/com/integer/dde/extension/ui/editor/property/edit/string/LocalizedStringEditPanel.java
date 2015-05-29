@@ -1,8 +1,5 @@
 package ua.com.integer.dde.extension.ui.editor.property.edit.string;
 
-import javax.swing.JPanel;
-
-import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,48 +7,29 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 import ua.com.integer.dde.extension.localize.Localize;
-import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.startpanel.FrameTools;
 
-public class LocalizedStringEditPanel extends JPanel implements PropertyEditComponent {
+public class LocalizedStringEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = 7823894230864943611L;
 	
 	private JTextField textfield;
-	@SuppressWarnings("rawtypes")
-	private JComboBox tagCombobox;
+	private JComboBox<String> tagCombobox;
 	private JCheckBox needLocalize;
-	private JLabel propertyName;
-
-	private String uiPropertyName;
-	private UiConfig config;
 	
-	private PropertyChangeListener listener;
+	private CheckNeedLocalizeListener needLocalizeListener = new CheckNeedLocalizeListener();
+	private TagSelectedListener tagListener = new TagSelectedListener();
 	
-	@SuppressWarnings("rawtypes")
 	public LocalizedStringEditPanel() {
-		setBackground(Color.GRAY);
-		setPreferredSize(new Dimension(300, 20));
-		setMinimumSize(new Dimension(300, 20));
-		setMaximumSize(new Dimension(300, 20));
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		
-		propertyName = new JLabel("Property name:");
-		propertyName.setPreferredSize(new Dimension(97, 20));
-		propertyName.setMinimumSize(new Dimension(97, 20));
-		propertyName.setMaximumSize(new Dimension(97, 20));
-		add(propertyName);
+		defaultValue = "";
 		
 		needLocalize = new JCheckBox("Localize");
-		needLocalize.addActionListener(new CheckNeedLocalizeListener());
+		needLocalize.addActionListener(needLocalizeListener);
 		needLocalize.setBackground(Color.GRAY);
 		add(needLocalize);
 		
@@ -62,8 +40,8 @@ public class LocalizedStringEditPanel extends JPanel implements PropertyEditComp
 		add(textfield);
 		textfield.setColumns(10);
 		
-		tagCombobox = new JComboBox();
-		tagCombobox.addActionListener(new TagSelectedListener());
+		tagCombobox = new JComboBox<String>();
+		tagCombobox.addActionListener(tagListener);
 		tagCombobox.setBackground(Color.LIGHT_GRAY);
 		tagCombobox.setVisible(false);
 		add(tagCombobox);
@@ -92,40 +70,35 @@ public class LocalizedStringEditPanel extends JPanel implements PropertyEditComp
 			config.set(uiPropertyName, getDefaultValue());
 		}
 		
-		config.set(uiPropertyName + "-localized-tag", tagCombobox.getSelectedItem().toString());
-		config.set(uiPropertyName + "-localize", "true");
+		if (tagCombobox.getSelectedIndex() >= 0) {
+			config.set(uiPropertyName + "-localized-tag", tagCombobox.getSelectedItem().toString());
+			config.set(uiPropertyName + "-localize", "true");
+		} else {
+			needLocalize.setSelected(false);
+			textfield.setVisible(true);
+			tagCombobox.setVisible(false);
+		}
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void updateTagList() {
-		tagCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getTags()));
+		tagCombobox.setModel(new DefaultComboBoxModel<String>(Localize.getInstance().getTags()));
 	}
 	
 	public static void main(String[] args) {
 		FrameTools.testingFrame(new LocalizedStringEditPanel());
 	}
 
-	@Override
-	public void setConfig(UiConfig config) {
-		this.config = config;
-		
-		updateUiFromConfig();
-	}
-	
-	@Override
-	public void setUiPropertyName(String propertyName) {
-		uiPropertyName = propertyName;
-		
-		updateUiFromConfig();
-	}
-	
-	private void updateUiFromConfig() {
+	protected void updateUIFromConfig() {
 		if (config != null && uiPropertyName != null) {
 			if (config.get(uiPropertyName + "-localize", "false").equals("true")) {
+				tagCombobox.removeActionListener(tagListener);
+				
 				updateTagList();
 				tagCombobox.setSelectedItem(config.get(uiPropertyName + "-localized-tag"));
 				textfield.setVisible(false);
 				tagCombobox.setVisible(true);
+				
+				tagCombobox.addActionListener(tagListener);
 			} else {
 				textfield.setText(config.get(uiPropertyName, getDefaultValue()));
 				textfield.setVisible(true);
@@ -156,20 +129,5 @@ public class LocalizedStringEditPanel extends JPanel implements PropertyEditComp
 				if (listener != null) listener.propertyChanged();
 			}
 		}
-	}
-
-	@Override
-	public void setPropertyName(String propertyName) {
-		this.propertyName.setText(propertyName);
-	}
-
-	@Override
-	public void setPropertyChangedListener(PropertyChangeListener listener) {
-		this.listener = listener;
-	}
-
-	@Override
-	public String getDefaultValue() {
-		return "";
 	}
 }

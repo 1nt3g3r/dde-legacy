@@ -20,8 +20,9 @@ import javax.swing.event.ChangeListener;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.PropertyEditComponent;
 import ua.com.integer.dde.startpanel.image.ImageSelectionListener;
+
 import javax.swing.border.LineBorder;
 import javax.swing.JCheckBox;
 

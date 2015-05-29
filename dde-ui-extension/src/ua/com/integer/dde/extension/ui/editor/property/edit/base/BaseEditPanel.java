@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
 
 public class BaseEditPanel extends JPanel implements PropertyEditComponent {
 	public static final int ITEM_WIDTH = 300;

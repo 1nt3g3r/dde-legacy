@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 
 import com.badlogic.gdx.utils.Scaling;
 
-public class ScalingEditPanel extends LabeledBaseEditPanel {
+public class ScalingEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = -9219486169697324844L;
 	private JComboBox<Scaling> valueField;
 	

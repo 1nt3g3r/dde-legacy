@@ -10,10 +10,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.startpanel.FrameTools;
 
-public class IntegerEditPanel extends LabeledBaseEditPanel {
+public class IntegerEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = -5563346076050032646L;
 
 	protected JSpinner valueSpinner;

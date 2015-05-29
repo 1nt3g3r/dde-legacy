@@ -1,10 +1,10 @@
 package ua.com.integer.dde.extension.ui.editor.property.imp.image;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.drawable.DrawableEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.scaling.ScalingEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 
-public class ImagePropertyEditor extends ExpandEditPanel {
+public class ImagePropertyEditor extends ExpandableConfigEditor {
 	private static final long serialVersionUID = 320977260364332927L;
 	private DrawableEditPanel drawableEditPanel;
 	private ScalingEditPanel scalingEditPanel;

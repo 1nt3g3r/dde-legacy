@@ -1,6 +1,7 @@
-package ua.com.integer.dde.extension.ui.editor.property.edit;
+package ua.com.integer.dde.extension.ui.editor.property.edit.base;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
+import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
 
 /**
  * Интерфейс для редактора свойств. Отдельные компоненты, что реализуют этот 

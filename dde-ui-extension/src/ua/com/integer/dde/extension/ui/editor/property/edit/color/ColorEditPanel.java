@@ -11,13 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.extension.ui.editor.utils.ColorUtils;
 import ua.com.integer.dde.startpanel.FrameTools;
 import ua.com.integer.dde.startpanel.util.color.ColorDialog;
 import ua.com.integer.dde.startpanel.util.color.ColorListener;
 
-public class ColorEditPanel extends LabeledBaseEditPanel implements ColorListener {
+public class ColorEditPanel extends LabeledEditPanel implements ColorListener {
 	private static final long serialVersionUID = -8356113889471511886L;
 	private JPanel colorValue;
 	private JButton chooseColor;

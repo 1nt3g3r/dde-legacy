@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.bool.BooleanEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.color.ColorEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.floatvalue.FloatEditPanel;
@@ -13,8 +12,9 @@ import ua.com.integer.dde.extension.ui.editor.property.edit.side.SideEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.size.SizeEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.string.StringEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.touchable.TouchableEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 
-public class CommonPropertiesExpandPanel extends ExpandEditPanel {
+public class CommonPropertiesExpandPanel extends ExpandableConfigEditor {
 	private static final long serialVersionUID = -937489155939773792L;
 	
 	private ColorEditPanel colorPanel;

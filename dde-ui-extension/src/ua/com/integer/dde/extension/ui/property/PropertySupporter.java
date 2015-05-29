@@ -163,4 +163,10 @@ public abstract class PropertySupporter {
 	public Scaling getScaling(String name) {
 		return Scaling.valueOf(config.get(name));
 	}
+	
+	public void editIfExists(String key, Runnable editRunnable) {
+		if (exists(key)) {
+			editRunnable.run();
+		}
+	}
 }

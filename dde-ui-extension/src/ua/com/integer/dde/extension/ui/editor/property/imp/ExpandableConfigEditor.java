@@ -1,4 +1,4 @@
-package ua.com.integer.dde.extension.ui.editor.property.edit.base;
+package ua.com.integer.dde.extension.ui.editor.property.imp;
 
 import static ua.com.integer.dde.extension.ui.editor.property.edit.base.BaseEditPanel.ITEM_HEIGHT;
 import static ua.com.integer.dde.extension.ui.editor.property.edit.base.BaseEditPanel.ITEM_WIDTH;
@@ -24,9 +24,10 @@ import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.editor.property.ConfigEditor;
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.PropertyEditComponent;
+import ua.com.integer.dde.extension.ui.editor.property.edit.builder.Builders;
 
-public abstract class ExpandEditPanel extends ConfigEditor implements PropertyChangeListener {
+public abstract class ExpandableConfigEditor extends ConfigEditor implements PropertyChangeListener {
 	private static final long serialVersionUID = -6256422816758571349L;
 	
 	private static Icon PLUS_ICON, MINUS_ICON;
@@ -44,16 +45,18 @@ public abstract class ExpandEditPanel extends ConfigEditor implements PropertyCh
 	
 	protected boolean updateUIConfigWhenPropertyChanged = true;
 	
+	protected Builders builders = new Builders(this);
+	
 	static {
 		try {
-			PLUS_ICON = new ImageIcon(ImageIO.read(ExpandEditPanel.class.getResource("/ua/com/integer/dde/extension/ui/res/icon/plus-16-16.png")));
-			MINUS_ICON = new ImageIcon(ImageIO.read(ExpandEditPanel.class.getResource("/ua/com/integer/dde/extension/ui/res/icon/minus-16-16.png")));
+			PLUS_ICON = new ImageIcon(ImageIO.read(ExpandableConfigEditor.class.getResource("/ua/com/integer/dde/extension/ui/res/icon/plus-16-16.png")));
+			MINUS_ICON = new ImageIcon(ImageIO.read(ExpandableConfigEditor.class.getResource("/ua/com/integer/dde/extension/ui/res/icon/minus-16-16.png")));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public ExpandEditPanel() {
+	public ExpandableConfigEditor() {
 		setBorder(null);
 		hardFixSize(ITEM_WIDTH, ITEM_HEIGHT);
 
@@ -223,5 +226,9 @@ public abstract class ExpandEditPanel extends ConfigEditor implements PropertyCh
 		panel.add(label);
 		panel.add(Box.createHorizontalGlue());
 		return panel;
+	}
+	
+	public Builders b() {
+		return builders;
 	}
 }

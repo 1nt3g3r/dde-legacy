@@ -2,12 +2,12 @@ package ua.com.integer.dde.extension.ui.editor.property.imp.button;
 
 import javax.swing.JComponent;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.bool.BooleanEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.drawable.DrawableEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.integer.IntegerEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 
-public class ButtonPropertyEditor extends ExpandEditPanel {
+public class ButtonPropertyEditor extends ExpandableConfigEditor {
 	private static final long serialVersionUID = 4678870679226617989L;
 	private IntegerEditPanel pressedOffsetX;
 	private DrawableEditPanel checkedOverDrawable;

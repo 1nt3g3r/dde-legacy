@@ -20,7 +20,7 @@ public class CheckboxPropertySupporter extends TextButtonPropertySupporter {
 	public void setup(UiConfig config, Actor actor, DDKernel kernel) {
 		super.setup(config, actor, kernel);
 		
-		CheckBox checkbox = (CheckBox) actor;
+		final CheckBox checkbox = (CheckBox) actor;
 		
 		if (!exists("text")) {
 			checkbox.setText("Checkbox");
@@ -31,5 +31,12 @@ public class CheckboxPropertySupporter extends TextButtonPropertySupporter {
 		if (exists("checkbox-over-drawable")) checkbox.getStyle().checkboxOver = getDrawable("checkbox-over-drawable");
 		if (exists("checkbox-disabled-on-drawable")) checkbox.getStyle().checkboxOnDisabled = getDrawable("checkbox-disabled-on-drawable");
 		if (exists("checkbox-disabled-off-drawable")) checkbox.getStyle().checkboxOffDisabled = getDrawable("checkbox-disabled-off-drawable");
+		
+		editIfExists("checkbox-checked", new Runnable() {
+			@Override
+			public void run() {
+				checkbox.setChecked(getBoolean("checkbox-checked"));
+			}
+		});
 	}
 }

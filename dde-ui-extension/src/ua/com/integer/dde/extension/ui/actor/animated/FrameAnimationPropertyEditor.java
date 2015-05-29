@@ -4,13 +4,13 @@ import javax.swing.SpinnerNumberModel;
 
 import com.badlogic.gdx.utils.Scaling;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.floatvalue.FloatEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.scaling.ScalingEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.text.AlignEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.textureregion.TextureRegionEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 
-public class FrameAnimationPropertyEditor extends ExpandEditPanel {
+public class FrameAnimationPropertyEditor extends ExpandableConfigEditor {
 	private static final long serialVersionUID = 6464795552264451196L;
 	
 	private TextureRegionEditPanel atlasChooser;

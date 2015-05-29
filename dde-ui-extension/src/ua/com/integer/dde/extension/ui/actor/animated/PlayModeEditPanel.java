@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
-public class PlayModeEditPanel extends LabeledBaseEditPanel {
+public class PlayModeEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = 8434740669668473954L;
 
 	private JComboBox<PlayMode> playMode;

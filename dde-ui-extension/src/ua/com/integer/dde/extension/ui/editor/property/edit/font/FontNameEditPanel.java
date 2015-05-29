@@ -7,10 +7,10 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.extension.ui.property.util.font.FontUtils;
 
-public class FontNameEditPanel extends LabeledBaseEditPanel {
+public class FontNameEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = 5635076338216542087L;
 
 	private JComboBox<String> fontNameBox;

@@ -6,10 +6,10 @@ import javax.swing.JLabel;
 
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
 import ua.com.integer.dde.extension.ui.editor.UiEditorScreen;
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.textureregion.TextureRegionEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 
-public class TextureRegionGroupActorPropertyEditor extends ExpandEditPanel {
+public class TextureRegionGroupActorPropertyEditor extends ExpandableConfigEditor {
 	private static final long serialVersionUID = -974408993230468701L;
 	private TextureRegionEditPanel textureRegionEditPanel;
 

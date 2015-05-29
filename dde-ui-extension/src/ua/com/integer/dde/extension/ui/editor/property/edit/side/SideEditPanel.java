@@ -1,55 +1,33 @@
 package ua.com.integer.dde.extension.ui.editor.property.edit.side;
 
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 import ua.com.integer.dde.extension.ui.Side;
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.EditorKernel;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 
-public class SideEditPanel extends JPanel implements PropertyEditComponent {
+public class SideEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = 8272656692182461302L;
 
-	private JLabel propertyName;
-	
-	private UiConfig config;
-	private PropertyChangeListener listener;
-	@SuppressWarnings("rawtypes")
-	private JComboBox sideCombobox;
+	private JComboBox<Side> sideCombobox;
 	
 	private SideChangeListener sideListener = new SideChangeListener();
 
 	/**
 	 * Create the panel.
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SideEditPanel() {
-		setPreferredSize(new Dimension(300, 20));
-		setMinimumSize(new Dimension(300, 20));
-		setMaximumSize(new Dimension(300, 20));
-		setBackground(Color.GRAY);
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		defaultValue = Side.CENTER + "";
 		
-		propertyName = new JLabel("Property name:");
-		propertyName.setPreferredSize(new Dimension(100, 20));
-		propertyName.setMinimumSize(new Dimension(100, 20));
-		propertyName.setMaximumSize(new Dimension(100, 20));
-		add(propertyName);
-		
-		sideCombobox = new JComboBox();
+		sideCombobox = new JComboBox<Side>();
 		sideCombobox.addActionListener(sideListener);
-		sideCombobox.setModel(new DefaultComboBoxModel(Side.values()));
+		sideCombobox.setModel(new DefaultComboBoxModel<Side>(Side.values()));
 		sideCombobox.setBackground(Color.LIGHT_GRAY);
 		add(sideCombobox);
 	}
@@ -65,26 +43,6 @@ public class SideEditPanel extends JPanel implements PropertyEditComponent {
 		}
 	}
 
-	@Override
-	public void setUiPropertyName(String propertyName) {
-		
-	}
-
-	@Override
-	public void setPropertyName(String propertyName) {
-		this.propertyName.setText(propertyName);
-	}
-
-	@Override
-	public void setPropertyChangedListener(PropertyChangeListener listener) {
-		this.listener = listener;
-	}
-
-	@Override
-	public String getDefaultValue() {
-		return Side.CENTER + "";
-	}
-	
 	class SideChangeListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {

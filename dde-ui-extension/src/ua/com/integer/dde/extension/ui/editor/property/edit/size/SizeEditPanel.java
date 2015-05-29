@@ -5,53 +5,30 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
-import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyEditComponent;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.extension.ui.property.util.font.FontUtils;
 import ua.com.integer.dde.extension.ui.size.Size;
 import ua.com.integer.dde.extension.ui.size.SizeType;
 
-public class SizeEditPanel extends JPanel implements PropertyEditComponent {
+public class SizeEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = -4171978323826119465L;
-	@SuppressWarnings("rawtypes")
-	private JComboBox sizeTypeBox;
+	private JComboBox<SizeType> sizeTypeBox;
 	private JSpinner multSpinner;
-	private JLabel propertyName;
-	
-	private PropertyChangeListener changeListener;
-
-	private UiConfig config;
-	private String uiPropertyName;
-	
-	private String defaultValue = FontUtils.getDefaultFontSize().toString();
 	
 	private SizeTypeChangeListener actionListener = new SizeTypeChangeListener();
 	private SizeListener valueChangeListener = new SizeListener();
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SizeEditPanel() {
-		setPreferredSize(new Dimension(300, 20));
-		setMinimumSize(new Dimension(300, 20));
-		setMaximumSize(new Dimension(300, 20));
-		setBackground(Color.GRAY);
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		
-		propertyName = new JLabel("Property name:");
-		propertyName.setPreferredSize(new Dimension(100, 20));
-		propertyName.setMinimumSize(new Dimension(100, 20));
-		propertyName.setMaximumSize(new Dimension(100, 20));
-		add(propertyName);
+		defaultValue = FontUtils.getDefaultFontSize().toString();
 		
 		sizeTypeBox = new JComboBox();
 		sizeTypeBox.addActionListener(actionListener);
@@ -73,20 +50,6 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		add(multSpinner);
 	}
 	
-	@Override
-	public void setConfig(UiConfig config) {
-		this.config = config;
-		
-		updateUiFromConfig();
-	}
-	
-	@Override
-	public void setUiPropertyName(String propertyName) {
-		uiPropertyName = propertyName;
-		
-		updateUiFromConfig();
-	}
-	
 	protected void updateUiFromConfig() {
 		if (config != null && uiPropertyName != null) {
 			multSpinner.removeChangeListener(valueChangeListener);
@@ -102,22 +65,6 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		}
 	}
 	
-	
-	@Override
-	public void setPropertyName(String propertyName) {
-		this.propertyName.setText(propertyName);
-	}
-	
-	@Override
-	public void setPropertyChangedListener(PropertyChangeListener listener) {
-		this.changeListener = listener;
-	}
-	
-	@Override
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-	
 	class SizeListener implements ChangeListener{
 		@Override
 		public void stateChanged(ChangeEvent e) {
@@ -127,7 +74,9 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		private void updateConfigFromUi() {
 			if (config != null && uiPropertyName != null) {
 				writeChangesIntoConfig();
-				if (changeListener != null) changeListener.propertyChanged();
+				if (listener != null) {
+					listener.propertyChanged();
+				}
 			}
 		}
 	}
@@ -155,9 +104,8 @@ public class SizeEditPanel extends JPanel implements PropertyEditComponent {
 		writeChangesIntoConfig();
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setAllowedSizeTypes(SizeType ... types) {
-		sizeTypeBox.setModel(new DefaultComboBoxModel(types));
+		sizeTypeBox.setModel(new DefaultComboBoxModel<SizeType>(types));
 	}
 	
 	public void setDefaultSize(Size defaultSize) {

@@ -1,6 +1,5 @@
 package ua.com.integer.dde.extension.ui.editor.property.imp.textlabel;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.ExpandEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.bool.BooleanEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.color.ColorEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.drawable.DrawableEditPanel;
@@ -9,10 +8,11 @@ import ua.com.integer.dde.extension.ui.editor.property.edit.font.FontNameEditPan
 import ua.com.integer.dde.extension.ui.editor.property.edit.size.SizeEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.string.LocalizedStringEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.edit.text.AlignEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 import ua.com.integer.dde.extension.ui.property.util.font.FontUtils;
 import ua.com.integer.dde.extension.ui.size.SizeType;
 
-public class TextLabelPropertyEditor extends ExpandEditPanel {
+public class TextLabelPropertyEditor extends ExpandableConfigEditor {
 	private static final long serialVersionUID = -4029545087867195370L;
 	private SizeEditPanel fontSizePanel;
 	private FontNameEditPanel fontNameEditPanel;

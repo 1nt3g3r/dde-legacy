@@ -8,9 +8,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
 import ua.com.integer.dde.extension.ui.actor.Align;
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 
-public class AlignEditPanel extends LabeledBaseEditPanel {
+public class AlignEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = 13348312730673242L;
 	private JComboBox<Align> alignValue;
 	private AlignSelectListener alignListener = new AlignSelectListener();

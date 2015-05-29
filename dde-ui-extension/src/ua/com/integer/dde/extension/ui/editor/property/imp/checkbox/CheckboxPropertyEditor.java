@@ -39,7 +39,8 @@ public class CheckboxPropertyEditor extends TextButtonPropertyEditor {
 		checkboxDisabledOffDrawable.setPropertyChangedListener(this);
 		checkboxDisabledOffDrawable.setPropertyName("Disabled off:");
 
-		addContent(subHeader("Checkbox drawables"),
+		addContent(		b().bool().setup("Checked", "checkbox-checked", false).build(),
+					header("Checkbox drawables"),
 						checkboxOnDrawable,
 						checkboxOffDrawable,
 						checkboxOverDrawable,

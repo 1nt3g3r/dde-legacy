@@ -8,10 +8,10 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.JButton;
 
-import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledBaseEditPanel;
+import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.startpanel.FrameTools;
 
-public class DrawableEditPanel extends LabeledBaseEditPanel {
+public class DrawableEditPanel extends LabeledEditPanel {
 	private static final long serialVersionUID = -1367789460763803249L;
 
 	/**
