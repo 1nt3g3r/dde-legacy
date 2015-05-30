@@ -6,8 +6,11 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,6 +27,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import ua.com.integer.dde.kernel.DDKernel;
+import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.startpanel.ddestub.CreateDDKernelStubDialog;
 import ua.com.integer.dde.startpanel.export.AndroidApkExporter;
 import ua.com.integer.dde.startpanel.export.DesktopExporter;
@@ -31,7 +35,8 @@ import ua.com.integer.dde.startpanel.extension.ExtensionDialog;
 import ua.com.integer.dde.startpanel.image.ImageChooser;
 import ua.com.integer.dde.startpanel.start.StartRunnable;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
 
@@ -329,11 +334,44 @@ public class DDEStartPanel {
 		}
 	}
 	
+	private LwjglAWTCanvas lCanvas;
+	private JFrame gameFrame;
 	/**
 	 * Запускает приложение, если оно еще не было запущено
 	 */
 	public void launch() {
-		new LwjglApplication(kernel, config);
+		if (gameFrame == null || !gameFrame.isVisible()) {
+			config.resizable = false;
+			
+			lCanvas = new LwjglAWTCanvas(kernel);
+			
+			JPanel panelForCanvas = new JPanel();
+			panelForCanvas.setLayout(new GridLayout(1, 1));
+			panelForCanvas.setSize(config.width, config.height);
+			panelForCanvas.add(lCanvas.getCanvas());
+			
+			gameFrame = new JFrame(config.title);
+			gameFrame.setSize(config.width, config.height);
+			gameFrame.setContentPane(panelForCanvas);
+			
+			gameFrame.addWindowListener(new ExitFromGameListener());
+			gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			gameFrame.setVisible(true);
+		}
+	}
+	
+	class ExitFromGameListener extends WindowAdapter {
+		@Override
+		public void windowClosing(final WindowEvent e) {
+			e.getWindow().setVisible(false);
+			
+			Gdx.app.postRunnable(new Runnable() {
+				public void run() {
+					AbstractScreen.getKernel().exit();
+					lCanvas.stop();
+				}
+			});
+		}
 	}
 	
 	public void launchAsFrame() {

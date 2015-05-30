@@ -229,7 +229,11 @@ public class DDKernel extends Game {
 	
 	@Override
 	public void dispose() {
-		super.dispose();
+		DDKernel.super.dispose();
 		getResourceManager().dispose();
+	}
+	
+	public void exit() {
+		Gdx.app.exit();
 	}
 }

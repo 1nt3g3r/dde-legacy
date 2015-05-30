@@ -422,6 +422,8 @@ public class UiEditorDialog extends JDialog {
 		
 		Gdx.app.postRunnable(new Runnable() {
 			public void run() {
+				EditorKernel.getInstance().getResourceManager().screens().disposeScreen(UiEditorScreen.class);
+				EditorKernel.getInstance().showScreen(UiEditorScreen.class);
 				fillLocalizeMenuLanguages();
 			}
 		});
@@ -783,7 +785,16 @@ public class UiEditorDialog extends JDialog {
 				sets.setSettingsClass(UiEditorDialog.class);
 				sets.putString("frame-width", getWidth() + "");
 				sets.putString("frame-height", getHeight() + "");
-				System.exit(0);
+
+				Actors.getInstance().clear();
+				EditorKernel.getInstance().exit();
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						lCanvas.stop();
+						dispose();
+					}
+				});
 			}
 		}
 	}

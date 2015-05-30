@@ -1,4 +1,4 @@
-package ua.com.integer.dde.extension.ui.actor.animated;
+package ua.com.integer.dde.extension.ui.actor.animation.frame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -35,8 +35,6 @@ public class EditorKernel extends DDKernel {
 	@Override
 	public void create() {
 		super.create();
-		showScreen(UiEditorScreen.class);
-		
 		commandProcessor = new CommandProcessor();
 	}
 	

@@ -29,10 +29,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class UiEditorScreen extends AbstractScreen implements ConfigChangedListener {
@@ -60,6 +59,9 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	
 	private Array<UiConfig> savedActions = new Array<UiConfig>();
 	
+	private Vector2 first = new Vector2();
+	private Vector2 second = new Vector2();
+	
 	class SwitchColorTask extends Task {
 		@Override
 		public void run() {
@@ -76,7 +78,6 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 	private boolean drawRectanglesAroundUnselectedActors = true;
 	
 	public UiEditorScreen() {
-		Timer.schedule(new SwitchColorTask(), 0, 0.2f);
 		shapeRenderer = new ShapeRenderer();
 		
 		addDefaultConfig();
@@ -277,10 +278,10 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 			Vector2 realCoords = ((Group) actor.getParent()).localToStageCoordinates(new Vector2(actor.getX(), actor.getY()));
 			if (actor == selectedActor) {
 				if (drawRectangleAroundSelectedActor) {
-					shapeRenderer.rect(dx + realCoords.x, dy + realCoords.y, actor.getOriginX(), actor.getOriginY(), actor.getWidth(), actor.getHeight(), actor.getScaleX(), actor.getScaleY(), getFullRotationForActor(actor));
+					shapeRenderer.rect(dx + realCoords.x, dy + realCoords.y, actor.getOriginX(), actor.getOriginY(), actor.getWidth(), actor.getHeight(), 1f, 1f, getFullRotationForActor(actor));
 				}
 			} else if (drawRectanglesAroundUnselectedActors && actor.getUserObject() instanceof UiConfig) {
-				shapeRenderer.rect(dx + realCoords.x, dy + realCoords.y, actor.getOriginX(), actor.getOriginY(), actor.getWidth(), actor.getHeight(), actor.getScaleX(), actor.getScaleY(), getFullRotationForActor(actor));
+				shapeRenderer.rect(dx + realCoords.x, dy + realCoords.y, actor.getOriginX(), actor.getOriginY(), actor.getWidth(), actor.getHeight(), 1f, 1f, getFullRotationForActor(actor));
 			}
 		}
 
@@ -361,6 +362,8 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 				EditorKernel.getInstance().getMainWindow().updateActorTree();
 				
 				getStage().addListener(new KeyboardListener());
+				
+				repeatTask(0.2f, new SwitchColorTask());
 			}
 		});
 		
@@ -521,6 +524,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		float endY = startPosition.y + actor.getHeight();
 
 		shapeRenderer.begin(ShapeType.Point);
+		
 		if (GridSettings.getInstance().needSnapToGrid()) {
 			shapeRenderer.setColor(Color.LIGHT_GRAY);
 		} else {
@@ -534,27 +538,52 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		}
 		
 		shapeRenderer.end();
-		
 	}
-	
+
 	private void drawGrid3x3(Actor actor) {
 		tmpGrid.set(0, 0);
-		Vector2 startPosition = actor.localToStageCoordinates(tmpGrid);
-		
-		float x = startPosition.x;
-		float y = startPosition.y;
 
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.DARK_GRAY);
-		for(int i = 0; i < 3; i++) {
-			float drawX = x + actor.getWidth() / 3f * (float) i;
-			
-			shapeRenderer.line(drawX, y, drawX, y + actor.getHeight());
-			
-			float drawY = y + actor.getHeight()/3f * (float) i;
-			
-			shapeRenderer.line(x, drawY, x + actor.getWidth(), drawY);
+		
+		float deltaWidth = actor.getWidth() / 3f;
+		float deltaHeight = actor.getHeight() / 3f;
+		
+		for(int col = 0; col < 3; col++) {
+			float tmpX = ((float) col) * deltaWidth;
+
+			for(int row = 0; row < 3; row++) {
+				float tmpY = ((float) row) * deltaHeight;
+				
+				first.set(tmpX, 0);
+				second.set(tmpX, actor.getHeight());
+				
+				Vector2 firstPoint = actor.localToStageCoordinates(first);
+				Vector2 secondPoint = actor.localToStageCoordinates(second);
+				
+				shapeRenderer.line(firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);
+				
+				first = new Vector2(0, tmpY);
+				second = new Vector2(actor.getWidth(), tmpY);
+				
+				firstPoint = actor.localToStageCoordinates(first);
+				secondPoint = actor.localToStageCoordinates(second);
+				
+				shapeRenderer.line(firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);
+			}
 		}
+		
+//		for(int i = 0; i < 3; i++) {
+//			float drawX = x + actor.getWidth() / 3f * (float) i;
+//			float drawY = y + actor.getHeight()/3f * (float) i;
+//			
+//			Vector2 newDraw = actor.localToStageCoordinates(new Vector2(actor.getWidth(), actor.getHeight()));
+//			
+//			shapeRenderer.line(x, y, newDraw.x, newDraw.y);
+//			
+//			shapeRenderer.line(drawX, y, drawX, y + actor.getHeight());
+//			shapeRenderer.line(x, drawY, x + actor.getWidth(), drawY);
+//		}
 		shapeRenderer.end();
 	}
 	
@@ -585,16 +614,22 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 			return;
 		}
 		
-		tmpResizeVector.set(0, 0);
-		Vector2 position = actor.localToStageCoordinates(tmpResizeVector);
-
-		float resizeQuadSize = 10;
-		float x = position.x + actor.getWidth() - resizeQuadSize;
-		float y = position.y + actor.getHeight() - resizeQuadSize;
+		float resizeQuadSize = 20;
+		tmpResizeVector.set(actor.getWidth() - resizeQuadSize, actor.getHeight() - resizeQuadSize);
+		tmpResizeVector = actor.localToStageCoordinates(tmpResizeVector);
+		
+		float x1 = tmpResizeVector.x;
+		float y1 = tmpResizeVector.y;
+		
+		tmpResizeVector.set(actor.getWidth(), actor.getHeight());
+		tmpResizeVector = actor.localToStageCoordinates(tmpResizeVector);
+		
+		float x2 = tmpResizeVector.x;
+		float y2 = tmpResizeVector.y;
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(Color.ORANGE);
-			shapeRenderer.rect(x, y, resizeQuadSize, resizeQuadSize);
+			shapeRenderer.triangle(x1, y2, x2, y2, x2, y1);
 		shapeRenderer.end();
 	}
 

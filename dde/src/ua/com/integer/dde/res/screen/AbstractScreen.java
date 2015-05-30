@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class AbstractScreen implements Screen {
@@ -212,6 +213,12 @@ public class AbstractScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		for(Actor actor : getStage().getRoot().getChildren()) {
+			if (actor instanceof Disposable) {
+				((Disposable) actor).dispose();
+			}
+		}
+		
 		notifyAboutEvent(ScreenEvent.DISPOSE);
 	}
 	
@@ -258,6 +265,19 @@ public class AbstractScreen implements Screen {
 		seqTask.addAction(Actions.delay(delay));
 		seqTask.addAction(Actions.run(task));
 		getStage().addAction(seqTask);
+	}
+	
+	/**
+	 * Циклично исполняет переданную задачу
+	 * @param interval
+	 * @param task
+	 */
+	public void repeatTask(float interval, Runnable task) {
+		getStage().addAction(Actions.forever(
+				Actions.sequence(
+						Actions.delay(interval),
+						Actions.run(task))
+				));
 	}
 	
 	public void showScreen(Class<? extends AbstractScreen> screen) {

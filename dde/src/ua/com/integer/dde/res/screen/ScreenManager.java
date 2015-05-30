@@ -95,7 +95,6 @@ public class ScreenManager implements Disposable, LoadManager {
 	public void dispose() {
 		for(AbstractScreen screen : screens.values()) {
 			screen.dispose();
-			//screen.getStage().dispose();
 		}
 		screens.clear();
 		if (AbstractScreen.getBatch() != null) {
@@ -224,11 +223,17 @@ public class ScreenManager implements Disposable, LoadManager {
 	}
 	
 	public void disposeScreen(Class<? extends AbstractScreen> screen) {
-		AbstractScreen screenToRemove = getScreen(screen);
-		String screenName = screenToRemove.getScreenName();
+		if (isLoaded(screen)) {
+			AbstractScreen screenToRemove = getScreen(screen);
+			String screenName = screenToRemove.getScreenName();
 		
-		screenToRemove.dispose();
-		screens.remove(screenName);
+			screenToRemove.dispose();
+			screens.remove(screenName);
+		}
+	}
+	
+	public boolean isLoaded(Class<? extends AbstractScreen> screen) {
+		return screens.containsKey(screen.getClass() + "");
 	}
 
 	@Override

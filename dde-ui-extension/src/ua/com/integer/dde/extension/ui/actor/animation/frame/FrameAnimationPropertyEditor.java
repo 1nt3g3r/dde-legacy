@@ -1,4 +1,4 @@
-package ua.com.integer.dde.extension.ui.actor.animated;
+package ua.com.integer.dde.extension.ui.actor.animation.frame;
 
 import javax.swing.SpinnerNumberModel;
 

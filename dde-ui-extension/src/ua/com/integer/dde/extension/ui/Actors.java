@@ -89,4 +89,11 @@ public class Actors {
 	public void deployToScreen(String actor, AbstractScreen screen) {
 		ActorUtils.deployConfigToScreen(screen, getConfig(actor));
 	}
+	
+	/**
+	 * Clears all cached configs
+	 */
+	public void clear() {
+		configs.clear();
+	}
 }
