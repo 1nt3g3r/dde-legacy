@@ -1,8 +1,8 @@
 package ua.com.integer.dde.extension.ui.actor;
 
-import ua.com.integer.dde.extension.ui.actor.animation.frame.FrameAnimation;
+import ua.com.integer.dde.extension.ui.actor.animation.frame.FrameAnimationActor;
 import ua.com.integer.dde.extension.ui.actor.animation.frame.FrameAnimationPropertySupporter;
-import ua.com.integer.dde.extension.ui.actor.animation.spine.SpineAnimation;
+import ua.com.integer.dde.extension.ui.actor.animation.spine.SpineAnimationActor;
 import ua.com.integer.dde.extension.ui.actor.animation.spine.SpineAnimationPropertySupporter;
 import ua.com.integer.dde.extension.ui.actor.shadowlabel.ShadowLabel;
 import ua.com.integer.dde.extension.ui.actor.shadowlabel.ShadowLabelPropertySupporter;
@@ -25,8 +25,8 @@ public class DDEExtensionActors {
 	
 	private DDEExtensionActors() {
 		register(ShadowLabel.ID, ShadowLabel.class, ShadowLabel.DESCRIPTION, ShadowLabel.CATEGORY, new ShadowLabelPropertySupporter());
-		register(FrameAnimation.ID, FrameAnimation.class, FrameAnimation.DESCRIPTION, FrameAnimation.CATEGORY, new FrameAnimationPropertySupporter());
-		register(SpineAnimation.ID, SpineAnimation.class, SpineAnimation.DESCRIPTION, SpineAnimation.CATEGORY, new SpineAnimationPropertySupporter());
+		register(FrameAnimationActor.ID, FrameAnimationActor.class, FrameAnimationActor.DESCRIPTION, FrameAnimationActor.CATEGORY, new FrameAnimationPropertySupporter());
+		register(SpineAnimationActor.ID, SpineAnimationActor.class, SpineAnimationActor.DESCRIPTION, SpineAnimationActor.CATEGORY, new SpineAnimationPropertySupporter());
 	}
 
 	public static DDEExtensionActors getInstance() {

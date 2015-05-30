@@ -30,17 +30,17 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.attachments.Attachment;
-import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
-
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Pool;
+import com.esotericsoftware.spine.attachments.Attachment;
+import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
 
 public class SkeletonBounds {
 	private float minX, minY, maxX, maxY;
-	private Array<BoundingBoxAttachment> boundingBoxes = new Array();
-	private Array<FloatArray> polygons = new Array();
+	private Array<BoundingBoxAttachment> boundingBoxes = new Array<BoundingBoxAttachment>();
+	private Array<FloatArray> polygons = new Array<FloatArray>();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Pool<FloatArray> polygonPool = new Pool() {
 		protected Object newObject () {
 			return new FloatArray();

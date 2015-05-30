@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Screen manager. Contains game screens. Can contain only one instance 
- * of one game screen - as example, if you create TestScreen class, you 
+ * of each screen - as example, if you create TestScreen class, you 
  * can't put it twice to this manager.
  * 
  * @author 1nt3g3r
@@ -89,7 +89,7 @@ public class ScreenManager implements Disposable, LoadManager {
 
 	/**
 	 * Clears this ScreenManager and call dispose() 
-	 * for every screen
+	 * for every screen. Also disposes AbstractScreen.batch
 	 */
 	@Override
 	public void dispose() {
@@ -118,7 +118,7 @@ public class ScreenManager implements Disposable, LoadManager {
 	 * @param needUpdate if true "performUpdate()" method will be called in previous showed screen
 	 */
 	public void previousScreen(boolean needUpdate) {
-		if (screenStack.size > 1) {
+		if (screenStack.size >= 1) {
 			screenStack.pop();
 			showScreen(screenStack.peek());
 		}

@@ -37,11 +37,12 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 /** Stores state for an animation and automatically mixes between animations. */
 public class AnimationState {
 	private final AnimationStateData data;
-	private Array<TrackEntry> tracks = new Array();
-	private final Array<Event> events = new Array();
-	private final Array<AnimationStateListener> listeners = new Array();
+	private Array<TrackEntry> tracks = new Array<TrackEntry>();
+	private final Array<Event> events = new Array<Event>();
+	private final Array<AnimationStateListener> listeners = new Array<AnimationStateListener>();
 	private float timeScale = 1;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Pool<TrackEntry> trackEntryPool = new Pool() {
 		protected Object newObject () {
 			return new TrackEntry();

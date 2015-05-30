@@ -50,7 +50,7 @@ public class SizeEditPanel extends LabeledEditPanel {
 		add(multSpinner);
 	}
 	
-	protected void updateUiFromConfig() {
+	protected void updateUIFromConfig() {
 		if (config != null && uiPropertyName != null) {
 			multSpinner.removeChangeListener(valueChangeListener);
 			sizeTypeBox.removeActionListener(actionListener);

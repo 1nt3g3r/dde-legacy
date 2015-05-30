@@ -41,7 +41,8 @@ public class Skin {
 	static private final Key lookup = new Key();
 
 	final String name;
-	final ObjectMap<Key, Attachment> attachments = new ObjectMap();
+	final ObjectMap<Key, Attachment> attachments = new ObjectMap<Key, Attachment>();
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	final Pool<Key> keyPool = new Pool(64) {
 		protected Object newObject () {
 			return new Key();

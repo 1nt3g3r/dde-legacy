@@ -19,7 +19,7 @@ public class FrameAnimationPropertySupporter extends PropertySupporter {
 	public void setup(UiConfig config, Actor actor, DDKernel kernel) {
 		super.setup(config, actor, kernel);
 		
-		FrameAnimation frameAnimation = (FrameAnimation) actor;
+		FrameAnimationActor frameAnimation = (FrameAnimationActor) actor;
 		
 		if (exists("frames")) {
 			frameAnimation.initAnimation(0.3f, getRegions("frames"));

@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 
-public class FrameAnimation extends Image {
+public class FrameAnimationActor extends Image {
 	public static final String ID = "ua.com.integer.dde.ui.frame.animation";
 	public static final String CATEGORY = "Animations";
 	public static final String DESCRIPTION = "Frame animation";
@@ -18,14 +18,14 @@ public class FrameAnimation extends Image {
 	private float animationDelay;
 	private TextureRegionDrawable regionDrawable;
 	
-	public FrameAnimation() {
+	public FrameAnimationActor() {
 	}
 	
 	public void setFromAtlas(TextureAtlas atlas, String animation, float delay) {
 		initAnimation(delay, atlas.findRegions(animation));
 	}
 	
-	public FrameAnimation(float delay, TextureRegion[] regions) {
+	public FrameAnimationActor(float delay, TextureRegion[] regions) {
 		initAnimation(delay, regions);
 	}
 
@@ -39,7 +39,7 @@ public class FrameAnimation extends Image {
 		setDrawable(regionDrawable);
 	}
 	
-	public FrameAnimation(float delay, Array<? extends TextureRegion> regions) {
+	public FrameAnimationActor(float delay, Array<? extends TextureRegion> regions) {
 		initAnimation(delay, regions);
 	}
 

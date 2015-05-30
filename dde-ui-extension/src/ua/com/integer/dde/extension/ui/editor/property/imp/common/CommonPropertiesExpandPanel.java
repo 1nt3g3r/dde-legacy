@@ -124,7 +124,7 @@ public class CommonPropertiesExpandPanel extends ExpandableConfigEditor {
 					setConfig(config);
 					writeChangesIntoConfig();
 
-					updateUiFromConfig();
+					updateUIFromConfig();
 				}
 			}
 		};
@@ -159,7 +159,7 @@ public class CommonPropertiesExpandPanel extends ExpandableConfigEditor {
 					setConfig(config);
 					writeChangesIntoConfig();
 					
-					updateUiFromConfig();
+					updateUIFromConfig();
 				}
 			}
 		};
@@ -194,7 +194,7 @@ public class CommonPropertiesExpandPanel extends ExpandableConfigEditor {
 					setConfig(config);
 					writeChangesIntoConfig();
 					
-					updateUiFromConfig();
+					updateUIFromConfig();
 				}
 			}
 		};
@@ -229,7 +229,7 @@ public class CommonPropertiesExpandPanel extends ExpandableConfigEditor {
 					setConfig(config);
 					writeChangesIntoConfig();
 					
-					updateUiFromConfig();
+					updateUIFromConfig();
 				}
 			}
 		};

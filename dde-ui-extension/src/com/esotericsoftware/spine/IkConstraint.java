@@ -20,7 +20,7 @@ public class IkConstraint {
 		mix = data.mix;
 		bendDirection = data.bendDirection;
 
-		bones = new Array(data.bones.size);
+		bones = new Array<Bone>(data.bones.size);
 		if (skeleton != null) {
 			for (BoneData boneData : data.bones)
 				bones.add(skeleton.findBone(boneData.name));

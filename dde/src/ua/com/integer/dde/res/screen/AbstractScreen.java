@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -213,13 +214,20 @@ public class AbstractScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		for(Actor actor : getStage().getRoot().getChildren()) {
-			if (actor instanceof Disposable) {
-				((Disposable) actor).dispose();
-			}
+		disposeActors(getStage().getRoot());
+		notifyAboutEvent(ScreenEvent.DISPOSE);
+	}
+	
+	private void disposeActors(Actor actor) {
+		if (actor instanceof Disposable) {
+			((Disposable) actor).dispose();
 		}
 		
-		notifyAboutEvent(ScreenEvent.DISPOSE);
+		if (actor instanceof Group) {
+			for(Actor child : ((Group) actor).getChildren()) {
+				disposeActors(child);
+			}
+		}
 	}
 	
 	public static DDKernel getKernel() {

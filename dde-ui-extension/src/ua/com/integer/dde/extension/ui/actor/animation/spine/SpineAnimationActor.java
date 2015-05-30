@@ -5,7 +5,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.esotericsoftware.spine.Animation;
 import com.esotericsoftware.spine.AnimationState;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.Skeleton;
@@ -13,7 +15,7 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
 import com.esotericsoftware.spine.SkeletonRenderer;
 
-public class SpineAnimation extends Actor implements Disposable {
+public class SpineAnimationActor extends Actor implements Disposable {
 	public static final String ID = "ua.com.integer.dde.ui.spine.animation";
 	public static final String CATEGORY = "Animations";
 	public static final String DESCRIPTION = "Spine animation";
@@ -26,22 +28,33 @@ public class SpineAnimation extends Actor implements Disposable {
 	private TextureAtlas atlas;
 	private FileHandle spineData;
 	
-	public SpineAnimation() {
-		initByPath("bee");
-		setAnimation(1, "action", true);
-	}
-	
 	public void initByPath(String name) {
-		String basePath = "data/spine-animations/";
+		String basePath = SpineAnimations.ANIMATION_PATH + "/";
 		
 		String atlasPath = basePath + name + ".atlas";
 		String jsonPath = basePath + name + ".json";
 		
 		setAtlas(new TextureAtlas(atlasPath));
 		setSpineData(Gdx.files.internal(jsonPath));
+		
+		sizeChanged();
+		positionChanged();
+	}
+
+	public String[] getAnimations() {
+		Array<Animation> animations = skeleton.getData().getAnimations();
+		
+		String[] result = new String[animations.size];
+		for(int i = 0; i < animations.size; i++) {
+			result[i] = animations.get(i).getName();
+		}
+		
+		return result;
 	}
 	
 	public void setAtlas(TextureAtlas atlas) {
+		dispose();
+		
 		this.atlas = atlas;
 	}
 	
@@ -72,6 +85,7 @@ public class SpineAnimation extends Actor implements Disposable {
 	}
 		
 	public void setAnimation(int id, String animation, boolean loop) {
+		stopAllAnimations();
 		animationState.setAnimation(id, animation, loop);
 	}
 	
@@ -86,10 +100,6 @@ public class SpineAnimation extends Actor implements Disposable {
 	@Override
 	public void act(float delta) {
 		if (skeleton != null && animationState != null) {
-			setupSize();
-			skeleton.setPosition(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
-			skeleton.getRootBone().setRotation(getRotation());
-
 			animationState.update(delta);
 			animationState.apply(skeleton);
 			skeleton.updateWorldTransform();
@@ -98,7 +108,29 @@ public class SpineAnimation extends Actor implements Disposable {
 		super.act(delta);
 	}
 	
-	private void setupSize() {
+	@Override
+	public void setRotation(float degrees) {
+		super.setRotation(degrees);
+		
+		if (skeleton != null) {
+			skeleton.getRootBone().setRotation(getRotation());
+		}
+	}
+	
+	@Override
+	protected void positionChanged() {
+		if (skeleton == null) {
+			return;
+		}
+		
+		skeleton.setPosition(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
+	}
+	
+	protected void sizeChanged() {
+		if (skeleton == null) {
+			return;
+		}
+		
 		float baseAnimationWidth = skeleton.getData().getWidth();
 		float baseAnimationHeight = skeleton.getData().getHeight();
 		
@@ -109,27 +141,52 @@ public class SpineAnimation extends Actor implements Disposable {
 		float scaleY = parentHeight / baseAnimationHeight;
 		
 		skeleton.getRootBone().setScale(Math.min(scaleX, scaleY));
+		
+		skeleton.setPosition(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
 	}
 	
-//	@Override
-//	public void setOrigin(float originX, float originY) {
-//		throw new IllegalAccessError("Origin is always in center!");
-//	}
-//	
-//	@Override
-//	public void setWidth(float width) {
-//		throw new IllegalAccessError("Size is always (0, 0)!");
-//	}
-//	
-//	@Override
-//	public void setHeight(float height) {
-//		throw new IllegalAccessError("Size is always (0, 0)!");
-//	}
-//	
-//	@Override
-//	public void setSize(float width, float height) {
-//		throw new IllegalAccessError("Size is always (0, 0)!");
-//	}
+	@Override
+	public void setScale(float scaleX, float scaleY) {
+		super.setScale(scaleX, scaleY);
+		
+		positionChanged();
+	}
+	
+	@Override
+	public void setScale(float scaleXY) {
+		super.setScale(scaleXY);
+		
+		positionChanged();
+	}
+	
+	@Override
+	public void setScaleX(float scaleX) {
+		super.setScaleX(scaleX);
+		
+		positionChanged();
+	}
+	
+	@Override
+	public void setScaleY(float scaleY) {
+		super.setScaleY(scaleY);
+		
+		positionChanged();
+	}
+
+	@Override
+	public void setOrigin(float originX, float originY) {
+		super.setOrigin(getWidth()/2f, getHeight()/2f);
+	}
+	
+	@Override
+	public void setOriginX(float originX) {
+		super.setOriginX(getWidth()/2f);
+	}
+	
+	@Override
+	public void setOriginY(float originY) {
+		super.setOriginY(getHeight()/2f);
+	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {

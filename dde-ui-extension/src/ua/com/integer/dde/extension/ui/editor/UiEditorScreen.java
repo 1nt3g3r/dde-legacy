@@ -5,6 +5,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -321,7 +323,6 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 					
 					getStage().clear();
 					if (dragListener == null) {
-						//TODO here bad place
 						dragListener = new WidgetDragListener();
 					}
 					addScreenEventListener(dragListener);
@@ -436,14 +437,19 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		removeConfig(getUiConfig(), config);
 	}
 	
-	public void addConfig(UiConfig parent, UiConfig toInsert) {
+	public void addConfig(UiConfig parent, final UiConfig toInsert) {
 		saveCurrentConfig();
 		
 		parent.children.add(toInsert);
 		updateConfig();
 		EditorKernel.getInstance().getMainWindow().updateActorTree();
 		
-		selectActorByConfig(toInsert);
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				selectActorByConfig(toInsert);
+			}
+		}, 100);
 	}
 
 	/**
@@ -614,7 +620,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 			return;
 		}
 		
-		float resizeQuadSize = 20;
+		float resizeQuadSize = 10;
 		tmpResizeVector.set(actor.getWidth() - resizeQuadSize, actor.getHeight() - resizeQuadSize);
 		tmpResizeVector = actor.localToStageCoordinates(tmpResizeVector);
 		
