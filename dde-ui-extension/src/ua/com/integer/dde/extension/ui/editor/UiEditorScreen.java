@@ -578,18 +578,6 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 				shapeRenderer.line(firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);
 			}
 		}
-		
-//		for(int i = 0; i < 3; i++) {
-//			float drawX = x + actor.getWidth() / 3f * (float) i;
-//			float drawY = y + actor.getHeight()/3f * (float) i;
-//			
-//			Vector2 newDraw = actor.localToStageCoordinates(new Vector2(actor.getWidth(), actor.getHeight()));
-//			
-//			shapeRenderer.line(x, y, newDraw.x, newDraw.y);
-//			
-//			shapeRenderer.line(drawX, y, drawX, y + actor.getHeight());
-//			shapeRenderer.line(x, drawY, x + actor.getWidth(), drawY);
-//		}
 		shapeRenderer.end();
 	}
 	
@@ -635,7 +623,7 @@ public class UiEditorScreen extends AbstractScreen implements ConfigChangedListe
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(Color.ORANGE);
-			shapeRenderer.triangle(x1, y2, x2, y2, x2, y1);
+			shapeRenderer.rectLine(x1, y1, x2, y2, resizeQuadSize/2f);
 		shapeRenderer.end();
 	}
 

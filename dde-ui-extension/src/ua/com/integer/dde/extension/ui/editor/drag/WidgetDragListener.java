@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Listener which allows user to drag widgets and save position of that drag to attached {@link UiConfig} object
@@ -329,6 +330,10 @@ public class WidgetDragListener extends InputListener implements ScreenListener 
 	private void touchUpOnResize() {
 		UiConfig config = (UiConfig) touchActor.getUserObject();
 		config.loadSizeFromActor(touchActor);
+		
+		if (Boolean.parseBoolean(config.get("actor-center-origin", "true"))) {
+			touchActor.setOrigin(Align.center);
+		}
 	}
 
 	private void touchUpOnDragging() {
