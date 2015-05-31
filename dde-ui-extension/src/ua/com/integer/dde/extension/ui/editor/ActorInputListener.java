@@ -65,15 +65,10 @@ public class ActorInputListener extends InputListener {
 		if (event.isCancelled()) return false;
 		
 		if (actor != null) {
-			actor.getColor().a -= ((float) amount / 30f);
-			if (actor.getColor().a < 0) {
-				actor.getColor().a = 0;
-			}
-			
-			if (actor.getColor().a > 1) {
-				actor.getColor().a = 1;
-			}
-			
+			actor.setRotation((actor.getRotation() + amount) % 360);
+			UiConfig config = (UiConfig) actor.getUserObject();
+			config.set("actor-rotation", actor.getRotation() + "");
+			EditorKernel.getInstance().getMainWindow().updatePropertyPanelForSelectedActor();
 			event.cancel();
 		}
 		return true;
