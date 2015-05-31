@@ -24,6 +24,24 @@ public class SpineAnimationPropertySupporter extends PropertySupporter {
 		}
 	};
 	
+	private Runnable setTimeScaleRunnable = new Runnable() {
+		@Override
+		public void run() {
+			animation.setTimeScale(getFloat("spine-animation-time-scale"));
+		}
+	};
+	
+	private Runnable setFlipXRunnable = new Runnable() {
+		public void run() {
+			animation.setFlipX(getBoolean("spine-animation-flip-x"));
+		}
+	};
+	
+	private Runnable setFlipYRunnable = new Runnable() {
+		public void run() {
+			animation.setFlipY(getBoolean("spine-animation-flip-y"));
+		}
+	};
 	
 	@Override
 	public JPanel createSetupPanel(UiConfig config, Actor actor) {
@@ -38,5 +56,8 @@ public class SpineAnimationPropertySupporter extends PropertySupporter {
 		
 		editIfExists("spine-animation-config", setConfigRunnable);
 		editIfExists("spine-animation-name", setAnimationRunnable);
+		editIfExists("spine-animation-time-scale", setTimeScaleRunnable);
+		editIfExists("spine-animation-flip-x", setFlipXRunnable);
+		editIfExists("spine-animation-flip-y", setFlipYRunnable);
 	}
 }

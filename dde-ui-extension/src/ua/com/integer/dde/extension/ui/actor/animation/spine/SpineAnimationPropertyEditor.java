@@ -1,6 +1,9 @@
 package ua.com.integer.dde.extension.ui.actor.animation.spine;
 
+import javax.swing.SpinnerNumberModel;
+
 import ua.com.integer.dde.extension.ui.editor.property.edit.PropertyChangeListener;
+import ua.com.integer.dde.extension.ui.editor.property.edit.floatvalue.FloatEditPanel;
 import ua.com.integer.dde.extension.ui.editor.property.imp.ExpandableConfigEditor;
 
 public class SpineAnimationPropertyEditor extends ExpandableConfigEditor {
@@ -8,6 +11,7 @@ public class SpineAnimationPropertyEditor extends ExpandableConfigEditor {
 	
 	private SpineConfigListEditPanel animationList;
 	private AnimationNamesEditPanel animationName;
+	private FloatEditPanel timeScalePanel;
 
 	class AnimationNameChangeListener implements PropertyChangeListener {
 		@Override
@@ -40,9 +44,21 @@ public class SpineAnimationPropertyEditor extends ExpandableConfigEditor {
 		animationName.setLabel("Animation:");
 		animationName.setPropertyChangedListener(this);
 		
-		setContent( header("Animation config to use"),
+		timeScalePanel = new FloatEditPanel();
+		timeScalePanel.getValueSpinner().setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(0.1f)));
+
+		timeScalePanel.setDefaultValue("1.0");
+		timeScalePanel.setPropertyName("Time scale:");
+		timeScalePanel.setUiPropertyName("spine-animation-time-scale");
+		timeScalePanel.setPropertyChangedListener(this);
+		
+		setContent( header("Config to use"),
 						animationList,
-					header("Animation to play"),
-						animationName);
+					header("Animation params"),
+						animationName,
+						timeScalePanel,
+					header("Animation flip"),
+						b().bool().setup("Flip X", "spine-animation-flip-x", false).build(),
+						b().bool().setup("Flip Y", "spine-animation-flip-y", false).build());
 	}
 }

@@ -2,6 +2,7 @@ package ua.com.integer.dde.extension.ui.actor.animation.spine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -195,6 +196,15 @@ public class SpineAnimationActor extends Actor implements Disposable {
 			renderer.draw(batch, skeleton);
 		}
 	}
+	
+	@Override
+	public void setColor(Color color) {
+		super.setColor(color);
+		
+		if (skeleton != null) {
+			skeleton.setColor(color);
+		}
+	}
 
 	@Override
 	public void dispose() {
@@ -202,5 +212,34 @@ public class SpineAnimationActor extends Actor implements Disposable {
 			atlas.dispose();
 			atlas = null;
 		}
+	}
+	
+	public void setFlip(boolean flipX, boolean flipY) {
+		setFlipX(flipX);
+		setFlipY(flipY);
+	}
+	
+	public void setFlipX(boolean flipX) {
+		if (skeleton != null) {
+			skeleton.setFlipX(flipX);
+		}
+	}
+	
+	public void setFlipY(boolean flipY) {
+		if (skeleton != null) {
+			skeleton.setFlipY(flipY);
+		}
+	}
+	
+	public SkeletonRenderer getRenderer() {
+		return renderer;
+	}
+	
+	public Skeleton getSkeleton() {
+		return skeleton;
+	}
+	
+	public AnimationState getAnimationState() {
+		return animationState;
 	}
 }
