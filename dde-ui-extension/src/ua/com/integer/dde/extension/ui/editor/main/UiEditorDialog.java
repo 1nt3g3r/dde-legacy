@@ -348,11 +348,12 @@ public class UiEditorDialog extends JDialog {
 		mnViewActorHierarchy.addActionListener(new ShowActorHierarchyClickListener());
 
 		loadResolutions();
-		//TODO если нужно редактировать с помощью Swing Designer, закомментировать эти строки
+		//TODO if you want to edit this frame using Swing Editor, you should comment this lines
 		setupFullActorPath(); 
 		updateActorList();
 		insertCanvas();
 		loadUiSettings();
+		//TODO if you want to edit this frame using Swing Editor, you should comment this lines
 		
 		FrameTools.situateOnCenter(this);
 	}
@@ -788,13 +789,9 @@ public class UiEditorDialog extends JDialog {
 
 				Actors.getInstance().clear();
 				EditorKernel.getInstance().exit();
+				lCanvas.stop();
 				
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						lCanvas.stop();
-						dispose();
-					}
-				});
+				dispose();
 			}
 		}
 	}
