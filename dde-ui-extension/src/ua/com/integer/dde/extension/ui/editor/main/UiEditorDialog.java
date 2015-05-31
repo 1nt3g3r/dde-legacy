@@ -787,10 +787,12 @@ public class UiEditorDialog extends JDialog {
 				sets.putString("frame-width", getWidth() + "");
 				sets.putString("frame-height", getHeight() + "");
 
+				setVisible(false);
+
 				Actors.getInstance().clear();
 				EditorKernel.getInstance().exit();
 				lCanvas.stop();
-				
+
 				dispose();
 			}
 		}

@@ -3,6 +3,7 @@ package ua.com.integer.dde.startpanel.extension;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -54,30 +54,32 @@ public class ExtensionDialog extends JDialog {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
-		contentPanel.setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10), new EtchedBorder(EtchedBorder.LOWERED, null, null)));
+		contentPanel.setBorder(new EmptyBorder(10, 10, 0, 10));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			extensionList = new JList<String>();
 			extensionList.addListSelectionListener(new ExtensionSelectListener());
-			extensionList.setBackground(Color.LIGHT_GRAY);
+			contentPanel.setLayout(new GridLayout(0, 2, 0, 0));
+			extensionList.setBackground(Color.GRAY);
 			JScrollPane extensionScroll = new JScrollPane(extensionList);
+			extensionScroll.setBackground(Color.LIGHT_GRAY);
 			extensionScroll.setViewportBorder(new TitledBorder(null, "Available extensions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			contentPanel.add(extensionScroll, BorderLayout.WEST);
+			contentPanel.add(extensionScroll);
 		}
 		{
 			extensionInfo = new JTextPane();
 			extensionInfo.setContentType("text/html");
 			JScrollPane textScroll = new JScrollPane(extensionInfo);
-			textScroll.setViewportBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Info about selected extension", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			extensionInfo.setBackground(Color.LIGHT_GRAY);
+			textScroll.setBackground(Color.LIGHT_GRAY);
+			textScroll.setViewportBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Selected extension description", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			extensionInfo.setBackground(Color.GRAY);
 			extensionInfo.setEditable(false);
-			contentPanel.add(textScroll, BorderLayout.CENTER);
+			contentPanel.add(textScroll);
 		}
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBackground(Color.GRAY);
-			buttonPane.setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10), new EtchedBorder(EtchedBorder.LOWERED, null, null)));
+			buttonPane.setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10), null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			

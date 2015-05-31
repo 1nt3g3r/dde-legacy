@@ -1,6 +1,6 @@
 {
 "jarName": "dde-ext-ui-editor.jar",
 "name": "DDE UI Editor",
-"description": "Simple but flexible GUI editor",
+"description": "Actor editor. Allows you to build complex UI screens",
 "startClass": "ua.com.integer.dde.extension.ui.editor.UIEditorExtension"
 }
