@@ -620,6 +620,7 @@ public class UiEditorDialog extends JDialog {
 	
 	public void saveCurrentUiConfig() {
 		getCurrentUiConfig().saveToFile(getSelectedActorFile());
+		Actors.getInstance().clear();
 	}
 	
 	private UiConfig getCurrentUiConfig() {

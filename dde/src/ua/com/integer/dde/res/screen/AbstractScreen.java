@@ -298,4 +298,14 @@ public class AbstractScreen implements Screen {
 	public void showScreen(Class<? extends AbstractScreen> screen) {
 		getKernel().showScreen(screen);
 	}
+	
+	public void clear() {
+		getStage().clear();
+		
+		componentHelpers.clear();
+		screenListeners.clear();
+		
+		stage.getRoot().setSize(stage.getWidth(), stage.getHeight());
+		stage.addListener(new BackPressListener());
+	}
 }

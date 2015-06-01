@@ -342,6 +342,7 @@ public class DDEStartPanel {
 	public void launch() {
 		if (gameFrame == null || !gameFrame.isVisible()) {
 			config.resizable = false;
+			config.title = kernel.getClass().getSimpleName();
 			
 			lCanvas = new LwjglAWTCanvas(kernel);
 			
