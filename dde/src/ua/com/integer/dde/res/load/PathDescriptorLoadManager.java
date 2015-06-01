@@ -31,7 +31,7 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 	
 	@Override
 	public void dispose() {
-		for(Object object : loadedObjects) {
+		for(Object object : loadedObjects.values()) {
 			if (object != null && object instanceof Disposable) {
 				((Disposable) object).dispose();
 			}

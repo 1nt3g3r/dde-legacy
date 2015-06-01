@@ -2,6 +2,7 @@ package ua.com.integer.dde.extension.ui.actor.animation.spine;
 
 import java.io.File;
 
+import ua.com.integer.dde.startpanel.FileUtils;
 import ua.com.integer.dde.startpanel.ddestub.ProjectFinder;
 import ua.com.integer.dde.util.JsonWorker;
 
@@ -43,8 +44,20 @@ public class SpineAnimations {
 			tmpAnimationArray[i] = tmpAnimationList.get(i);
 		}
 		
+		Array<File> tmp = new Array<File>();
+		File baseDirectory = new File(animationPath);
+		
+		FileUtils.getFilesRecursivelyByExtensions(baseDirectory , tmp, ".json");
+		
+		tmpAnimationArray = new String[tmp.size];
+		for(int i = 0; i < tmpAnimationArray.length; i++) {
+			File file = tmp.get(i);
+			tmpAnimationArray[i] = FileUtils.getFilenameRelativeToParent(file, baseDirectory).split("\\.")[0];
+		}
+		
 		return tmpAnimationArray;
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public String[] getAnimationList(String configName) {

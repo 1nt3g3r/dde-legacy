@@ -2,6 +2,8 @@ package ua.com.integer.dde.startpanel;
 
 import java.io.File;
 
+import com.badlogic.gdx.utils.Array;
+
 public class FileUtils {
 	public static void clearDirectory(String dir) {
 		File srcDir = new File(dir);
@@ -33,5 +35,43 @@ public class FileUtils {
 	        }
 	    }
 	    return dir.delete();
+	}
+	
+	public static void getFilesRecursivelyByExtensions(File startFile, Array<File> result, String extension) {
+		if (startFile.isFile() && startFile.getName().endsWith(extension)) {
+			result.add(startFile);
+		}
+		
+		if (startFile.isDirectory()) {
+			for(File file : startFile.listFiles()) {
+				getFilesRecursivelyByExtensions(file, result, extension);
+			}
+		}
+	}
+	
+	public static String getFilenameRelativeToParent(File file, File parent) {
+		String name = file.getName();
+		try {
+			File tmpFile = new File(file.getAbsolutePath()).getParentFile();
+			
+			String parentPath = parent.getCanonicalPath();
+			String currentPath = tmpFile.getCanonicalPath();
+			
+			while(!parentPath.equals(currentPath)) {
+				name = tmpFile.getName() + "/" + name;
+				parent = file.getParentFile();
+				
+				tmpFile = tmpFile.getParentFile();
+				currentPath = tmpFile.getCanonicalPath();
+			}
+		} catch(Exception ex) {
+			return name;
+		}
+		
+		return name;
+	}
+	
+	public static void main(String[] args) {
+		
 	}
 }
