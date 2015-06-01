@@ -1,6 +1,7 @@
 package ua.com.integer.dde.res.screen;
 
 public enum ScreenEvent {
+	FIRST_TIME_SHOWN,
 	SHOW,
 	HIDE,
 	PAUSE,

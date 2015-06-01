@@ -269,6 +269,7 @@ public class TextureManager implements LoadManager {
 		
 		assets.dispose();
 		assets = null;
+		
 		Gdx.app.log("dde", "Texture manager dispose!");
 	}
 

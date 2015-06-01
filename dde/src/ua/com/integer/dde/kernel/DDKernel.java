@@ -79,7 +79,7 @@ public class DDKernel extends Game {
 	 */
 	@Override
 	public void create() {
-		if (Gdx.app.getType() != ApplicationType.Android) {
+		if (Gdx.app.getType() != ApplicationType.Android && !created) {
 			config.addUseDirectory();
 		}
 		Gdx.input.setCatchBackKey(config.catchBackKey);

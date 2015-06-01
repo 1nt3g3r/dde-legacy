@@ -33,6 +33,8 @@ public class AbstractScreen implements Screen {
 	private Array<ActorHelper> componentHelpers;
 	private Array<ScreenListener> screenListeners;
 	
+	private boolean firstTimeShown;
+	
 	public class BackPressListener extends InputListener {
 		@Override
 		public boolean keyDown(InputEvent event, int keycode) {
@@ -188,6 +190,11 @@ public class AbstractScreen implements Screen {
 		config.active = true;
 		Gdx.input.setInputProcessor(stage);
 		notifyAboutEvent(ScreenEvent.SHOW);
+		
+		if (!firstTimeShown) {
+			firstTimeShown = true;
+			notifyAboutEvent(ScreenEvent.FIRST_TIME_SHOWN);
+		}
 	}
 	
 	public boolean isActive() {
