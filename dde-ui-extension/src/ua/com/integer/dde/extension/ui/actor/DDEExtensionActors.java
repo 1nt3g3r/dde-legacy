@@ -6,9 +6,13 @@ import ua.com.integer.dde.extension.ui.actor.animation.spine.SpineAnimationActor
 import ua.com.integer.dde.extension.ui.actor.animation.spine.SpineAnimationPropertySupporter;
 import ua.com.integer.dde.extension.ui.actor.shadowlabel.ShadowLabel;
 import ua.com.integer.dde.extension.ui.actor.shadowlabel.ShadowLabelPropertySupporter;
+import ua.com.integer.dde.extension.ui.actor.textarea.TextAreaConfig;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
+import ua.com.integer.dde.extension.ui.property.imp.textfield.TextFieldPropertySupporter;
+import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -27,6 +31,7 @@ public class DDEExtensionActors {
 		register(ShadowLabel.ID, ShadowLabel.class, ShadowLabel.DESCRIPTION, ShadowLabel.CATEGORY, new ShadowLabelPropertySupporter());
 		register(FrameAnimationActor.ID, FrameAnimationActor.class, FrameAnimationActor.DESCRIPTION, FrameAnimationActor.CATEGORY, new FrameAnimationPropertySupporter());
 		register(SpineAnimationActor.ID, SpineAnimationActor.class, SpineAnimationActor.DESCRIPTION, SpineAnimationActor.CATEGORY, new SpineAnimationPropertySupporter());
+		register(TextAreaConfig.ID, TextArea.class, TextAreaConfig.DESCRIPTION, TextAreaConfig.CATEGORY, new TextFieldPropertySupporter());
 	}
 
 	public static DDEExtensionActors getInstance() {
@@ -67,6 +72,12 @@ public class DDEExtensionActors {
 	}
 	
 	public Actor create(String id) {
+		if (id.equals("textarea")) {
+			TextArea result = new TextArea("", DefaultSkin.getInstance().getSkin());
+			result.clearListeners();
+			return result;
+		}
+		
 		try {
 			return actors.get(id).newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {

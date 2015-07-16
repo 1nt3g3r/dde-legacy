@@ -63,7 +63,7 @@ public class UiConfig {
 	
 	@Override
 	public String toString() {
-		return name + "";
+		return name;
 	}
 	
 	/**
@@ -191,5 +191,63 @@ public class UiConfig {
 		}
 		
 		return false;
+	}
+	
+	public UiConfig recursiveSearch(Object obj) {
+		if (this == obj) {
+			return this;
+		}
+		
+		UiConfig current = (UiConfig) obj;
+		if (current.children == null || current.children.size == 0) {
+			return null;
+		}
+		
+		for(UiConfig child: current.children) {
+			return recursiveSearch(child);
+		}
+		
+		return null;
+	}
+	
+	public int getChildCount(UiConfig config, int value) {
+		if (config.children != null) {
+			value += config.children.size;
+			
+			for(UiConfig child: config.children) {
+				return getChildCount(child, value);
+			}
+		}
+		
+		return value;
+	}
+	
+	public void printChildren(int offset) {
+		if (children != null) {
+			for(UiConfig child: children) {
+				String additionalSpaces = new String("");
+				for(int i = 0; i < offset; i++) {
+					additionalSpaces += " ";
+				}
+				System.out.println(additionalSpaces + child.name);
+			}
+		}
+	}
+	
+	public int getChildCount() {
+		Integer result = new Integer(0);
+		int toReturn = childCountRecursive(this, result);
+		return toReturn;
+	}
+	
+	private int childCountRecursive(UiConfig start, Integer count) {
+		if (start.children != null) {
+			count += start.children.size;
+			for(UiConfig child: start.children) {
+				childCountRecursive(child, count);
+			}
+		}
+		
+		return count;
 	}
 }

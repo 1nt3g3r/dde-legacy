@@ -126,14 +126,28 @@ public class MenuCreator {
 	
 	public JMenu createInsertMenu() {
 		JMenu toReturn = new JMenu("Insert");
-			toReturn.add(createAddWidgetMenu("Simple", WidgetType.SIMPLE_WIDGETS));
-			toReturn.add(createAddWidgetMenu("Container", WidgetType.CONTAINER_WIDGETS));
-			toReturn.add(createAddWidgetMenu("Other", WidgetType.OTHER_WIDGETS));
+			JMenu simpleWidgets = createAddWidgetMenu("Simple", WidgetType.SIMPLE_WIDGETS);
+			JMenu containerWidgets = createAddWidgetMenu("Container", WidgetType.CONTAINER_WIDGETS);
+			JMenu otherWidgets = createAddWidgetMenu("Other", WidgetType.OTHER_WIDGETS);
+			
 			if (DDEExtensionActors.getInstance().hasActors()) {
 				for(String category: DDEExtensionActors.getInstance().getCategories()) {
-					toReturn.add(createAddExtensionWidgetMenu(category));
+					if (category.equals("Simple")) {
+						addExtensionsWidgetToMenu(category, simpleWidgets);
+					} else if (category.equals("Container")) {
+						addExtensionsWidgetToMenu(category, containerWidgets);
+					} else if (category.equals("Other")) {
+						addExtensionsWidgetToMenu(category, otherWidgets);
+					} else {
+						toReturn.add(createAddExtensionWidgetMenu(category));
+					}
 				}
 			}
+
+			toReturn.add(simpleWidgets);
+			toReturn.add(containerWidgets);
+			toReturn.add(otherWidgets);
+			
 			toReturn.add(createInserUiConfigMenu());
 		return toReturn;
 	}
@@ -177,6 +191,7 @@ public class MenuCreator {
 		}
 		
 	}
+	
 	public JMenu createAddExtensionWidgetMenu(String category) {
 		JMenu toReturn = new JMenu(category);
 		for(String id: DDEExtensionActors.getInstance().getIdsFromCategory(category)) {
@@ -189,6 +204,15 @@ public class MenuCreator {
 		return toReturn;
 	}
 	
+	public void addExtensionsWidgetToMenu(String category, JMenu menu) {
+		for(String id: DDEExtensionActors.getInstance().getIdsFromCategory(category)) {
+			String name = DDEExtensionActors.getInstance().getDescription(id);
+			JMenuItem insertItem = new JMenuItem(name);
+			insertItem.addActionListener(new CreateExtensionWidgetListener(id));
+			menu.add(insertItem);
+			
+		}
+	}
 	
 	class InsertDialogListener implements ActionListener {
 		private File configFile;
