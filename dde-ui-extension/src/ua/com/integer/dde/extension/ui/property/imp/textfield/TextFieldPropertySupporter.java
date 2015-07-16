@@ -34,9 +34,7 @@ public class TextFieldPropertySupporter extends PropertySupporter {
 			textField.getStyle().background = getDrawable("textfield-background");
 		}
 		
-		if (exists("font")) {
-			textField.getStyle().font = getFont("font");
-		}
+		textField.getStyle().font = getFont("font");
 		
 		if (exists("font-color")) {
 			textField.getStyle().fontColor = getColor("font-color");
@@ -46,9 +44,7 @@ public class TextFieldPropertySupporter extends PropertySupporter {
 			textField.setText(getLocalizedText("text"));
 		}
 		
-		if (exists("message-font")) {
-			textField.getStyle().messageFont = (getFont("message-font"));
-		}
+		textField.getStyle().messageFont = getFont("message-font");
 		
 		if (exists("message-text")) {
 			textField.setMessageText(getLocalizedText("message-text"));
