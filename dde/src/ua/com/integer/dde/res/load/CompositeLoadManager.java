@@ -14,21 +14,22 @@ public class CompositeLoadManager implements LoadManager {
 	
 	@Override
 	public void dispose() {
-		for(LoadManager manager : loadManagers) {
-			manager.dispose();
+		for(int i = 0; i < loadManagers.size; i++) {
+			loadManagers.get(i).dispose();
 		}
 	}
 
 	@Override
 	public void loadAll() {
-		for(LoadManager manager: loadManagers) {
-			manager.loadAll();
+		for(int i = 0; i < loadManagers.size; i++) {
+			loadManagers.get(i).loadAll();
 		}
 	}
 
 	@Override
 	public boolean loadStep() {
-		for(LoadManager manager: loadManagers) {
+		for(int i = 0; i < loadManagers.size; i++) {
+			LoadManager manager = loadManagers.get(i);
 			if (manager.getLoadedAssetCount() < manager.getAssetCount()) {
 				manager.loadStep();
 				return false;
@@ -46,8 +47,8 @@ public class CompositeLoadManager implements LoadManager {
 	@Override
 	public int getAssetCount() {
 		int totalAssetCount = 0;
-		for(LoadManager manager : loadManagers) {
-			totalAssetCount += manager.getAssetCount();
+		for(int i = 0; i < loadManagers.size; i++) {
+			totalAssetCount += loadManagers.get(i).getAssetCount();
 		}
 		return totalAssetCount;
 	}
@@ -55,8 +56,8 @@ public class CompositeLoadManager implements LoadManager {
 	@Override
 	public int getLoadedAssetCount() {
 		int totalLoadedAssetCount = 0;
-		for(LoadManager manager: loadManagers) {
-			totalLoadedAssetCount += manager.getLoadedAssetCount();
+		for(int i = 0; i < loadManagers.size; i++) {
+			totalLoadedAssetCount += loadManagers.get(i).getLoadedAssetCount();
 		}
 		return totalLoadedAssetCount;
 	}
@@ -68,7 +69,8 @@ public class CompositeLoadManager implements LoadManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends LoadManager> T getManager(Class<T> type) {
-		for(LoadManager loadManager : loadManagers) {
+		for(int i = 0; i < loadManagers.size; i++) {
+			LoadManager loadManager = loadManagers.get(i);
 			if (loadManager.getClass() == type) {
 				return (T) loadManager;
 			}
@@ -85,7 +87,9 @@ public class CompositeLoadManager implements LoadManager {
 	@SuppressWarnings("unchecked")
 	public <T extends LoadManager> Array<T> getManagers(Class<T> type) {
 		Array<T> result = new Array<T>();
-		for(LoadManager loadManager : loadManagers) {
+		
+		for(int i = 0; i < loadManagers.size; i++) {
+			LoadManager loadManager = loadManagers.get(i);
 			if (loadManager.getClass() == type) {
 				result.add((T) loadManager);
 			}
@@ -117,5 +121,16 @@ public class CompositeLoadManager implements LoadManager {
 	@Override
 	public boolean isLoaded(String name) {
 		throw new IllegalStateException("You can't call this method in composite manager!");
+	}
+	
+	public LoadManager getManager(String fullClassName) {
+		for(int i = 0; i < loadManagers.size; i++) {
+			LoadManager manager = loadManagers.get(i);
+			if (manager.getClass().getName().equals(fullClassName)) {
+				return manager;
+			}
+		}
+		
+		return null;
 	}
 }

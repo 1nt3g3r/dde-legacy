@@ -1,15 +1,5 @@
 package ua.com.integer.dde.kernel;
 
-import ua.com.integer.dde.net.ClientCommandManager;
-import ua.com.integer.dde.res.font.TTFFontManager;
-import ua.com.integer.dde.res.graphics.TextureManager;
-import ua.com.integer.dde.res.load.ResourceManager;
-import ua.com.integer.dde.res.screen.AbstractScreen;
-import ua.com.integer.dde.res.screen.ScreenManager;
-import ua.com.integer.dde.res.sound.MusicManager;
-import ua.com.integer.dde.res.sound.SoundManager;
-import ua.com.integer.dde.ui.UIBuilder;
-
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -20,6 +10,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import ua.com.integer.dde.net.ClientCommandManager;
+import ua.com.integer.dde.res.font.TTFFontManager;
+import ua.com.integer.dde.res.graphics.TextureManager;
+import ua.com.integer.dde.res.load.ResourceManager;
+import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
+import ua.com.integer.dde.res.load.imp.MusicManager;
+import ua.com.integer.dde.res.load.imp.SoundManager;
+import ua.com.integer.dde.res.screen.AbstractScreen;
+import ua.com.integer.dde.res.screen.ScreenManager;
+import ua.com.integer.dde.ui.UIBuilder;
 
 /**
  * Ядро игры. Точка доступа ко всем возможностям - 
@@ -102,13 +103,11 @@ public class DDKernel extends Game {
 		resourceManager.addManager(textureManager);
 		textureManager.setPackDirectory(config.packDirectory);
 		
-		soundManager = new SoundManager();
+		soundManager = new SoundManager(PathDescriptor.internal(config.soundDirectory));
 		resourceManager.addManager(soundManager);
-		soundManager.setSoundDirectory(config.soundDirectory);
 		
-		musicManager = new MusicManager();
+		musicManager = new MusicManager(PathDescriptor.internal(config.musicDirectory));
 		resourceManager.addManager(musicManager);
-		musicManager.setMusicDirectory(config.musicDirectory);
 		
 		uiBuilder = new UIBuilder(this);
 		AbstractScreen.setKernel(this);

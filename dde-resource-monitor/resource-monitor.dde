@@ -1,0 +1,6 @@
+{
+"jarName": "dde-ext-res-monitor.jar",
+"name": "DDE Resource Monitor",
+"description": "Resource monitor. Allows you to monitor loaded to game resources.",
+"startClass": "ua.com.integer.dde.extension.resource.monitor.ResourceMonitor"
+}

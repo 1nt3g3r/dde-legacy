@@ -10,6 +10,7 @@ import ua.com.integer.dde.extension.ui.actor.textarea.TextAreaConfig;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.extension.ui.property.imp.textfield.TextFieldPropertySupporter;
 import ua.com.integer.dde.extension.ui.skin.DefaultSkin;
+import ua.com.integer.dde.res.screen.AbstractScreen;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
@@ -23,6 +24,8 @@ public class DDEExtensionActors {
 	private ObjectMap<String, Array<String>> categories = new ObjectMap<String, Array<String>>();
 	
 	private static DDEExtensionActors instance = new DDEExtensionActors();
+	
+	private Array<String> tmpIdsFromCategory = new Array<String>();
 	
 	private Array<String> tmpCategories = new Array<String>();
 	private Array<String> tmpNamesFromCategories = new Array<String>();
@@ -74,7 +77,9 @@ public class DDEExtensionActors {
 	public Actor create(String id) {
 		if (id.equals("textarea")) {
 			TextArea result = new TextArea("", DefaultSkin.getInstance().getSkin());
-			result.clearListeners();
+			if (isEditor()) {
+				result.clearListeners();
+			}
 			return result;
 		}
 		
@@ -93,7 +98,6 @@ public class DDEExtensionActors {
 		return descriptions.size > 0;
 	}
 
-	private Array<String> tmpIdsFromCategory = new Array<String>();
 	public Array<String> getIdsFromCategory(String category) {
 		tmpIdsFromCategory.clear();
 		for(String id: categories.get(category)) {
@@ -104,5 +108,10 @@ public class DDEExtensionActors {
 
 	public String getDescription(String id) {
 		return descriptions.get(id);
+	}
+	
+	private boolean isEditor() {
+		String coreName = AbstractScreen.getKernel().getClass().getName();
+		return coreName.contains("EditorKernel");
 	}
 }

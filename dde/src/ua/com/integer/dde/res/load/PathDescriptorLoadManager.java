@@ -1,11 +1,11 @@
 package ua.com.integer.dde.res.load;
 
-import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
+
+import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
 public abstract class PathDescriptorLoadManager implements LoadManager {
 	protected PathDescriptor descriptor;
@@ -111,6 +111,22 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 	public void load(String name) {
 		if (!objectsToLoad.contains(name, false)) {
 			objectsToLoad.add(name);
+		}
+	}
+	
+	public void unload(String name) {
+		if (loadedObjects.containsKey(name)) {
+			Object asset = loadedObjects.get(name);
+			if (asset != null && asset instanceof Disposable) {
+				((Disposable) asset).dispose();
+			}
+			loadedObjects.remove(name);
+		}
+	}
+	
+	public void unloadAll(Array<String> assets) {
+		for(String name: assets) {
+			unload(name);
 		}
 	}
 	

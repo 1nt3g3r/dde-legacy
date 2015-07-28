@@ -37,6 +37,13 @@
 			<fileset file="${ui}/ui-editor.dde"/>
 		</copy>
 		
+		<!--Resource monitor extension-->
+		<ant dir="${res}" antfile="${res}/build.xml" target="make.jars"/>
+		<copy todir="release/extensions/res-mon">
+			<fileset dir="${res.jardir}"/>
+			<fileset file="${res}/resource-monitor.dde"/>
+		</copy>
+		
 		<zip destfile="build/dde-release.zip" basedir="release"/>
 	
 		<antcall target="post.clean"/>
