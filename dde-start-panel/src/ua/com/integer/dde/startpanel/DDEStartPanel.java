@@ -357,6 +357,7 @@ public class DDEStartPanel {
 			
 			gameFrame.addWindowListener(new ExitFromGameListener());
 			gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			FrameTools.situateOnCenter(gameFrame);
 			gameFrame.setVisible(true);
 		}
 	}

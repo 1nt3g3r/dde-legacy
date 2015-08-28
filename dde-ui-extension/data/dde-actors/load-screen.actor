@@ -1,0 +1,124 @@
+{
+name: root
+horizontalDistance: {}
+verticalDistance: {}
+width: {
+	sizeValue: 0.5
+}
+height: {
+	sizeValue: 0.5
+}
+children: [
+	{
+		name: progress-label
+		widgetType: TEXT_LABEL
+		horizontalDistance: {}
+		verticalDistance: {}
+		width: {
+			sizeValue: 0.55999935
+		}
+		height: {
+			sizeValue: 0.15999976
+		}
+		properties: {
+			distanceX: "{sizeValue:0.029999662}"
+			distanceY: "{sizeValue:-0.17000012}"
+			text-align: CENTER
+			width: "{sizeValue:0.55999935}"
+			height: "{sizeValue:0.15999976}"
+			font-name: standard
+			font-name-size: "{sizeValue:0.05,sizeType:\"SCREEN_WIDTH\"}"
+			font-scale-x: 1.0
+			font-scale-y: 1.0
+			actor-scale-x: 1.0
+			actor-scale-y: 1.0
+		}
+	}
+	{
+		name: inner1
+		widgetType: EMPTY_GROUP
+		horizontalDistance: {}
+		verticalDistance: {}
+		width: {
+			sizeValue: 0.5
+		}
+		height: {
+			sizeValue: 0.5
+		}
+		children: [
+			{
+				name: inner2
+				widgetType: EMPTY_GROUP
+				horizontalDistance: {}
+				verticalDistance: {}
+				width: {
+					sizeValue: 0.5
+				}
+				height: {
+					sizeValue: 0.5
+				}
+				children: [
+					{
+						name: l21
+						widgetType: TEXT_LABEL
+						horizontalDistance: {}
+						verticalDistance: {}
+						width: {
+							sizeValue: 0.5
+						}
+						height: {
+							sizeValue: 0.5
+						}
+						properties: {
+							distanceX: "{}"
+							distanceY: "{}"
+							width: "{sizeValue:0.5}"
+							height: "{sizeValue:0.5}"
+							font-name: standard
+						}
+					}
+				]
+				properties: {
+					distanceX: "{}"
+					distanceY: "{}"
+					width: "{sizeValue:0.5}"
+					height: "{sizeValue:0.5}"
+				}
+			}
+			{
+				name: l1
+				widgetType: TEXT_LABEL
+				horizontalDistance: {}
+				verticalDistance: {}
+				width: {
+					sizeValue: 0.5
+				}
+				height: {
+					sizeValue: 0.5
+				}
+				properties: {
+					distanceX: "{}"
+					distanceY: "{}"
+					width: "{sizeValue:0.5}"
+					height: "{sizeValue:0.5}"
+					font-name: standard
+				}
+			}
+		]
+		properties: {
+			distanceX: "{}"
+			distanceY: "{}"
+			width: "{sizeValue:0.5}"
+			height: "{sizeValue:0.5}"
+		}
+	}
+]
+properties: {
+	distanceX: "{}"
+	distanceY: "{}"
+	width: "{sizeValue:0.5}"
+	height: "{sizeValue:0.5}"
+	actor-scale-x: 1.0
+	actor-scale-y: 1.0
+}
+}
