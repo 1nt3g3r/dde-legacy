@@ -2,12 +2,12 @@ package ua.com.integer.dde.extension.ui.actor.animation.frame;
 
 import javax.swing.JPanel;
 
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.property.PropertySupporter;
 import ua.com.integer.dde.kernel.DDKernel;
-
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class FrameAnimationPropertySupporter extends PropertySupporter {
 	@Override

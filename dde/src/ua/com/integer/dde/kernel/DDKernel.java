@@ -144,6 +144,15 @@ public class DDKernel extends Game {
 	}
 	
 	/**
+	 * Уничтожает экран
+	 * 
+	 * @param screen
+	 */
+	public void disposeScreen(Class<? extends AbstractScreen> screen) {
+		screenManager.disposeScreen(screen);
+	}
+	
+	/**
 	 * Возвращает звук по его имени. Если звук не был загружен, загружает его.
 	 * 
 	 * @param soundName имя звука без расширения .mp3

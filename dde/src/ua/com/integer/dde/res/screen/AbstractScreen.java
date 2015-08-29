@@ -35,6 +35,8 @@ public class AbstractScreen implements Screen {
 	
 	private boolean firstTimeShown;
 	
+	private boolean logEnabled;
+	
 	public class BackPressListener extends InputListener {
 		@Override
 		public boolean keyDown(InputEvent event, int keycode) {
@@ -77,6 +79,8 @@ public class AbstractScreen implements Screen {
 		stage = new Stage(new ScreenViewport(), getBatch());
 		stage.getRoot().setSize(stage.getWidth(), stage.getHeight());
 		stage.addListener(new BackPressListener());
+		
+		log("screen <" + getScreenName() + "> created");
 	}
 	
 	public ScreenConfig getConfig() {
@@ -119,6 +123,8 @@ public class AbstractScreen implements Screen {
 		}
 		helper.updateActor();
 		componentHelpers.add(helper);
+		
+		log("actor helper added");
 	}
 	
 	/**
@@ -183,6 +189,7 @@ public class AbstractScreen implements Screen {
 		for(ActorHelper locator : componentHelpers) {
 			locator.updateActor();
 		}
+		log("helpers updated");
 	}
 
 	@Override
@@ -235,6 +242,8 @@ public class AbstractScreen implements Screen {
 				disposeActors(child);
 			}
 		}
+		
+		log("actors disposed");
 	}
 	
 	public static DDKernel getKernel() {
@@ -307,5 +316,17 @@ public class AbstractScreen implements Screen {
 		
 		stage.getRoot().setSize(stage.getWidth(), stage.getHeight());
 		stage.addListener(new BackPressListener());
+		
+		log("clear");
+	}
+	
+	public void setLogEnabled(boolean logEnabled) {
+		this.logEnabled = logEnabled;
+	}
+	
+	public void log(String text) {
+		if (logEnabled) {
+			Gdx.app.log(config.screenName, text);
+		}
 	}
 }

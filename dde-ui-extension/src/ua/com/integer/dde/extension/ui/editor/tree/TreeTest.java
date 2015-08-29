@@ -2,27 +2,23 @@ package ua.com.integer.dde.extension.ui.editor.tree;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
 
-import com.badlogic.gdx.Gdx;
+import ua.com.integer.dde.extension.ui.UiConfig;
+import ua.com.integer.dde.util.JsonWorker;
+
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import com.badlogic.gdx.files.FileHandle;
 
-import ua.com.integer.dde.extension.ui.Actors;
-import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.util.ActorUtilities;
-import ua.com.integer.dde.util.JsonWorker;
-
 public class TreeTest extends JDialog {
-
+	private static final long serialVersionUID = 3647596534590332320L;
 	private final JPanel contentPanel = new JPanel();
 
 	/**

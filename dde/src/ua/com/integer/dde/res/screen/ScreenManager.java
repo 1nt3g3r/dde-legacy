@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.ObjectMap;
  *
  */
 public class ScreenManager implements Disposable, LoadManager {
+	public static final String LOG_TAG = "DDE.ScreenManager";
+	
 	private Array<Class<? extends AbstractScreen>> loadQueue;
 	private int totalScreenCountToLoad, loadedScreenCount;
 	
@@ -24,6 +26,7 @@ public class ScreenManager implements Disposable, LoadManager {
 	private Array<String> screenNames;
 	private Array<String> screenStack;
 	private DDKernel kernel;
+	private boolean logEnabled;
 	
 	/**
 	 * Creates manager and call setGame() method
@@ -42,6 +45,8 @@ public class ScreenManager implements Disposable, LoadManager {
 		screenStack = new Array<String>();
 		
 		loadQueue = new Array<Class<? extends AbstractScreen>>();
+		
+		log("created");
 	}
 	
 	/**
@@ -58,6 +63,7 @@ public class ScreenManager implements Disposable, LoadManager {
 	public void addScreen(AbstractScreen screen) {
 		screens.put(screen.getScreenName(), screen);
 		screenNames.add(screen.getScreenName());
+		log("screen " + screen.getScreenName() + " added");
 	}
 	
 	/**
@@ -70,6 +76,7 @@ public class ScreenManager implements Disposable, LoadManager {
 		if (toRemove != null) {
 			toRemove.dispose();
 			screens.remove(screenName);
+			log("screen " + screenName + " removed");
 		}
 	}
 	
@@ -85,6 +92,7 @@ public class ScreenManager implements Disposable, LoadManager {
 			throw new IllegalArgumentException("Screen " + screenName + " not found!");
 		}
 		kernel.setScreen(screen);
+		log("screen " + screenName + " was shown");
 	}
 
 	/**
@@ -93,6 +101,7 @@ public class ScreenManager implements Disposable, LoadManager {
 	 */
 	@Override
 	public void dispose() {
+		log("start dispose...");
 		for(AbstractScreen screen : screens.values()) {
 			screen.dispose();
 		}
@@ -100,6 +109,7 @@ public class ScreenManager implements Disposable, LoadManager {
 		if (AbstractScreen.getBatch() != null) {
 			AbstractScreen.disposeBatch();
 		}
+		log("dispose finished");
 	}
 	
 	/**
@@ -121,6 +131,7 @@ public class ScreenManager implements Disposable, LoadManager {
 		if (screenStack.size >= 1) {
 			screenStack.pop();
 			showScreen(screenStack.peek());
+			log("switched to previous screen");
 		}
 	}
 	
@@ -147,6 +158,7 @@ public class ScreenManager implements Disposable, LoadManager {
 		try {
 			toReturn = (AbstractScreen) type.newInstance();
 			screens.put(toReturn.getScreenName(), toReturn);
+			log("screen <" + toReturn.getScreenName() + " created");
 			return (T) toReturn;
 		} catch (InstantiationException e) {
 			e.printStackTrace();
@@ -164,6 +176,7 @@ public class ScreenManager implements Disposable, LoadManager {
 	public <T extends AbstractScreen> void loadScreen(Class<T> type) {
 		loadQueue.add(type);
 		totalScreenCountToLoad++;
+		log("screen with type " + type + " added to load queue");
 	}
 	
 	/**
@@ -175,8 +188,11 @@ public class ScreenManager implements Disposable, LoadManager {
 			try {
 				screenToShow = (AbstractScreen) type.newInstance();
 				screens.put(screenToShow.getScreenName(), screenToShow);
+				log("screen " + screenToShow.getScreenName() + " created");
 			} catch (InstantiationException e) {
+				log(e.toString());
 			} catch (IllegalAccessException e) {
+				log(e.toString());
 			}
 		}
 		showScreen(screenToShow.getScreenName());
@@ -184,7 +200,7 @@ public class ScreenManager implements Disposable, LoadManager {
 
 	@Override
 	public void loadAll() {
-		Gdx.app.log("ScreenManager", "loadAll() isn't implemented in ScreenManager now");
+		log("loadAll() isn't implemented in ScreenManager now");
 	}
 
 	@Override
@@ -223,21 +239,36 @@ public class ScreenManager implements Disposable, LoadManager {
 	}
 	
 	public void disposeScreen(Class<? extends AbstractScreen> screen) {
+		log("try to dispose screen " + screen);
 		if (isLoaded(screen)) {
 			AbstractScreen screenToRemove = getScreen(screen);
 			String screenName = screenToRemove.getScreenName();
 		
 			screenToRemove.dispose();
 			screens.remove(screenName);
+			
+			log("   ... success, screen " + screenName + " disposed");
+		} else {
+			log("   ... fail, screen " + screen + " isn't loaded");
 		}
 	}
 	
 	public boolean isLoaded(Class<? extends AbstractScreen> screen) {
-		return screens.containsKey(screen.getClass() + "");
+		return screens.containsKey(screen + "");
 	}
 
 	@Override
 	public boolean isLoaded(String name) {
 		return screens.containsKey(name);
+	}
+	
+	public void setLogEnabled(boolean logEnabled) {
+		this.logEnabled = logEnabled;
+	}
+	
+	private void log(String text) {
+		if (logEnabled) {
+			Gdx.app.log(LOG_TAG, text);
+		}
 	}
 }

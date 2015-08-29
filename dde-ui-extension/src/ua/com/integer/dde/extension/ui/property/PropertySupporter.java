@@ -115,7 +115,12 @@ public abstract class PropertySupporter {
 		
 		if (fontSize < 5) fontSize = 5;
 		
-		return AbstractScreen.getFont(config.get(name), fontSize); 
+		String fontName = config.get(name);
+		if (fontName.equals("")) {
+			return AbstractScreen.getKernel().getFont(fontSize);
+		} else {
+			return AbstractScreen.getFont(config.get(name), fontSize); 
+		}
 	}
 	
 	public boolean exists(String name) {
