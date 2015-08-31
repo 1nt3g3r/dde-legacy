@@ -36,7 +36,6 @@ public class PageControl extends Group {
 	
 	public void setScrollSize(float scrollSize) {
 		this.scrollSize = scrollSize;
-		System.out.println("scroll size is " + scrollSize);
 	}
 	
 	@Override

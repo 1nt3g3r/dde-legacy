@@ -8,6 +8,10 @@ import ua.com.integer.dde.res.load.PathDescriptorLoadManager;
 import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
 public class SoundManager extends PathDescriptorLoadManager {
+	public SoundManager() {
+		this(null);
+	}
+	
 	public SoundManager(PathDescriptor descriptor) {
 		setDescriptor(descriptor);
 		

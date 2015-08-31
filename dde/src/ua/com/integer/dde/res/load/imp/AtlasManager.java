@@ -8,6 +8,10 @@ import ua.com.integer.dde.res.load.PathDescriptorLoadManager;
 import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
 public class AtlasManager extends PathDescriptorLoadManager {
+	public AtlasManager() {
+		this(null);
+	}
+	
 	public AtlasManager(PathDescriptor descriptor) {
 		setDescriptor(descriptor);
 		

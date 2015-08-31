@@ -6,6 +6,7 @@ import ua.com.integer.dde.res.graphics.TextureManager;
 import ua.com.integer.dde.res.load.ResourceManager;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenManager;
+import ua.com.integer.dde.res.screen.transition.ScreenTransition;
 import ua.com.integer.dde.res.sound.MusicManager;
 import ua.com.integer.dde.res.sound.SoundManager;
 import ua.com.integer.dde.ui.UIBuilder;
@@ -133,6 +134,17 @@ public class DDKernel extends Game {
 	 */
 	public void showScreen(Class<? extends AbstractScreen> screen) {
 		screenManager.showScreen(screen);
+	}
+	
+	/**
+	 * Shows screen with given {@link ScreenTransition}. If transition is empty, shows screen without any transitions
+	 */
+	public void showScreen(Class<? extends AbstractScreen> screen, ScreenTransition transition) {
+		if (transition == null) {
+			showScreen(screen);
+		} else {
+			transition.transit(screen);
+		}
 	}
 	
 	/**

@@ -242,7 +242,6 @@ public class TTFFontManager implements LoadManager {
 	
 	public void addFont(String fontName, int fontSize, FreeTypeFontParameter parameter) {
 		createFontGeneratorIfNeed(fontName);
-		
 	}
 
 	@Override

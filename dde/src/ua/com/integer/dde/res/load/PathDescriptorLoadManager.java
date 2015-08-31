@@ -1,7 +1,9 @@
 package ua.com.integer.dde.res.load;
 
+import ua.com.integer.dde.res.load.descriptor.CompositePathDescriptor;
 import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -14,6 +16,8 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 	protected Array<String> extensions = new Array<String>();
 	
 	private boolean loadingInSeparateThread;
+	
+	private boolean logEnabled;
 
 	private String currentName;
 	
@@ -40,12 +44,39 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		loadedObjects.clear();
 		objectsToLoad.clear();
 	}
+	
+	/**
+	 * Unloads object by his name if it was loaded. 
+	 * If it was in load queue, this object just removes from loading queue.
+	 * 
+	 * @param name of object to unload
+	 */
+	public void unload(String name) {
+		Object object = loadedObjects.get(name);
+		if (object != null && object instanceof Disposable) {
+			((Disposable) object).dispose();
+		}
+		
+		loadedObjects.remove(name);
+		objectsToLoad.removeValue(name, false);
+	}
 
 	@Override
 	public void loadAll() {
 		objectsToLoad.clear();
 		loadedObjects.clear();
 		
+		if(descriptor instanceof CompositePathDescriptor) {
+			CompositePathDescriptor compositePathDescriptor = (CompositePathDescriptor) descriptor;
+			for(PathDescriptor descriptor: compositePathDescriptor.getDescriptors()) {
+				loadAllFromPathDescriptor(descriptor);
+			}
+		} else {
+			loadAllFromPathDescriptor(descriptor);
+		}
+	}
+	
+	public void loadAllFromPathDescriptor(PathDescriptor descriptor) {
 		for (FileHandle handle : descriptor.getDirectory().list()) {
 			if (!handle.isDirectory()) {
 				String extension = handle.extension();
@@ -58,7 +89,7 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 
 	@Override
 	public boolean loadStep() {
-		if (getLoadedAssetCount() == getAssetCount()) {
+		if (getObjectsToLoad().size <= 0) {
 			return true;
 		}
 		
@@ -114,6 +145,12 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		}
 	}
 	
+	public void load(Array<String> names) {
+		for(String name: names) {
+			load(name);
+		}
+	}
+	
 	public void add(String name, Object item) {
 		loadedObjects.put(name, item);
 	}
@@ -128,9 +165,10 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 			loadingInSeparateThread = true;
 			new Thread() {
 				public void run() {
-					while(getLoadedAssetCount() != getAssetCount()) {
-						loadStep();
+					while(!loadStep()) {
+						log("load step in separate thread");
 					}
+					loadingInSeparateThread = false;
 				}
 			}.start();
 		}
@@ -140,9 +178,10 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 		return loadingInSeparateThread;
 	}
 	
-	protected void loadObject(FileHandle handle) {
+	protected synchronized void loadObject(FileHandle handle) {
 		Object item = createItem(handle);
 		loadedObjects.put(currentName, item);
+		objectsToLoad.removeValue(currentName, false);
 	}
 	
 	protected Object get(String name) {
@@ -156,6 +195,20 @@ public abstract class PathDescriptorLoadManager implements LoadManager {
 	
 	public ObjectMap<String, Object> getLoadedObjects() {
 		return loadedObjects;
+	}
+	
+	public Array<String> getObjectsToLoad() {
+		return objectsToLoad;
+	}
+	
+	public void log(String message) {
+		if (logEnabled) {
+			Gdx.app.log(getClass().toString(), message);
+		}
+	}
+	
+	public void setLogEnabled(boolean logEnabled) {
+		this.logEnabled = logEnabled;
 	}
 	
 	protected abstract Object createItem(FileHandle handle);

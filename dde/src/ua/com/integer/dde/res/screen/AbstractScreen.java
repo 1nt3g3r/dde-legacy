@@ -1,6 +1,7 @@
 package ua.com.integer.dde.res.screen;
 
 import ua.com.integer.dde.kernel.DDKernel;
+import ua.com.integer.dde.res.screen.transition.ScreenTransition;
 import ua.com.integer.dde.ui.helper.ActorHelper;
 
 import com.badlogic.gdx.Gdx;
@@ -306,6 +307,10 @@ public class AbstractScreen implements Screen {
 	
 	public void showScreen(Class<? extends AbstractScreen> screen) {
 		getKernel().showScreen(screen);
+	}
+	
+	public void showScreen(Class<? extends AbstractScreen> screen, ScreenTransition transition) {
+		getKernel().showScreen(screen, transition);
 	}
 	
 	public void clear() {
