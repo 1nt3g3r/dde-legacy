@@ -1,5 +1,6 @@
 package ua.com.integer.dde.kernel;
 
+import ua.com.integer.dde.interaction.InteractionInterface;
 import ua.com.integer.dde.net.ClientCommandManager;
 import ua.com.integer.dde.res.font.TTFFontManager;
 import ua.com.integer.dde.res.graphics.TextureManager;
@@ -48,6 +49,8 @@ public class DDKernel extends Game {
 	private UIBuilder uiBuilder;
 	
 	private DDKernelConfig config;
+	
+	private InteractionInterface platformInteraction;
 	
 	/**
 	 * Создает ядро с параметрами по умолчанию
@@ -256,5 +259,13 @@ public class DDKernel extends Game {
 	
 	public void exit() {
 		Gdx.app.exit();
+	}
+	
+	public void setPlatformInteraction(InteractionInterface platformInteraction) {
+		this.platformInteraction = platformInteraction;
+	}
+	
+	public InteractionInterface getPlatformInteraction() {
+		return platformInteraction;
 	}
 }

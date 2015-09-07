@@ -11,8 +11,6 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import javax.swing.Box;
@@ -37,9 +35,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import ua.com.integer.dde.extension.localize.Dictionary;
 import ua.com.integer.dde.extension.localize.Localize;
-import ua.com.integer.dde.extension.localize.Translation;
 import ua.com.integer.dde.startpanel.ddestub.ProjectFinder;
+import ua.com.integer.dde.startpanel.util.ExtensionFilenameFilter;
+import ua.com.integer.dde.util.JsonWorker;
 
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -49,8 +49,7 @@ public class LocalizeEditor extends JDialog {
 	@SuppressWarnings("rawtypes")
 	private JList tagList;
 
-	private File translationFile;
-	private Translation translation;
+	private Localize translation;
 	@SuppressWarnings("rawtypes")
 	private JList langList;
 	
@@ -232,28 +231,21 @@ public class LocalizeEditor extends JDialog {
 		update();
 	}
 	
+	private File translationFile;
+	
 	private void update() {
 		if (ProjectFinder.findAndroidProject() == null) {
-			translationFile = new File("./data/" + Localize.LOCALIZE_FILENAME);
+			translationFile = new File("");
 		} else {
-			translationFile = new File(ProjectFinder.findAndroidProject() + "/assets/data/" + Localize.LOCALIZE_FILENAME);
+			translationFile = new File(ProjectFinder.findAndroidProject() + "/assets/data/dde-translation");
 		}
 		
 		if (!translationFile.exists()) {
-			try {
-				translationFile.getParentFile().mkdirs();
-				translationFile.createNewFile();
-				FileWriter fWriter = new FileWriter(translationFile);
-				fWriter.write("{}");
-				fWriter.flush();
-				fWriter.close();
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "Can not create localize file: " + translationFile.getPath() +"\n" + e.getMessage());
-				System.exit(-1);
-			}
+			translationFile.mkdirs();
 		} 
 		
-		translation = Translation.loadFromFile(translationFile);
+		translation = Localize.getInstance();
+		translation.setInnerLocalizeFolder(translationFile.getPath());
 
 		initTagList();
 		updateLanguageList();
@@ -271,6 +263,12 @@ public class LocalizeEditor extends JDialog {
 	
 	@SuppressWarnings("unchecked")
 	private void updateLanguageList() {
+		File[] translationFiles = translationFile.listFiles(new ExtensionFilenameFilter("dictionary"));
+		for(File file: translationFiles) {
+			String[] parts = file.getName().split("\\.");
+			String language = parts[0].split("-")[0];
+			translation.setLanguage(language);
+		}
 		langList.setModel(new LangListModel(translation));
 	}
 	
@@ -278,7 +276,7 @@ public class LocalizeEditor extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				translation.saveToFile(translationFile);
+				translation.saveAllToDirectory(translationFile);
 				JOptionPane.showMessageDialog(null, "Translation was succesfully saved!");
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Error during save translation!");
@@ -334,7 +332,11 @@ public class LocalizeEditor extends JDialog {
 				if (translation.getLanguages().contains(language, false)) {
 					JOptionPane.showMessageDialog(null, "Language " + language + " already exists!");
 				} else {
-					translation.addLanguage(language);
+					File newTranslation = new File(translationFile, language + "-translation.dictionary");
+					Dictionary newDict = new Dictionary();
+					newDict.language = language;
+					JsonWorker.toJson(newDict, newTranslation);
+					translation.addDictionary(Dictionary.fromJson(newTranslation));
 					updateLanguageList();
 				}
 			}
@@ -352,7 +354,7 @@ public class LocalizeEditor extends JDialog {
 			int answer = JOptionPane.showConfirmDialog(null, "Do you want to delete language <" + getSelectedLanguage() + ">");
 			if (answer == JOptionPane.YES_OPTION) {
 				String language = getSelectedLanguage();
-				translation.deleteLanguage(language);
+				new File(translationFile, language + "-translation.dictionary").delete();
 				translationTabs.remove(editors.get(language));
 				updateLanguageList();
 			}
@@ -425,7 +427,10 @@ public class LocalizeEditor extends JDialog {
 				for(JScrollPane scroll : editors.values()) {
 					JTable table = (JTable) scroll.getViewport().getView();
 					TranslationTableModel model = (TranslationTableModel) table.getModel();
-					table.setRowSelectionInterval(model.getIndexOfTag(getSelectedTag()), model.getIndexOfTag(getSelectedTag()));
+					
+					String selectedTag = getSelectedTag();
+					int selectedIndex = model.getIndexOfTag(selectedTag);
+					table.setRowSelectionInterval(selectedIndex, selectedIndex);
 				}
 			}
 		}
@@ -434,11 +439,8 @@ public class LocalizeEditor extends JDialog {
 	class WindowExitListener extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
-			try {
-				translation.saveToFile(translationFile);
-				dispose();
-			} catch (IOException e1) {
-			}
+			translation.saveAllToDirectory(translationFile);
+			dispose();
 		}
 	}
 	

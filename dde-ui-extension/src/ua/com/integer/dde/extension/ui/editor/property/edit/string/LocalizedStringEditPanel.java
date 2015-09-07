@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import ua.com.integer.dde.extension.localize.Localize;
+import ua.com.integer.dde.extension.ui.UiConfig;
 import ua.com.integer.dde.extension.ui.editor.property.edit.base.LabeledEditPanel;
 import ua.com.integer.dde.startpanel.FrameTools;
 
@@ -66,6 +67,14 @@ public class LocalizedStringEditPanel extends LabeledEditPanel {
 	}
 	
 	private void localizeText() {
+		if (config == null) {
+			config = new UiConfig();
+		}
+		
+		if (uiPropertyName == null) {
+			uiPropertyName = "test";
+		}
+		
 		if (!config.properties.containsKey(uiPropertyName)) {
 			config.set(uiPropertyName, getDefaultValue());
 		}
@@ -81,7 +90,8 @@ public class LocalizedStringEditPanel extends LabeledEditPanel {
 	}
 	
 	private void updateTagList() {
-		tagCombobox.setModel(new DefaultComboBoxModel<String>(Localize.getInstance().getTags()));
+		Localize.getInstance().loadAllInnerDictionaries();
+		tagCombobox.setModel(new DefaultComboBoxModel<String>(Localize.getInstance().getTagsAsArray()));
 	}
 	
 	public static void main(String[] args) {
