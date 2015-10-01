@@ -57,6 +57,8 @@ public class LocalizeEditor extends JDialog {
 	private JTabbedPane translationTabs;
 	private JCheckBox highlightUntranslatedCheckbox;
 	
+	private File translationFile;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -231,11 +233,9 @@ public class LocalizeEditor extends JDialog {
 		update();
 	}
 	
-	private File translationFile;
-	
 	private void update() {
 		if (ProjectFinder.findAndroidProject() == null) {
-			translationFile = new File("");
+			translationFile = new File(".");
 		} else {
 			translationFile = new File(ProjectFinder.findAndroidProject() + "/assets/data/dde-translation");
 		}
@@ -264,6 +264,10 @@ public class LocalizeEditor extends JDialog {
 	@SuppressWarnings("unchecked")
 	private void updateLanguageList() {
 		File[] translationFiles = translationFile.listFiles(new ExtensionFilenameFilter("dictionary"));
+		if (translationFiles == null) {
+			return;
+		}
+		
 		for(File file: translationFiles) {
 			String[] parts = file.getName().split("\\.");
 			String language = parts[0].split("-")[0];
@@ -333,6 +337,8 @@ public class LocalizeEditor extends JDialog {
 					JOptionPane.showMessageDialog(null, "Language " + language + " already exists!");
 				} else {
 					File newTranslation = new File(translationFile, language + "-translation.dictionary");
+					
+					
 					Dictionary newDict = new Dictionary();
 					newDict.language = language;
 					JsonWorker.toJson(newDict, newTranslation);

@@ -109,10 +109,14 @@ public class LocalizedStringEditPanel extends LabeledEditPanel {
 				tagCombobox.setVisible(true);
 				
 				tagCombobox.addActionListener(tagListener);
+				
+				needLocalize.setSelected(true);
 			} else {
 				textfield.setText(config.get(uiPropertyName, getDefaultValue()));
 				textfield.setVisible(true);
 				tagCombobox.setVisible(false);
+				
+				needLocalize.setSelected(false);
 			}
 		}
 	}

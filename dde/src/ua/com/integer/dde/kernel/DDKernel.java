@@ -11,6 +11,7 @@ import ua.com.integer.dde.res.screen.transition.ScreenTransition;
 import ua.com.integer.dde.res.sound.MusicManager;
 import ua.com.integer.dde.res.sound.SoundManager;
 import ua.com.integer.dde.ui.UIBuilder;
+import ua.com.integer.dde.util.Settings;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
@@ -51,6 +52,8 @@ public class DDKernel extends Game {
 	private DDKernelConfig config;
 	
 	private InteractionInterface platformInteraction;
+	
+	private Settings sets;
 	
 	/**
 	 * Создает ядро с параметрами по умолчанию
@@ -119,6 +122,8 @@ public class DDKernel extends Game {
 		if (config.stopManageTexturesAfterLoading) {
 			Texture.setAssetManager(null);
 		}
+		
+		sets = new Settings();
 		
 		created = true;
 	}
@@ -267,5 +272,9 @@ public class DDKernel extends Game {
 	
 	public InteractionInterface getPlatformInteraction() {
 		return platformInteraction;
+	}
+	
+	public Settings getSets() {
+		return sets;
 	}
 }

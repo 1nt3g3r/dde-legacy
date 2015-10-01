@@ -140,7 +140,27 @@ public class AbstractScreen implements Screen {
 	 * Method searches in root group.
 	 */
 	public <T extends Actor> T findByName(String name) {
+		if (name == null) {
+			return null;
+		}
+		
 		return stage.getRoot().findActor(name);
+	}
+	
+	/**
+	 * Removes actor by his name
+	 */
+	public void removeActor(String name) {
+		removeActor(findByName(name));
+	}
+	
+	/**
+	 * Removes actor from this screen
+	 */
+	public void removeActor(Actor actor) {
+		if (actor != null) {
+			actor.remove();
+		}
 	}
 
 	/**
@@ -325,10 +345,20 @@ public class AbstractScreen implements Screen {
 		log("clear");
 	}
 	
+	/**
+	 * Sets logging enabled or disabled. Log messages will be printed to console 
+	 * with {{@link #getScreenName()} tag
+	 * 
+	 * @param logEnabled is log enabled
+	 */
 	public void setLogEnabled(boolean logEnabled) {
 		this.logEnabled = logEnabled;
 	}
 	
+	/**
+	 * Logs message to console. See {@link #setLogEnabled(boolean))
+	 * @param text text to log
+	 */
 	public void log(String text) {
 		if (logEnabled) {
 			Gdx.app.log(config.screenName, text);

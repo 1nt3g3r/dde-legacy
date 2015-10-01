@@ -47,4 +47,8 @@ public class Dictionary {
 	public void removeTag(String tagName) {
 		translation.remove(tagName);
 	}
+
+	public void sort() {
+		translation.orderedKeys().sort();
+	}
 }

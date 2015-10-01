@@ -147,6 +147,8 @@ public class Localize {
 		for(Dictionary dict: dictionaries.values()) {
 			dict.synchronizeTags(tags);
 		}
+		
+		tags.sort();
 	}
 	
 	/**
@@ -193,14 +195,18 @@ public class Localize {
 	 * Загружает словарь из указанного файла
 	 */
 	public void loadDictionary(File file) {
-		addDictionary(Dictionary.fromJson(file));
+		if (file.exists()) {
+			addDictionary(Dictionary.fromJson(file));
+		}
 	}
 	
 	/**
 	 * Загружает словарь из указанного файла
 	 */
 	public void loadDictionary(FileHandle handle) {
-		addDictionary(Dictionary.fromJson(handle));
+		if (handle.exists()) {
+			addDictionary(Dictionary.fromJson(handle));
+		}
 	}
 	
 	/**
@@ -242,6 +248,7 @@ public class Localize {
 	public void addTag(String tagName) {
 		for(Dictionary dictionary: dictionaries.values()) {
 			dictionary.addTag(tagName);
+			dictionary.sort();
 		}
 		
 		updateTags();
@@ -262,6 +269,7 @@ public class Localize {
 	 * Возвращает словарь для указанного языка
 	 */
 	public OrderedMap<String, String> getTranslateMap(String language) {
+		dictionaries.get(language).translation.orderedKeys().sort();
 		return dictionaries.get(language).translation;
 	}
 	
@@ -303,8 +311,18 @@ public class Localize {
 			for(File file: translationFiles) {
 				String[] parts = file.getName().split("\\.");
 				String lang = parts[0].split("-")[0];
-				Localize.getInstance().setLanguage(lang);
+				if (!getLanguages().contains(lang, false)) {
+					Localize.getInstance().setLanguage(lang);
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Возвращает текущий язык
+	 * @return
+	 */
+	public String getLanguage() {
+		return currentLanguage;
 	}
 }
