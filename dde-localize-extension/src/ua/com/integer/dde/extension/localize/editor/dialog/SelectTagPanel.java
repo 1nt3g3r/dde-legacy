@@ -84,8 +84,8 @@ public class SelectTagPanel extends JPanel {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setup() {
-		tagCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getTags()));
-		langCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getLanguages()));
+		tagCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getTagsAsArray()));
+		langCombobox.setModel(new DefaultComboBoxModel(Localize.getInstance().getLanguagesAsArray()));
 		
 		tagCombobox.addActionListener(new TagBoxSelectListener());
 		langCombobox.addActionListener(new LanguageSelectListener());

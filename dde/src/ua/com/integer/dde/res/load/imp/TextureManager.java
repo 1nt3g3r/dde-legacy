@@ -7,6 +7,10 @@ import ua.com.integer.dde.res.load.PathDescriptorLoadManager;
 import ua.com.integer.dde.res.load.descriptor.PathDescriptor;
 
 public class TextureManager extends PathDescriptorLoadManager {
+	public TextureManager() {
+		this(null);
+	}
+	
 	public TextureManager(PathDescriptor descriptor) {
 		setDescriptor(descriptor);
 		

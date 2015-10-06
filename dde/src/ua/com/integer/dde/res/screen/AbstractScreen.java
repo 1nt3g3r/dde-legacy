@@ -1,6 +1,7 @@
 package ua.com.integer.dde.res.screen;
 
 import ua.com.integer.dde.kernel.DDKernel;
+import ua.com.integer.dde.res.screen.transition.ScreenTransition;
 import ua.com.integer.dde.ui.helper.ActorHelper;
 
 import com.badlogic.gdx.Gdx;
@@ -34,6 +35,8 @@ public class AbstractScreen implements Screen {
 	private Array<ScreenListener> screenListeners;
 	
 	private boolean firstTimeShown;
+	
+	private boolean logEnabled;
 	
 	public class BackPressListener extends InputListener {
 		@Override
@@ -77,6 +80,8 @@ public class AbstractScreen implements Screen {
 		stage = new Stage(new ScreenViewport(), getBatch());
 		stage.getRoot().setSize(stage.getWidth(), stage.getHeight());
 		stage.addListener(new BackPressListener());
+		
+		log("screen <" + getScreenName() + "> created");
 	}
 	
 	public ScreenConfig getConfig() {
@@ -119,6 +124,8 @@ public class AbstractScreen implements Screen {
 		}
 		helper.updateActor();
 		componentHelpers.add(helper);
+		
+		log("actor helper added");
 	}
 	
 	/**
@@ -133,7 +140,27 @@ public class AbstractScreen implements Screen {
 	 * Method searches in root group.
 	 */
 	public <T extends Actor> T findByName(String name) {
+		if (name == null) {
+			return null;
+		}
+		
 		return stage.getRoot().findActor(name);
+	}
+	
+	/**
+	 * Removes actor by his name
+	 */
+	public void removeActor(String name) {
+		removeActor(findByName(name));
+	}
+	
+	/**
+	 * Removes actor from this screen
+	 */
+	public void removeActor(Actor actor) {
+		if (actor != null) {
+			actor.remove();
+		}
 	}
 
 	/**
@@ -183,6 +210,7 @@ public class AbstractScreen implements Screen {
 		for(ActorHelper locator : componentHelpers) {
 			locator.updateActor();
 		}
+		log("helpers updated");
 	}
 
 	@Override
@@ -235,6 +263,8 @@ public class AbstractScreen implements Screen {
 				disposeActors(child);
 			}
 		}
+		
+		log("actors disposed");
 	}
 	
 	public static DDKernel getKernel() {
@@ -299,6 +329,10 @@ public class AbstractScreen implements Screen {
 		getKernel().showScreen(screen);
 	}
 	
+	public void showScreen(Class<? extends AbstractScreen> screen, ScreenTransition transition) {
+		getKernel().showScreen(screen, transition);
+	}
+	
 	public void clear() {
 		getStage().clear();
 		
@@ -307,5 +341,27 @@ public class AbstractScreen implements Screen {
 		
 		stage.getRoot().setSize(stage.getWidth(), stage.getHeight());
 		stage.addListener(new BackPressListener());
+		
+		log("clear");
+	}
+	
+	/**
+	 * Sets logging enabled or disabled. Log messages will be printed to console 
+	 * with {{@link #getScreenName()} tag
+	 * 
+	 * @param logEnabled is log enabled
+	 */
+	public void setLogEnabled(boolean logEnabled) {
+		this.logEnabled = logEnabled;
+	}
+	
+	/**
+	 * Logs message to console. See {@link #setLogEnabled(boolean))
+	 * @param text text to log
+	 */
+	public void log(String text) {
+		if (logEnabled) {
+			Gdx.app.log(config.screenName, text);
+		}
 	}
 }

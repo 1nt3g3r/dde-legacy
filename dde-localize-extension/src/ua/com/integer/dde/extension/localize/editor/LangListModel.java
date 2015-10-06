@@ -2,7 +2,7 @@ package ua.com.integer.dde.extension.localize.editor;
 
 import javax.swing.AbstractListModel;
 
-import ua.com.integer.dde.extension.localize.Translation;
+import ua.com.integer.dde.extension.localize.Localize;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -12,7 +12,7 @@ public class LangListModel extends AbstractListModel {
 	
 	private Array<String> languages;
 	
-	public LangListModel(Translation translation) {
+	public LangListModel(Localize translation) {
 		languages = translation.getLanguages();
 	}
 	

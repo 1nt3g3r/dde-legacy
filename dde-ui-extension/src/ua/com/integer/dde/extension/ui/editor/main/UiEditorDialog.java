@@ -405,6 +405,8 @@ public class UiEditorDialog extends JDialog {
 		
 	};
 	private void fillLocalizeMenuLanguages() {
+		Localize.getInstance().loadAllInnerDictionaries();
+		
 		for(String lang : Localize.getInstance().getLanguages()) {
 			JMenuItem langItem = new JMenuItem(lang);
 			langItem.addActionListener(new LanguageClickListener(lang));

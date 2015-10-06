@@ -10,8 +10,7 @@ import java.util.Scanner;
 import com.badlogic.gdx.utils.Json;
 
 public class JsonWorker {
-	public static Json JSON = new Json();
-
+	public static final Json JSON = new Json();
 	
 	public static <T> T fromJson(Class<T> type, File file) {
 		try {
@@ -40,5 +39,9 @@ public class JsonWorker {
 			fWriter.close();
 		} catch (Exception e) {
 		}
+	}
+	
+	public static void createEmptyJson(File file) {
+		toJson(new Object(), file);
 	}
 }

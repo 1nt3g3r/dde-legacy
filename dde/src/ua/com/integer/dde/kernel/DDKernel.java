@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ua.com.integer.dde.interaction.InteractionInterface;
 import ua.com.integer.dde.net.ClientCommandManager;
 import ua.com.integer.dde.res.font.TTFFontManager;
 import ua.com.integer.dde.res.graphics.TextureManager;
@@ -20,7 +21,9 @@ import ua.com.integer.dde.res.load.imp.MusicManager;
 import ua.com.integer.dde.res.load.imp.SoundManager;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenManager;
+import ua.com.integer.dde.res.screen.transition.ScreenTransition;
 import ua.com.integer.dde.ui.UIBuilder;
+import ua.com.integer.dde.util.Settings;
 
 /**
  * Ядро игры. Точка доступа ко всем возможностям - 
@@ -48,6 +51,10 @@ public class DDKernel extends Game {
 	private UIBuilder uiBuilder;
 	
 	private DDKernelConfig config;
+	
+	private InteractionInterface platformInteraction;
+	
+	private Settings sets;
 	
 	/**
 	 * Создает ядро с параметрами по умолчанию
@@ -115,6 +122,8 @@ public class DDKernel extends Game {
 			Texture.setAssetManager(null);
 		}
 		
+		sets = new Settings();
+		
 		created = true;
 	}
 	
@@ -135,11 +144,31 @@ public class DDKernel extends Game {
 	}
 	
 	/**
+	 * Shows screen with given {@link ScreenTransition}. If transition is empty, shows screen without any transitions
+	 */
+	public void showScreen(Class<? extends AbstractScreen> screen, ScreenTransition transition) {
+		if (transition == null) {
+			showScreen(screen);
+		} else {
+			transition.transit(screen);
+		}
+	}
+	
+	/**
 	 * Возвращает экран по его классу. Если экран ранее не был загружен, загружает его
 	 * @return
 	 */
 	public <T extends AbstractScreen> T getScreen(Class<T> screen) {
 		return screenManager.getScreen(screen);
+	}
+	
+	/**
+	 * Уничтожает экран
+	 * 
+	 * @param screen
+	 */
+	public void disposeScreen(Class<? extends AbstractScreen> screen) {
+		screenManager.disposeScreen(screen);
 	}
 	
 	/**
@@ -234,5 +263,17 @@ public class DDKernel extends Game {
 	
 	public void exit() {
 		Gdx.app.exit();
+	}
+	
+	public void setPlatformInteraction(InteractionInterface platformInteraction) {
+		this.platformInteraction = platformInteraction;
+	}
+	
+	public InteractionInterface getPlatformInteraction() {
+		return platformInteraction;
+	}
+	
+	public Settings getSets() {
+		return sets;
 	}
 }

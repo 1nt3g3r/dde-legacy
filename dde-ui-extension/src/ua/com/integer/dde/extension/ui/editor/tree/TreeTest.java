@@ -10,12 +10,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 
+import ua.com.integer.dde.extension.ui.UiConfig;
+import ua.com.integer.dde.util.JsonWorker;
+
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import com.badlogic.gdx.files.FileHandle;
-
-import ua.com.integer.dde.extension.ui.UiConfig;
-import ua.com.integer.dde.util.JsonWorker;
 
 public class TreeTest extends JDialog {
 	private static final long serialVersionUID = 3647596534590332320L;

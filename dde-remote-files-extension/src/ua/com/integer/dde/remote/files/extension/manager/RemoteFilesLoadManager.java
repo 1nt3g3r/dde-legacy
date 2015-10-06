@@ -1,0 +1,90 @@
+package ua.com.integer.dde.remote.files.extension.manager;
+
+import ua.com.integer.dde.remote.files.extension.core.Downloader;
+import ua.com.integer.dde.remote.files.extension.core.FileList;
+import ua.com.integer.dde.remote.files.extension.core.OperationListener;
+import ua.com.integer.dde.remote.files.extension.core.RemoteFilesConfig;
+import ua.com.integer.dde.res.load.LoadManager;
+import ua.com.integer.dde.res.screen.AbstractScreen;
+
+public class RemoteFilesLoadManager implements LoadManager, OperationListener {
+	private Downloader downloader;
+	private RemoteFilesConfig config;
+	private boolean failed;
+	private boolean loaded;
+	
+	public RemoteFilesLoadManager(RemoteFilesConfig config) {
+		this.config = config;
+		downloader = new Downloader(config);
+	}
+
+	@Override
+	public void dispose() {
+		downloader.stop();
+	}
+
+	@Override
+	public void loadAll() {
+		FileList filelist = getFilelist();
+		if (filelist == null) {
+			downloader.start(this);
+		} else {
+			loaded = downloader.isSynchronized(filelist);
+			if (!loaded) {
+				downloader.start(this);
+			}
+		}
+	}
+
+	@Override
+	public boolean loadStep() {
+		if (loaded || failed) {
+			return true;
+		}
+		return downloader.getSynchronizedPercent() >= 100;
+	}
+
+	@Override
+	public float getLoadPercent() {
+		return downloader.getSynchronizedPercent() / 100f;
+	}
+
+	@Override
+	public int getAssetCount() {
+		return downloader.getFiles().files.size;
+	}
+
+	@Override
+	public int getLoadedAssetCount() {
+		return downloader.getSynchronizedPercent() * getAssetCount() / 100;
+	}
+
+	@Override
+	public boolean isLoaded(String name) {
+		return false;
+	}
+
+	@Override
+	public void finished(String message) {
+		AbstractScreen.getKernel().getSets().saveJsonObject(getFilelistPrefsName(), downloader.getFiles());
+	}
+	
+	private FileList getFilelist() {
+		return AbstractScreen.getKernel().getSets().getJsonObject(getFilelistPrefsName(), FileList.class);
+	}
+	private String getFilelistPrefsName() {
+		return config.localFolder + "+" + config.remoteURL;
+	}
+
+	@Override
+	public void progress(int progress) {
+	}
+
+	@Override
+	public void failed(String message) {
+	}
+	
+	public boolean isFailed() {
+		return failed;
+	}
+}

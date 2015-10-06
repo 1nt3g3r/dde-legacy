@@ -13,6 +13,9 @@ public class PageControl extends Group {
 	
 	private boolean verticalOrientation;
 	
+	private PageControlListener pageListener;
+	private int previousPage = 1;
+	
 	public PageControl() {
 		scroll = new ScrollPane(null);
 		scroll.setFadeScrollBars(false);
@@ -36,7 +39,6 @@ public class PageControl extends Group {
 	
 	public void setScrollSize(float scrollSize) {
 		this.scrollSize = scrollSize;
-		System.out.println("scroll size is " + scrollSize);
 	}
 	
 	@Override
@@ -62,6 +64,19 @@ public class PageControl extends Group {
 		float nearestX = getNearestX();
 		if (!scroll.isPanning() && Math.abs(nearestX - scroll.getScrollX()) >= 2 && Math.abs(scroll.getVelocityX()) <= 0.00f) {
 			scroll.setScrollX(nearestX);
+			
+			notifyPageChanged();
+		}
+	}
+	
+	private void notifyPageChanged() {
+		int currentPage = getCurrentPage();
+		if (currentPage != previousPage) {
+			if (pageListener != null) {
+				pageListener.pageChanged(currentPage);
+			}
+			
+			previousPage = currentPage;
 		}
 	}
 	
@@ -80,6 +95,8 @@ public class PageControl extends Group {
 		float nearestY = getNearestY();
 		if (!scroll.isPanning() && Math.abs(nearestY - scroll.getScrollY()) >= 2 && Math.abs(scroll.getVelocityY()) <= 0.00f) {
 			scroll.setScrollY(nearestY);
+			
+			notifyPageChanged();
 		}
 	}
 	
@@ -149,5 +166,13 @@ public class PageControl extends Group {
 	
 	public ScrollPane getScroll() {
 		return scroll;
+	}
+	
+	public void setPageListener(PageControlListener pageListener) {
+		this.pageListener = pageListener;
+	}
+	
+	public interface PageControlListener {
+		public void pageChanged(int page);
 	}
 }

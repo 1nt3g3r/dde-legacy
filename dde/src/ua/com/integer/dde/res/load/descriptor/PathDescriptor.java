@@ -1,5 +1,7 @@
 package ua.com.integer.dde.res.load.descriptor;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.files.FileHandle;
@@ -33,6 +35,15 @@ public class PathDescriptor {
 		}
 	};
 	
+	public File getDirectoryAsFile() {
+		FileHandle fHandleDir = getDirectory();
+		if (fHandleDir != null) {
+			return fHandleDir.file();
+		}
+		
+		return null;
+	}
+	
 	public FileHandle getFile(String name) {
 		if (getDirectory() == null) {
 			return null;
@@ -59,6 +70,15 @@ public class PathDescriptor {
 	
 	public static PathDescriptor local(String path) {
 		return new PathDescriptor(path, FileType.Local);
+	}
+	
+	/**
+	 * String format <filetype;path>. Possible filetypes: {@link FileType}
+	 */
+	public static PathDescriptor fromString(String path) {
+		String[] parts = path.split(";");
+		FileType type = FileType.valueOf(parts[0]);
+		return new PathDescriptor(parts[1], type);
 	}
 	
 	public static PathDescriptor multiple(String path, FileType ... types) {

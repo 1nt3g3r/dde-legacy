@@ -11,6 +11,7 @@ import ua.com.integer.dde.extension.ui.property.PropertyUtils;
 import ua.com.integer.dde.extension.ui.property.imp.common.CommonPropertySupporter;
 import ua.com.integer.dde.res.screen.AbstractScreen;
 import ua.com.integer.dde.res.screen.ScreenEvent;
+import ua.com.integer.dde.res.screen.ScreenListener;
 import ua.com.integer.dde.ui.actor.PageControl;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -111,5 +112,25 @@ public class ActorUtils {
 		for(UiConfig cfg : config.children) {
 			insertConfigToActor(screen, cfg, (Group) actor);
 		}
+	}
+	
+	public static UiConfigurator getActorConfigurator(AbstractScreen screen, Actor actor) {
+		if (actor == null) {
+			return null;
+		}
+		
+		for(ScreenListener listener : screen.getScreenListeners()) {
+			if (listener != null && listener instanceof UiConfigurator) {
+				UiConfigurator tmp = (UiConfigurator) listener;
+				if (tmp.getTarget() == actor) {
+					return tmp;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static UiConfigurator getActorConfigurator(AbstractScreen screen, String actorName) {
+		return getActorConfigurator(screen, screen.findByName(actorName));
 	}
 }
