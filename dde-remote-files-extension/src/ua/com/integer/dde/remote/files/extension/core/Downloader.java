@@ -10,6 +10,7 @@ import com.badlogic.gdx.Net.HttpMethods;
 import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.Net.HttpResponse;
 import com.badlogic.gdx.Net.HttpResponseListener;
+import com.badlogic.gdx.files.FileHandle;
 
 public class Downloader {
 	public static final String FILELIST_NAME = "filelist.json";
@@ -25,6 +26,8 @@ public class Downloader {
 	private int maxFailCount = 5;
 	
 	private boolean downloadingNow = false;
+	
+	private OperationListener mainListener;
 
 	public Downloader(RemoteFilesConfig config) {
 		this(config.localFolder, config.remoteURL);
@@ -36,15 +39,12 @@ public class Downloader {
 		this.localFolder = slashed(localFolder);
 		this.remoteURL = slashed(remoteURL);
 
-		File folder = new File(localFolder);
-		if (!folder.exists()) {
-			folder.mkdirs();
-		}
+		Gdx.files.external(localFolder).mkdirs();
 	}
 
 	private void log(String message) {
 		if (log) {
-			Gdx.app.log(LOG_TAG, message);
+			System.out.println(message);
 		}
 	}
 
@@ -59,6 +59,10 @@ public class Downloader {
 	}
 
 	public void start(final OperationListener listener) {
+		if (stop) {
+			return;
+		}
+		
 		stop = false;
 		failCount = 0;
 		downloadingNow = false;
@@ -95,6 +99,8 @@ public class Downloader {
 			listener.failed("too much fails: " + failCount);
 			return;
 		}
+		
+		this.mainListener = listener;
 		
 		if (stop) {
 			listener.failed("cancelled");
@@ -136,6 +142,11 @@ public class Downloader {
 			}
 		}
 	}
+	
+	public void continueDownloading() {
+		failCount = 0;
+		update(mainListener);
+	}
 
 	private void updateFileList(final OperationListener listener) {
 		HttpRequest req = new HttpRequest(HttpMethods.GET);
@@ -170,8 +181,8 @@ public class Downloader {
 		String path = localFolder + remoteFile.folder;
 		path = slashed(path) + remoteFile.filename;
 		
-		File handle = new File(path);
-		if (handle.exists() && !handle.isDirectory() && remoteFile.checksum == FileUtils.getCRCChecksum(handle)) {
+		FileHandle handle = Gdx.files.external(path);
+		if (handle.exists() && !handle.isDirectory() && remoteFile.checksum == FileUtils.getCRCChecksum(handle.file())) {
 			return true;
 		} else {
 			return false;
@@ -210,9 +221,9 @@ public class Downloader {
 			@Override
 			public void handleHttpResponse(HttpResponse httpResponse) {
 				downloadingNow = true;
-				new File(localFolder + remoteFile.folder).mkdirs();
+				Gdx.files.external(localFolder + remoteFile.folder).mkdirs();
 
-				File file = new File(slashed(localFolder + remoteFile.folder) + remoteFile.filename);
+				File file = Gdx.files.external(slashed(localFolder + remoteFile.folder) + remoteFile.filename).file();
 
 				FileOutputStream output = null;
 				try {
@@ -300,5 +311,17 @@ public class Downloader {
 		} else {
 			return str + "/";
 		}
+	}
+	
+	public boolean isStopped() {
+		return stop;
+	}
+
+	public String getRemoteURL() {
+		return remoteURL;
+	}
+	
+	public String getLocalFolder() {
+		return localFolder;
 	}
 }

@@ -78,6 +78,11 @@ public class LoadManagerScreen extends AbstractScreen {
 			return;
 		}
 		
+		if (loadManager == null) {
+			super.render(delta);
+			return;
+		}
+		
 		if (loadManager.loadStep()) {
 			if (loadListener != null) {
 				loadListener.loadPercentChanged(1f);

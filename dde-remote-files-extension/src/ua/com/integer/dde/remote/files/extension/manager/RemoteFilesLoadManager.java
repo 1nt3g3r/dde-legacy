@@ -1,20 +1,29 @@
 package ua.com.integer.dde.remote.files.extension.manager;
 
+import com.badlogic.gdx.Gdx;
+
 import ua.com.integer.dde.remote.files.extension.core.Downloader;
 import ua.com.integer.dde.remote.files.extension.core.FileList;
 import ua.com.integer.dde.remote.files.extension.core.OperationListener;
 import ua.com.integer.dde.remote.files.extension.core.RemoteFilesConfig;
 import ua.com.integer.dde.res.load.LoadManager;
 import ua.com.integer.dde.res.screen.AbstractScreen;
+import ua.com.integer.dde.util.JsonWorker;
 
 public class RemoteFilesLoadManager implements LoadManager, OperationListener {
 	private Downloader downloader;
-	private RemoteFilesConfig config;
 	private boolean failed;
 	private boolean loaded;
 	
+	public RemoteFilesLoadManager(Downloader downloader) {
+		this.downloader = downloader;
+	}
+	
+	public RemoteFilesLoadManager(String innerConfigName) {
+		this(JsonWorker.JSON.fromJson(RemoteFilesConfig.class, Gdx.files.internal("data/dde-remote-files-configs/" + innerConfigName + ".config")));
+	}
+	
 	public RemoteFilesLoadManager(RemoteFilesConfig config) {
-		this.config = config;
 		downloader = new Downloader(config);
 	}
 
@@ -30,7 +39,9 @@ public class RemoteFilesLoadManager implements LoadManager, OperationListener {
 			downloader.start(this);
 		} else {
 			loaded = downloader.isSynchronized(filelist);
-			if (!loaded) {
+			if (loaded) {
+				downloader.setFiles(filelist);
+			} else {
 				downloader.start(this);
 			}
 		}
@@ -41,12 +52,16 @@ public class RemoteFilesLoadManager implements LoadManager, OperationListener {
 		if (loaded || failed) {
 			return true;
 		}
+		
 		return downloader.getSynchronizedPercent() >= 100;
 	}
 
 	@Override
 	public float getLoadPercent() {
-		return downloader.getSynchronizedPercent() / 100f;
+		if (loaded) {
+			return 1f;
+		}
+		return (float) (downloader.getSynchronizedPercent()) / 100f;
 	}
 
 	@Override
@@ -66,14 +81,17 @@ public class RemoteFilesLoadManager implements LoadManager, OperationListener {
 
 	@Override
 	public void finished(String message) {
-		AbstractScreen.getKernel().getSets().saveJsonObject(getFilelistPrefsName(), downloader.getFiles());
+		if (downloader.getFiles() != null) {
+			AbstractScreen.getKernel().getSets().saveJsonObject(getFilelistPrefsName(), downloader.getFiles()).flush();
+		}
 	}
 	
 	private FileList getFilelist() {
 		return AbstractScreen.getKernel().getSets().getJsonObject(getFilelistPrefsName(), FileList.class);
 	}
+	
 	private String getFilelistPrefsName() {
-		return config.localFolder + "+" + config.remoteURL;
+		return downloader.getLocalFolder() + "+" + downloader.getRemoteURL();
 	}
 
 	@Override
@@ -82,9 +100,18 @@ public class RemoteFilesLoadManager implements LoadManager, OperationListener {
 
 	@Override
 	public void failed(String message) {
+		failed = true;
 	}
 	
 	public boolean isFailed() {
 		return failed;
+	}
+	
+	public boolean isLoaded() {
+		return loaded;
+	}
+	
+	public void removeFilelist() {
+		AbstractScreen.getKernel().getSets().removeKey(getFilelistPrefsName());
 	}
 }

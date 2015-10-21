@@ -31,10 +31,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ua.com.integer.dde.remote.files.extension.core.RemoteFilesConfig;
+import ua.com.integer.dde.startpanel.extension.Extension;
 import ua.com.integer.dde.startpanel.util.ExtensionFilenameFilter;
 import ua.com.integer.dde.util.JsonWorker;
 
-public class RemoteFilesSetupDialog extends JDialog {
+public class RemoteFilesSetupDialog extends JDialog implements Extension {
 	private static final long serialVersionUID = -2593784323690192621L;
 	private final JPanel contentPanel = new JPanel();
 	private JList<String> configList;
@@ -177,7 +178,7 @@ public class RemoteFilesSetupDialog extends JDialog {
 			}
 		}
 		
-		//updateConfigList();
+		updateConfigList();
 	}
 	
 	private void updateConfigList() {
@@ -349,5 +350,10 @@ public class RemoteFilesSetupDialog extends JDialog {
 	}
 	public JTextField getRemoteURLValue() {
 		return remoteURLValue;
+	}
+
+	@Override
+	public void launch() {
+		main(null);
 	}
 }

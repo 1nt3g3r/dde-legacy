@@ -73,6 +73,11 @@ public class Settings {
 		return JsonWorker.JSON.fromJson(cl, json);
 	}
 	
+	public void removeKey(String name) {
+		prefs.remove(name);
+		prefs.flush();
+	}
+	
 	public void flush() {
 		prefs.flush();
 	}

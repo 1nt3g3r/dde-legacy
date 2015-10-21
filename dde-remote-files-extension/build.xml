@@ -1,0 +1,43 @@
+<project name="Remote files extension" basedir="." default="make.jars">
+	
+	<path id="classpath">
+		<fileset dir="../dde/libs" includes="*.jar"/>
+		<fileset dir="../dde/build" includes="*.jar"/>
+		<fileset dir="../dde-start-panel/build" includes="*.jar"/>
+	</path>
+	
+	<target name="make.jars" depends="prepare">
+		<antcall target="build.runtime.jar"/>
+		<antcall target="build.editor.jar"/>
+		<antcall target="build.sources"/>
+		<antcall target="post.clean"/>
+	</target>
+		
+	<target name="compile">
+		<javac srcdir="src" destdir="build/classes">
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+	
+	<target name="build.runtime.jar" depends="compile">
+		<delete dir="build/classes/ua/com/integer/dde/remote/files/extension/editor"/>
+		<jar destfile="build/dde-remote-files-runtime.jar" basedir="build/classes"/>
+	</target>
+	
+	<target name="build.editor.jar" depends="compile">
+		<jar destfile="build/dde-remote-files-editor.jar" basedir="build/classes"/>
+	</target>
+	
+	<target name="build.sources">
+		<jar destfile="build/dde-remote-files-sources.jar" basedir="src"/>
+	</target>
+	
+	<target name="prepare">
+		<delete dir="build"/>
+		<mkdir dir="build/classes"/>
+	</target>
+	
+	<target name="post.clean">
+		<delete dir="build/classes"/>
+	</target>
+</project>

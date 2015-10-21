@@ -44,6 +44,13 @@
 			<fileset file="${res}/resource-monitor.dde"/>
 		</copy>
 		
+		<!-- Remote files extension -->
+		<ant dir="${remote.files}" antfile="${remote.files}/build.xml" target="make.jars"/>
+		<copy todir="release/extensions/remote-files">
+			<fileset dir="${remote.files.jardir}"/>
+			<fileset file="${remote.files}/resource-files.dde"/>
+		</copy>
+		
 		<zip destfile="build/dde-release.zip" basedir="release"/>
 	
 		<antcall target="post.clean"/>

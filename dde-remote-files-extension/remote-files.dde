@@ -1,0 +1,6 @@
+{
+"jarName": "dde-remote-files-editor.jar",
+"name": "DDE Remote Files Extension",
+"description": "Remote files extension. Put files to some remote server, download them and use in your game",
+"startClass": "ua.com.integer.dde.remote.files.extension.editor.RemoteFilesSetupDialog"
+}
